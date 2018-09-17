@@ -1,0 +1,68 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ach
+  namespace: apps
+spec:
+  type: ClusterIP
+  selector:
+    app: ach
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ach
+  namespace: apps
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /v1/ach
+            backend:
+              serviceName: ach
+              servicePort: 8080
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ach
+  namespace: apps
+  labels:
+    app: ach
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: ach
+  template:
+    metadata:
+      labels:
+        app: ach
+    spec:
+      containers:
+      - image: moov/ach:v0.3.0-dev
+        imagePullPolicy: Always
+        name: ach
+        ports:
+          - containerPort: 8080
+            name: htp
+            protocol: TCP
+      restartPolicy: Always
+      # serviceAccount: ach
+      # serviceAccountName: ach
+
+---

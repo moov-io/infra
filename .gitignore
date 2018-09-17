@@ -1,0 +1,7 @@
+# terraform related files/folders
+terraform.tfvars
+terraform.tfstate.backup*
+.terraform/
+
+# context specific directories
+.gcp/
