@@ -1,5 +1,7 @@
 ## moov.io infra
 
+This repository holds the configurion for [moov.io](https://github.com/moov-io)'s infrastructure. If you find a problem (security or otherwise), please contact us at [`security@moov.io`](mailto:security@moov.io).
+
 ### Assumptions / Project Goals
 
 ### Getting started
