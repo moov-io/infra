@@ -1,3 +1,15 @@
+provider "kubernetes" {
+  host = "${google_container_cluster.primary.endpoint}"
+
+  username = "${var.username}"
+  password = "${var.password}"
+
+  # client_certificate = "${base64decode(file("client.crt"))}"
+  # client_key = "${base64decode(file("client.key"))}"
+  # cluster_ca_certificate = "${base64decode(file("ca.crt"))}"
+}
+
+
 variable "cluster_name" {
   default = "sbx"
 }
@@ -129,24 +141,14 @@ resource "null_resource" "kubectl_setup" {
   }
 }
 
-
-output "client_certificate" {
-  value = "${google_container_cluster.primary.master_auth.0.client_certificate}"
-}
-
-output "client_key" {
-  value = "${google_container_cluster.primary.master_auth.0.client_key}"
-}
-
-output "cluster_ca_certificate" {
-  value = "${google_container_cluster.primary.master_auth.0.cluster_ca_certificate}"
-}
-
-
-provider "kubernetes" {
-  host = "${google_container_cluster.primary.endpoint}"
-
-  client_certificate = "${google_container_cluster.primary.master_auth.0.client_certificate}"
-  client_key = "${google_container_cluster.primary.master_auth.0.client_key}"
-  cluster_ca_certificate = "${google_container_cluster.primary.master_auth.0.cluster_ca_certificate}"
+resource "null_resource" "kubernetes_config_save" {
+  provisioner "local-exec" {
+    command = "echo '${google_container_cluster.primary.master_auth.0.client_certificate}' > client.crt"
+  }
+  provisioner "local-exec" {
+    command = "echo '${google_container_cluster.primary.master_auth.0.client_key}' > client.key"
+  }
+  provisioner "local-exec" {
+    command = "echo '${google_container_cluster.primary.master_auth.0.cluster_ca_certificate}' > ca.crt"
+  }
 }

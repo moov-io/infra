@@ -20,23 +20,6 @@ spec:
 
 ---
 apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ach
-  namespace: apps
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /v1/ach
-            backend:
-              serviceName: ach
-              servicePort: 8080
-
----
-apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: ach
@@ -44,7 +27,7 @@ metadata:
   labels:
     app: ach
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: ach

@@ -6,12 +6,12 @@ provider "google" {
 }
 
 variable "gcp_creds_filepath" {
-  default = "~/.google/credentials.json"
+  default     = "~/.google/credentials.json"
   description = "Local filepath for Google Cloud credentials"
 }
 
 variable "gcp_project" {
-  default = "automated-clearing-house"
+  default     = "automated-clearing-house"
   description = "Google Cloud project name"
 }
 
@@ -21,6 +21,7 @@ variable "gcp_region" {
 
 variable "gcp_zones" {
   type = "list"
+
   default = [
     "us-central1-a",
     "us-central1-b",
@@ -50,9 +51,11 @@ resource "null_resource" "rbac_setup" {
     command = "kubectl create clusterrolebinding ${var.cluster_name}-admin-binding --clusterrole=cluster-admin --user=${element(var.cluster_admins, count.index)}"
   }
 }
+
 variable "cluster_admins" {
   default = [
     "adam@moov.io",
-    # "wade@moov.io"
   ]
+
+  # "wade@moov.io"
 }

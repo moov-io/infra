@@ -20,24 +20,6 @@ spec:
 
 ---
 apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: auth
-  namespace: apps
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /v1/auth
-            backend:
-              serviceName: auth
-              servicePort: 8080
-
----
-
-apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: auth
@@ -45,7 +27,7 @@ metadata:
   labels:
     app: auth
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: auth

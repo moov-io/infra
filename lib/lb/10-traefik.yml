@@ -5,17 +5,36 @@ metadata:
   name: traefik
   namespace: lb
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: traefik
   ports:
-    - name: proxy
+    - name: http
       protocol: TCP
       port: 80
       targetPort: 80
+    - name: proxy
+      protocol: TCP
+      port: 443
+      targetPort: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-dashboard
+  namespace: lb
+  annotations:
+    # We split traefik ports into two services so we can lockdown the dashboard
+    # to internal requests (and then filter those through an auth proxy).
+    # traefik.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8"
+spec:
+  type: LoadBalancer
+  selector:
+    app: traefik
+  ports:
     - name: dashboard
       protocol: TCP
-      port: 8080
+      port: 80
       targetPort: 8080
 ---
 apiVersion: v1
@@ -38,6 +57,42 @@ spec:
             backend:
               serviceName: traefik
               servicePort: 8080
+
+---
+# TODO(adam): notes from docs
+# - store certs in kv? (Why not k8s Secret?)
+#   - https://docs.traefik.io/configuration/acme/#as-a-key-value-store-entry
+# - https://docs.traefik.io/configuration/commons/#custom-error-pages
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: lb
+data:
+  traefik.toml: |
+      defaultEntryPoints = ["http","https"]
+      [entryPoints]
+      [entryPoints.http]
+      address = ":80"
+      [entryPoints.http.redirect]
+      entryPoint = "https"
+      [entryPoints.https]
+      address = ":443"
+      [entryPoints.https.tls]
+      [acme]
+      email = "security@moov.io"
+      storageFile = "/etc/traefik/letsencrypt.json"
+      entryPoint = "https"
+      onDemand = true
+      onHostRule = true
+      # caServer = "https://acme-staging.api.letsencrypt.org/directory"
+      caServer = "https://acme-v01.api.letsencrypt.org/directory"
+      [[acme.domains]]
+      main = "api.moov.io"
+      [kubernetes]
+      namespaces = ["apps", "infra", "lb"]
+      [metrics]
+      [metrics.prometheus]
 
 ---
 
@@ -68,6 +123,10 @@ spec:
           - --api
           - --kubernetes
           - --logLevel=DEBUG
+          - --configFile=/etc/traefik/traefik.toml
+        volumeMounts:
+          - name: traefik-config
+            mountPath: /etc/traefik/
         ports:
           - containerPort: 80
             name: proxy
@@ -75,6 +134,13 @@ spec:
           - containerPort: 8080
             name: dashboard
             protocol: TCP
+      volumes:
+        - name: traefik-config
+          configMap:
+            name: traefik-config
+            items:
+              - key: traefik.toml
+                path: traefik.toml
       restartPolicy: Always
 
 ---
