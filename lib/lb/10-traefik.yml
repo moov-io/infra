@@ -116,6 +116,7 @@ data:
       entryPoint = "https"
       [entryPoints.https]
       address = ":443"
+      compress = true
       [entryPoints.https.tls]
       minVersion = "VersionTLS12"
       ciphersuites = [
