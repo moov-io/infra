@@ -102,7 +102,6 @@ data:
       entryPoint = "https"
       # Enable api / dashboard
       [api]
-      entryPoint = "traefik-dashboard"
       dashboard = true
       # Let's Encrypt setup
       [acme]
@@ -141,7 +140,6 @@ spec:
       storage: 1Gi
 
 ---
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
