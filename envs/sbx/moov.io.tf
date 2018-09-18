@@ -8,30 +8,29 @@ resource "google_dns_managed_zone" "moov-io" {
 
 // moov.io
 resource "google_dns_record_set" "moov-A" {
-  name = "moov.io"
-  type = "A"
-  ttl = 60
-
-  managed_zone = "${google_dns_managed_zone.moov-io.dns_name}"
+  name         = "${google_dns_managed_zone.moov-io.dns_name}"
+  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  type         = "A"
+  ttl          = 60
 
   # github pages
   rrdatas = ["185.199.108.153", "185.199.111.153", "185.199.109.153", "185.199.110.153"]
 }
 
 resource "google_dns_record_set" "moov-SPF" {
-  name = "frontend.${google_dns_managed_zone.moov-io.dns_name}"
+  name         = "${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = "${google_dns_managed_zone.moov-io.name}"
-  type = "TXT"
-  ttl  = 60
+  type         = "TXT"
+  ttl          = 60
 
   rrdatas = ["\"v=spf1 include:_spf.google.com ~all\""]
 }
 
 resource "google_dns_record_set" "moov-MX" {
-  name = "${google_dns_managed_zone.moov-io.dns_name}"
+  name         = "${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = "${google_dns_managed_zone.moov-io.name}"
-  type = "MX"
-  ttl  = 60
+  type         = "MX"
+  ttl          = 60
 
   rrdatas = [
     "5 alt2.aspmx.l.google.com.",
@@ -51,10 +50,10 @@ data "kubernetes_service" "traefik" {
 }
 
 resource "google_dns_record_set" "api" {
-  name = "api.${google_dns_managed_zone.moov-io.dns_name}"
-  type = "A"
-  ttl  = 60
-
+  name         = "api.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  type         = "A"
+  ttl          = 60
+
   rrdatas = ["${data.kubernetes_service.traefik.load_balancer_ingress.0.ip}"]
 }
