@@ -41,7 +41,6 @@ resource "google_dns_record_set" "moov-MX" {
   ]
 }
 
-// api.moov.io
 data "kubernetes_service" "traefik" {
   metadata {
     name = "traefik"
@@ -51,6 +50,15 @@ data "kubernetes_service" "traefik" {
 
 resource "google_dns_record_set" "api" {
   name         = "api.${google_dns_managed_zone.moov-io.dns_name}"
+  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  type         = "A"
+  ttl          = 60
+
+  rrdatas = ["${data.kubernetes_service.traefik.load_balancer_ingress.0.ip}"]
+}
+
+resource "google_dns_record_set" "infra" {
+  name         = "infra.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = "${google_dns_managed_zone.moov-io.name}"
   type         = "A"
   ttl          = 60
