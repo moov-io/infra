@@ -73,6 +73,8 @@ data:
       defaultEntryPoints = ["http","https"]
       # logging
       logLevel = "INFO"
+      [file]
+      watch = true
       [traefikLog]
       # filePath = "/path/to/traefik.log"
       # format   = "json"
@@ -82,11 +84,19 @@ data:
       [entryPoints]
       [entryPoints.http]
       address = ":80"
+      compress = true
       [entryPoints.http.redirect]
       entryPoint = "https"
       [entryPoints.https]
       address = ":443"
       [entryPoints.https.tls]
+      minVersion = "VersionTLS12"
+      ciphersuites = [
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+        "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+      ]
+      snistrict = true
       # Enable /ping
       [ping]
       entryPoint = "https"
@@ -106,7 +116,6 @@ data:
       KeyType = "EC384"
       acmeLogging = true
       [acme.tlsChallenge]
-      [acme.httpChallenge]
       entryPoint = "http"
       [[acme.domains]]
       main = "api.moov.io"
