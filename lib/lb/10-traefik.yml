@@ -28,13 +28,13 @@ metadata:
     # to internal requests (and then filter those through an auth proxy).
     # traefik.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8"
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: traefik
   ports:
     - name: dashboard
       protocol: TCP
-      port: 80
+      port: 8080
       targetPort: 8080
 ---
 apiVersion: v1
@@ -71,6 +71,14 @@ metadata:
 data:
   traefik.toml: |
       defaultEntryPoints = ["http","https"]
+      # logging
+      logLevel = "INFO"
+      [traefikLog]
+      # filePath = "/path/to/traefik.log"
+      # format   = "json"
+      [accessLog]
+      # filePath = "/path/to/access.log"
+      # format   = "json
       [entryPoints]
       [entryPoints.http]
       address = ":80"
@@ -79,20 +87,49 @@ data:
       [entryPoints.https]
       address = ":443"
       [entryPoints.https.tls]
+      # Enable /ping
+      [ping]
+      entryPoint = "https"
+      # Enable api / dashboard
+      [api]
+      entryPoint = "traefik-dashboard"
+      dashboard = true
+      # Let's Encrypt setup
       [acme]
       email = "security@moov.io"
-      storageFile = "/etc/traefik/letsencrypt.json"
+      storage = "/opt/traefik/letsencrypt.json"
       entryPoint = "https"
       onDemand = true
       onHostRule = true
       # caServer = "https://acme-staging.api.letsencrypt.org/directory"
-      caServer = "https://acme-v01.api.letsencrypt.org/directory"
+      caServer = "https://acme-v02.api.letsencrypt.org/directory"
+      KeyType = "EC384"
+      acmeLogging = true
+      [acme.tlsChallenge]
+      [acme.httpChallenge]
+      entryPoint = "http"
       [[acme.domains]]
       main = "api.moov.io"
+      sans = ["infra.moov.io"]
       [kubernetes]
       namespaces = ["apps", "infra", "lb"]
       [metrics]
       [metrics.prometheus]
+
+
+---
+# Docs: https://cloud.google.com/kubernetes-engine/docs/concepts/persistent-volumes
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: traefik-acme
+  namespace: lb
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 1Gi
 
 ---
 
@@ -120,13 +157,12 @@ spec:
         imagePullPolicy: Always
         name: traefik
         args:
-          - --api
-          - --kubernetes
-          - --logLevel=DEBUG
           - --configFile=/etc/traefik/traefik.toml
         volumeMounts:
           - name: traefik-config
             mountPath: /etc/traefik/
+          - name: traefik-acme
+            mountPath: /opt/traefik/
         ports:
           - containerPort: 80
             name: proxy
@@ -141,6 +177,9 @@ spec:
             items:
               - key: traefik.toml
                 path: traefik.toml
+        - name: traefik-acme
+          persistentVolumeClaim:
+            claimName: traefik-acme
       restartPolicy: Always
 
 ---
