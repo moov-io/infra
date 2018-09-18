@@ -41,6 +41,35 @@ resource "google_dns_record_set" "moov-MX" {
   ]
 }
 
+resource "google_dns_record_set" "moov-CAA" {
+  name         = "${google_dns_managed_zone.moov-io.dns_name}"
+  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  type         = "CAA"
+  ttl          = 60
+
+  rrdatas = [
+    // Cloudflare
+    // https://support.cloudflare.com/hc/en-us/articles/115000310832-Certification-Authority-Authorization-CAA-FAQ
+    "0 issue \"comodoca.com\"",
+    "0 issuewild \"comodoca.com\"",
+    "0 issue \"digicert.com\"",
+    "0 issuewild \"digicert.com\"",
+    "0 issue \"globalsign.com\"",
+    "0 issuewild \"globalsign.com\"",
+
+    // future google ca
+    "0 issue \"google.com\"",
+    "0 issuewild \"google.com\"",
+
+    // ACME
+    "0 issue \"letsencrypt.org\"",
+    "0 issuewild \"letsencrypt.org\"",
+
+    // notify us
+    "0 iodef \"mailto:security@moov.io\"",
+  ]
+}
+
 data "kubernetes_service" "traefik" {
   metadata {
     name = "traefik"
