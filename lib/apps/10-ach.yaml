@@ -53,7 +53,7 @@ metadata:
   labels:
     app: ach
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: ach
