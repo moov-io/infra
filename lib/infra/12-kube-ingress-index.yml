@@ -43,8 +43,8 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: kube-ingress-index
-              servicePort: 8080
+              serviceName: oauth2-proxy
+              servicePort: 4180
 
 ---
 apiVersion: extensions/v1beta1

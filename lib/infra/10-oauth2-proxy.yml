@@ -1,0 +1,106 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oauth2-proxy
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: oauth2-proxy
+  ports:
+    - name: http
+      protocol: TCP
+      port: 4180
+      targetPort: 4180
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: oauth2-proxy
+  namespace: infra
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+  namespace: infra
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: infra.moov.io
+      http:
+        paths:
+          - path: /oauth2
+            backend:
+              serviceName: oauth2-proxy
+              servicePort: 4180
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: oauth2-proxy
+  namespace: infra
+  labels:
+    app: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        app: oauth2-proxy
+    spec:
+      serviceAccountName: oauth2-proxy
+      terminationGracePeriodSeconds: 30
+      containers:
+      - image: moov/oauth2_proxy:v2.2
+        imagePullPolicy: Always
+        name: oauth2-proxy
+        env:
+          - name: OAUTH2_PROXY_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy-config
+                key: client_id
+          - name: OAUTH2_PROXY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy-config
+                key: client_secret
+          - name: OAUTH2_PROXY_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: oauth2-proxy-config
+                key: cookie_secret
+        args:
+          - -cookie-domain=moov.io
+          - -cookie-secure
+          - -email-domain=*
+          - -github-org=moov-io
+          # - -github-team=infra
+          - -http-address=0.0.0.0:4180
+          - -pass-host-header
+          - -provider=github
+          - -redirect-url=https://infra.moov.io/oauth2/callback
+          - -upstream=http://prometheus.infra.svc.cluster.local:9090/prometheus/,http://traefik-dashboard.lb.svc.cluster.local:8080/traefik,http://kube-ingress-index.infra.svc.cluster.local:8080/
+        ports:
+          - containerPort: 4180
+            name: http
+            protocol: TCP
+      restartPolicy: Always
+
+---

@@ -38,52 +38,11 @@ spec:
       targetPort: 8080
 
 ---
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: traefik
-  namespace: lb
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.frontend.rule.type: PathPrefixStrip
-    ingress.kubernetes.io/content-type-nosniff: "true"
-    ingress.kubernetes.io/force-hsts: "true"
-    ingress.kubernetes.io/hsts-max-age: "315360000"
-    ingress.kubernetes.io/hsts-include-subdomains: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "infra.moov.io"
-    ingress.kubernetes.io/ssl-force-host: "true"
-spec:
-  rules:
-    - host: infra.moov.io
-      http:
-        paths:
-          - path: /traefik/
-            backend:
-              serviceName: traefik-dashboard
-              servicePort: 8080
-
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: traefik
   namespace: lb
-
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: traefik
-  namespace: lb
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /
-            backend:
-              serviceName: traefik
-              servicePort: 8080
 
 ---
 # TODO(adam): notes from docs
