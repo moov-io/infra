@@ -1,0 +1,292 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: prometheus
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: infra
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prometheus
+  namespace: infra
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: infra.moov.io
+      http:
+        paths:
+          - path: /prometheus/
+            backend:
+              serviceName: oauth2-proxy
+              servicePort: 4180
+              # serviceName: prometheus
+              # servicePort: 9090
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data
+  namespace: infra
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 25Gi
+
+---
+# Docs: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: infra
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      scrape_timeout: 10s
+      evaluation_interval: 15s
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+                # - http://alertmanaged.infra.svc.cluster.local:
+          scheme: http
+          timeout: 10s
+    scrape_configs:
+      - job_name: prometheus
+        scrape_interval: 15s
+        scrape_timeout: 10s
+        metrics_path: /metrics
+        scheme: http
+        static_configs:
+          - targets:
+              # - http://prometheus.infra.svc.cluster.local:9090/metrics
+      # Scrape nodes
+      - job_name: 'kubernetes-nodes'
+        scheme: http
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/${1}/proxy/metrics
+      # Scrape cadvisor
+      - job_name: 'kubernetes-cadvisor'
+        scheme: http
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
+
+---
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   labels:
+#     k8s-app: prometheus-operator
+#     name: prometheus-operator
+#     spec:
+#       replicas: 1
+#       template:
+#         metadata:
+#           labels:
+#             k8s-app: prometheus-operator
+#             spec:
+#               containers:
+#                 - args:
+#                     - --kubelet-service=kube-system/kubelet
+#                     - --config-reloader-image=quay.io/coreos/configmap-reload:v0.0.1
+#                     image: quay.io/coreos/prometheus-operator:v0.17.0
+#                     name: prometheus-operator
+#                     ports:
+#                       - containerPort: 8080
+#                         name: http
+#                         resources:
+#                           limits:
+#                             cpu: 200m
+#                             memory: 100Mi
+#                             requests:
+#                               cpu: 100m
+#                               memory: 50Mi
+#                               securityContext:
+#                                 runAsNonRoot: true
+#                                 runAsUser: 65534
+#                                 serviceAccountName: prometheus-operator
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: infra
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      terminationGracePeriodSeconds: 30
+      containers:
+      # - image: quay.io/coreos/prometheus-operator:v0.17.0
+      - image: prom/prometheus:v2.4.0
+        imagePullPolicy: Always
+        name: prometheus
+        args:
+          # TODO(adam): Just deploy prom operator and copy config
+          # - --kubelet-service=kube-system/kubelet
+          # - --config-reloader-image=quay.io/coreos/configmap-reload:v0.0.1
+          #
+          - --config.file=/opt/prometheus/prometheus.yml
+          - --storage.tsdb.path=/prometheus
+          - --web.console.libraries=/usr/share/prometheus/console_libraries
+          - --web.console.templates=/usr/share/prometheus/consoles
+          - --web.external-url=https://infra.moov.io/prometheus/
+        volumeMounts:
+          - name: prometheus-config
+            mountPath: /opt/prometheus/
+          - name: prometheus-data
+            mountPath: /data/prometheus
+        ports:
+          - containerPort: 9090
+            name: http
+            protocol: TCP
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+            items:
+              - key: prometheus.yml
+                path: prometheus.yml
+        - name: prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-data
+      restartPolicy: Always
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+  - apiGroups:
+      - extensions
+    resources:
+      - thirdpartyresources
+    verbs:
+      - "*"
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - "*"
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - alertmanagers
+      - prometheuses
+      - prometheuses/finalizers
+      - servicemonitors
+    verbs:
+      - "*"
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources:
+      - configmaps
+      - secrets
+    verbs: ["*"]
+  - apiGroups: [""]
+    resources:
+      - pods
+    verbs: ["get", "list", "delete", "watch"]
+  - apiGroups: [""]
+    resources:
+      - services
+      - endpoints
+    verbs: ["get", "create", "update"]
+  - apiGroups: [""]
+    resources:
+      - nodes
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - namespaces
+    verbs: ["list"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: infra
+
+---
