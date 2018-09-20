@@ -68,7 +68,10 @@ spec:
         name: auth
         ports:
           - containerPort: 8080
-            name: htp
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
             protocol: TCP
       restartPolicy: Always
       # serviceAccount: auth

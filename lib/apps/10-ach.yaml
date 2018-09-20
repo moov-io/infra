@@ -70,6 +70,9 @@ spec:
           - containerPort: 8080
             name: htp
             protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
       restartPolicy: Always
       # serviceAccount: ach
       # serviceAccountName: ach
