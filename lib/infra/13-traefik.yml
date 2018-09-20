@@ -6,7 +6,7 @@ metadata:
   namespace: infra
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/rule-type: PathPrefix
+    traefik.frontend.rule.type: PathPrefix
     ingress.kubernetes.io/content-type-nosniff: "true"
     ingress.kubernetes.io/force-hsts: "true"
     ingress.kubernetes.io/hsts-max-age: "315360000"
