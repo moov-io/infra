@@ -46,7 +46,7 @@ spec:
               serviceName: oauth2-proxy
               servicePort: 4180
               # serviceName: grafana
-              # servicePort: 9090
+              # servicePort: 3000
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -59,6 +59,53 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: infra
+data:
+  nginx.conf: |
+    daemon off;
+    worker_processes  1;
+    error_log  /var/log/nginx/error.log warn;
+    # error_log /dev/stdout warn;
+    pid       /var/run/nginx.pid;
+    events {
+      worker_connections  1024;
+    }
+    http {
+      include       /etc/nginx/mime.types;
+      default_type  application/octet-stream;
+      log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+      '$status $body_bytes_sent "$http_referer" '
+      '"$http_user_agent" "$http_x_forwarded_for"';
+
+      access_log  /var/log/nginx/access.log  main;
+      # access_log /dev/stdout main;
+      sendfile        on;
+      #tcp_nopush     on;
+      keepalive_timeout 65;
+      gzip  on;
+      include /opt/nginx/conf.d/*.conf;
+    }
+  default.conf: |
+    server {
+      listen 9090;
+      root /usr/share/nginx/www;
+      index index.html index.htm;
+      location /grafana/ {
+        proxy_pass http://localhost:3000/;
+      }
+    }
+  # metrics is for prometheus metrics scraping
+  # (avoid error logs)
+  metrics: |
+    # no content
+  index.html: |
+    nginx - grafana
 
 ---
 apiVersion: extensions/v1beta1
@@ -80,11 +127,25 @@ spec:
     spec:
       serviceAccountName: grafana
       terminationGracePeriodSeconds: 30
-      # Thanks - https://github.com/grafana/grafana/issues/13187
-      securityContext:
-        runAsUser: 472
-        fsGroup: 472
       containers:
+      - image: nginx:1.15
+        imagePullPolicy: Always
+        name: nginx
+        args:
+          - nginx
+          - -c
+          - /opt/nginx/nginx.conf
+        volumeMounts:
+          - name: nginx-conf
+            mountPath: /opt/nginx/
+          - name: nginx-temp
+            mountPath: /var/cache/nginx/
+          - name: nginx-www
+            mountPath: /usr/share/nginx/www/
+        ports:
+          - containerPort: 9090
+            name: http
+            protocol: TCP
       - image: grafana/grafana:master # 5.3.0-beta1 # 5.2.4
         imagePullPolicy: Always
         name: grafana
@@ -92,7 +153,7 @@ spec:
           - name: GF_PATHS_DATA
             value: /opt/grafana/
           - name: GF_SERVER_HTTP_PORT
-            value: "9090"
+            value: "3000"
           - name: GF_SERVER_PROTOCOL
             value: http
           - name: GF_SERVER_DOMAIN
@@ -155,13 +216,34 @@ spec:
           - name: grafana-data
             mountPath: /opt/grafana/
         ports:
-          - containerPort: 9090
+          - containerPort: 3000
             name: http
             protocol: TCP
+        securityContext:
+          # From https://github.com/grafana/grafana/issues/13187
+          runAsUser: 472
       volumes:
         - name: grafana-data
           persistentVolumeClaim:
             claimName: grafana-data
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+              - key: default.conf
+                path: conf.d/default.conf
+        - name: nginx-temp
+          emptyDir: {}
+        - name: nginx-www
+          configMap:
+            name: nginx-conf
+            items:
+              - key: metrics
+                path: metrics
+              - key: index.html
+                path: index.html
       restartPolicy: Always
 
 ---
