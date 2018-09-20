@@ -1,0 +1,167 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: grafana
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana
+  namespace: infra
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: infra
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: infra.moov.io
+      http:
+        paths:
+          - path: /grafana
+            backend:
+              serviceName: oauth2-proxy
+              servicePort: 4180
+              # serviceName: grafana
+              # servicePort: 9090
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+  namespace: infra
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: infra
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      serviceAccountName: grafana
+      terminationGracePeriodSeconds: 30
+      # Thanks - https://github.com/grafana/grafana/issues/13187
+      securityContext:
+        runAsUser: 472
+        fsGroup: 472
+      containers:
+      - image: grafana/grafana:master # 5.3.0-beta1 # 5.2.4
+        imagePullPolicy: Always
+        name: grafana
+        env:
+          - name: GF_PATHS_DATA
+            value: /opt/grafana/
+          - name: GF_SERVER_HTTP_PORT
+            value: "9090"
+          - name: GF_SERVER_PROTOCOL
+            value: http
+          - name: GF_SERVER_DOMAIN
+            value: infra.moov.io
+          # - name: GF_SERVER_ENFORCE_DOMAIN
+          #   value: "true"
+          - name: GF_SERVER_ROOT_URL
+            # value: '%(protocol)s://%(domain)s:/grafana/'
+            value: https://infra.moov.io/grafana/
+          - name: GF_SREVER_ROUTER_LOGGING
+            value: "true"
+          - name: GF_DATABASE_TYPE
+            value: sqlite3
+          - name: GF_DATABASE_PATH
+            value: /opt/grafana/grafana.db
+          - name: GF_AUTH_BASIC_ENABLED
+            value: "false"
+          - name: GF_AUTH_DISABLE_LOGIN_FORM
+            value: "true"
+          - name: GF_AUTH_DISABLE_SIGNOUT_MENU
+            value: "true"
+          - name: GF_AUTH_ANONYMOUS_ENABLED
+            value: "true" # remember, security@moov.io
+          # - name: GF_AUTH_ANONYMOUS_ORG_NAME
+          #   value: moov
+          - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+            value: Admin
+          - name: GF_USERS_ALLOW_SIGN_UP
+            value: "false"
+          - name: GF_USERS_ALLOW_ORG_CREATE
+            value: "false"
+          - name: GF_USERS_AUTO_ASSIGN_ORG
+            value: "true"
+          - name: GF_USERS_AUTO_ASSIGN_ORG_ROLE
+            value: "true"
+          - name: GF_LOG_MODE
+            value: console
+          - name: GF_LOG_LEVEL
+            value: debug
+          - name: GF_METRICS_ENABLED
+            value: "true"
+          - name: GF_ALERTING_ENABLED
+            value: "false"
+          - name: GF_SECURITY_ADMIN_USER
+            valueFrom:
+              secretKeyRef:
+                name: grafana-secrets
+                key: admin_user
+          - name: GF_SECURITY_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: grafana-secrets
+                key: admin_password
+          - name: GF_SECURITY_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: grafana-secrets
+                key: secret_key
+        volumeMounts:
+          - name: grafana-data
+            mountPath: /opt/grafana/
+        ports:
+          - containerPort: 9090
+            name: http
+            protocol: TCP
+      volumes:
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: grafana-data
+      restartPolicy: Always
+
+---
