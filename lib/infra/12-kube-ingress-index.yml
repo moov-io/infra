@@ -55,7 +55,7 @@ metadata:
   labels:
     app: kube-ingress-index
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: kube-ingress-index
