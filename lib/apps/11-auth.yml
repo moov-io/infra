@@ -63,7 +63,7 @@ spec:
         app: auth
     spec:
       containers:
-      - image: moov/auth:v0.1.0-dev
+      - image: moov/auth:v0.1.1-dev
         imagePullPolicy: Always
         name: auth
         ports:
