@@ -89,34 +89,7 @@ data:
         static_configs:
           - targets:
               # - http://prometheus.infra.svc.cluster.local:9090/metrics
-      # Scrape nodes
-      - job_name: 'kubernetes-nodes'
-        scheme: http
-        kubernetes_sd_configs:
-          - role: node
-        relabel_configs:
-          - action: labelmap
-            regex: __meta_kubernetes_node_label_(.+)
-          - target_label: __address__
-            replacement: kubernetes.default.svc:443
-          - source_labels: [__meta_kubernetes_node_name]
-            regex: (.+)
-            target_label: __metrics_path__
-            replacement: /api/v1/nodes/${1}/proxy/metrics
-      # Scrape cadvisor
-      - job_name: 'kubernetes-cadvisor'
-        scheme: http
-        kubernetes_sd_configs:
-          - role: node
-        relabel_configs:
-          - action: labelmap
-            regex: __meta_kubernetes_node_label_(.+)
-          - target_label: __address__
-            replacement: kubernetes.default.svc:443
-          - source_labels: [__meta_kubernetes_node_name]
-            regex: (.+)
-            target_label: __metrics_path__
-            replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+      # Scrape pods
       - job_name: 'kubernetes-pods'
         kubernetes_sd_configs:
           - role: pod
@@ -129,41 +102,8 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
-
----
-# apiVersion: extensions/v1beta1
-# kind: Deployment
-# metadata:
-#   labels:
-#     k8s-app: prometheus-operator
-#     name: prometheus-operator
-#     spec:
-#       replicas: 1
-#       template:
-#         metadata:
-#           labels:
-#             k8s-app: prometheus-operator
-#             spec:
-#               containers:
-#                 - args:
-#                     - --kubelet-service=kube-system/kubelet
-#                     - --config-reloader-image=quay.io/coreos/configmap-reload:v0.0.1
-#                     image: quay.io/coreos/prometheus-operator:v0.17.0
-#                     name: prometheus-operator
-#                     ports:
-#                       - containerPort: 8080
-#                         name: http
-#                         resources:
-#                           limits:
-#                             cpu: 200m
-#                             memory: 100Mi
-#                             requests:
-#                               cpu: 100m
-#                               memory: 50Mi
-#                               securityContext:
-#                                 runAsNonRoot: true
-#                                 runAsUser: 65534
-#                                 serviceAccountName: prometheus-operator
+          - action: labeldrop
+            regex: '(pod_template_hash)'
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
