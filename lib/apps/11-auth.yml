@@ -45,7 +45,7 @@ spec:
               servicePort: 8080
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth
@@ -54,6 +54,10 @@ metadata:
     app: auth
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: auth
@@ -79,8 +83,25 @@ spec:
           - containerPort: 9090
             name: metrics
             protocol: TCP
+        resources:
+          limits:
+            cpu: 0.1
+            memory: 25Mi
+          requests:
+            cpu: 0.1
+            memory: 10Mi
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
       restartPolicy: Always
-      # serviceAccount: auth
-      # serviceAccountName: auth
 
 ---
