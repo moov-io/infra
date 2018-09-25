@@ -64,6 +64,10 @@ spec:
       labels:
         app: kube-ingress-index
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
       serviceAccountName: kube-ingress-index
       terminationGracePeriodSeconds: 30
       containers:
