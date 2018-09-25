@@ -18,13 +18,7 @@ variable "username" {}
 variable "password" {}
 
 variable "primary_pool_node_count" {
-  default = 0
-}
-variable "secondary_pool_node_count" {
-  default = 0
-}
-variable "secondary_pool_count" {
-  default = 0
+  default = 3
 }
 
 variable "node_disk_size_gb" {
@@ -50,9 +44,6 @@ locals {
   # random_shuffle.zones returns with one of the original zones removed,
   # which becomes our primary zone.
   primary_gcp_zone = "${element(random_shuffle.zones.result, 0)}"
-
-  # secondary_gcp_zones is a list of var.gcp_zones, but with the primary removed.
-  secondary_gcp_zones = "${compact(split(",", replace(join(",", random_shuffle.zones.result), "${local.primary_gcp_zone}", "")))}"
 }
 
 
@@ -75,6 +66,10 @@ resource "google_container_cluster" "primary" {
     password = "${var.password}"
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   node_config {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
@@ -95,30 +90,7 @@ resource "google_container_node_pool" "primary" {
   zone       = "${local.primary_gcp_zone}"
   cluster    = "${google_container_cluster.primary.name}"
 
-  node_count = "${max(0, var.primary_pool_node_count - 1)}"
-  node_config {
-    disk_size_gb = "${var.node_disk_size_gb}"
-    disk_type    = "${var.node_disk_type}"
-    machine_type = "${var.node_machine_type}"
-    preemptible  = "${var.node_preemptible}"
-
-    oauth_scopes = [
-      "compute-rw",
-      "storage-ro",
-      "logging-write",
-      "monitoring",
-    ]
-  }
-}
-
-resource "google_container_node_pool" "secondary" {
-  name    = "${var.cluster_name}-secondary-nodes"
-  cluster = "${google_container_cluster.primary.name}"
-
-  count = "${var.secondary_pool_count}"
-  zone  = "${element(local.secondary_gcp_zones, count.index)}"
-
-  node_count = "${var.secondary_pool_node_count}"
+  node_count = "${max(1, var.primary_pool_node_count - 1)}"
   node_config {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"

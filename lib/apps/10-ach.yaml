@@ -62,6 +62,12 @@ spec:
       labels:
         app: ach
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
       containers:
       - image: moov/ach:v0.3.0-dev
         imagePullPolicy: Always

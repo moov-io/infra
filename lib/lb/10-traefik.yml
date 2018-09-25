@@ -157,7 +157,7 @@ metadata:
   namespace: lb
 spec:
   accessModes:
-    - ReadWriteOnce # mountable only to a single node
+    - ReadWriteOnce # read-write to a single node
   resources:
     requests:
       storage: 1Gi
@@ -171,7 +171,8 @@ metadata:
   labels:
     app: traefik
 spec:
-  replicas: 2
+  # TODO(adam): figure out multi-replica traefik ACME certs w/ [PVC] storage
+  # replicas: 2
   selector:
     matchLabels:
       app: traefik
@@ -180,6 +181,10 @@ spec:
       labels:
         app: traefik
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
       serviceAccountName: traefik
       terminationGracePeriodSeconds: 30
       containers:

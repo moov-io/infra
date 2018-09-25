@@ -62,6 +62,12 @@ spec:
       labels:
         app: auth
     spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
       containers:
       - image: moov/auth:v0.1.0
         imagePullPolicy: Always
