@@ -71,7 +71,7 @@ spec:
       serviceAccountName: kube-ingress-index
       terminationGracePeriodSeconds: 30
       containers:
-      - image: banno/kube-ingress-index:0.2.1
+      - image: adamdecaf/kube-ingress-index:0.2.2-dev
         imagePullPolicy: Always
         name: kube-ingress-indes
         args:
