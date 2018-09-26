@@ -1,1 +1,0 @@
-variable "env_name" {}
