@@ -79,6 +79,19 @@ spec:
           - containerPort: 9090
             name: metrics
             protocol: TCP
+        resources:
+          limits:
+            cpu: 50m
+            memory: 50m
+          requests:
+            cpu: 25m
+            memory: 25m
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
       restartPolicy: Always
       # serviceAccount: auth
       # serviceAccountName: auth
