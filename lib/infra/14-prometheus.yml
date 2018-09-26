@@ -109,7 +109,7 @@ data:
             regex: '(pod_template_hash)'
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
@@ -150,6 +150,18 @@ spec:
           - containerPort: 9090
             name: http
             protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /prometheus/status
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /prometheus/status
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 10
         securityContext:
           # TODO(adam): shouldn't need root
           # https://github.com/kubernetes/kubernetes/issues/2630
