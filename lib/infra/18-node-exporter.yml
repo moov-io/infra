@@ -59,8 +59,8 @@ spec:
             cpu: 102m
             memory: 180Mi
           requests:
-            cpu: 102m
-            memory: 180Mi
+            cpu: 0.1
+            memory: 25Mi
         volumeMounts:
         - mountPath: /host/proc
           name: proc

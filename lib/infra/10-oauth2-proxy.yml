@@ -74,6 +74,9 @@ spec:
       - image: moov/oauth2_proxy:v2.2
         imagePullPolicy: Always
         name: oauth2-proxy
+        resources:
+          requests:
+            memory: 20Mi
         env:
           - name: OAUTH2_PROXY_CLIENT_ID
             valueFrom:

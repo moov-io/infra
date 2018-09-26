@@ -22,7 +22,7 @@ spec:
         image: k8s.gcr.io/cadvisor:v0.30.2
         resources:
           requests:
-            memory: 200Mi
+            memory: 150Mi
             cpu: 150m
           limits:
             cpu: 300m
