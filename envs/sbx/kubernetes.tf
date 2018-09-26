@@ -40,13 +40,6 @@ variable "min_master_version" {
   default = "1.10.7-gke.1"
 }
 
-locals {
-  # random_shuffle.zones returns with one of the original zones removed,
-  # which becomes our primary zone.
-  primary_gcp_zone = "${element(random_shuffle.zones.result, 0)}"
-}
-
-
 # Setup for a GCP kubernetes cluster.
 resource "google_container_cluster" "primary" {
   name               = "${var.cluster_name}"
@@ -54,6 +47,11 @@ resource "google_container_cluster" "primary" {
   initial_node_count = 1
 
   min_master_version = "${var.min_master_version}"
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy = true
+  }
 
   maintenance_policy {
     daily_maintenance_window {
@@ -64,10 +62,6 @@ resource "google_container_cluster" "primary" {
   master_auth {
     username = "${var.username}"
     password = "${var.password}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 
   node_config {
@@ -89,6 +83,10 @@ resource "google_container_node_pool" "primary" {
   name       = "${var.cluster_name}-primary-nodes"
   zone       = "${local.primary_gcp_zone}"
   cluster    = "${google_container_cluster.primary.name}"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 
   node_count = "${max(1, var.primary_pool_node_count - 1)}"
   node_config {

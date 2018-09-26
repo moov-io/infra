@@ -2,6 +2,10 @@ resource "google_dns_managed_zone" "moov-io" {
   name        = "moov-io"
   dns_name    = "moov.io."
   description = "moov.io root zone"
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 // pro tip: 'host -a moov.io' lists all records

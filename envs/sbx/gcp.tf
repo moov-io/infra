@@ -5,6 +5,36 @@ provider "google" {
   region      = "${var.gcp_region}"
 }
 
+resource "google_project" "ach" {
+  name = "automated clearing house"
+  project_id = "${var.gcp_project}"
+  org_id     = "513355466794"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+# Enable all our needed Google API's
+resource "google_project_services" "ach" {
+  project  = "${var.gcp_project}"
+  services = [
+    "bigquery-json.googleapis.com",
+    "cloudkms.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "containerregistry.googleapis.com",
+    "dns.googleapis.com",
+    "iam.googleapis.com",
+    "iap.googleapis.com",
+    "oslogin.googleapis.com",
+    "pubsub.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage-api.googleapis.com",
+  ]
+}
+
 variable "gcp_creds_filepath" {
   default     = "~/.google/credentials.json"
   description = "Local filepath for Google Cloud credentials"
@@ -29,8 +59,25 @@ variable "gcp_zones" {
   ]
 }
 
+data "google_storage_project_service_account" "gcs_account" {}
+
+locals {
+  project_service_account_email = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
+  project_service_account_emails = "${list(local.project_service_account_email)}"
+}
+
 resource "random_shuffle" "zones" {
   input = ["${var.gcp_zones}"]
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+locals {
+  # random_shuffle.zones returns with one of the original zones removed,
+  # which becomes our primary zone.
+  primary_gcp_zone = "${element(random_shuffle.zones.result, 0)}"
 }
 
 // ClusterRole on GKE/K8S 1.6+ (with RBAC) won't let you create roles right away.
@@ -55,7 +102,10 @@ resource "null_resource" "rbac_setup" {
 variable "cluster_admins" {
   default = [
     "adam@moov.io",
+    # "wade@moov.io",
   ]
+}
 
-  # "wade@moov.io"
+locals {
+  gcp_cluster_admin_emails = "${formatlist("user:%s", var.cluster_admins)}",
 }
