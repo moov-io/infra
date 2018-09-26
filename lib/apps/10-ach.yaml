@@ -69,7 +69,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/ach:v0.3.0-dev
+      - image: moov/ach:v0.3.0
         imagePullPolicy: Always
         name: ach
         ports:
