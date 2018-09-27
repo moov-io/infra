@@ -32,7 +32,7 @@ metadata:
     ingress.kubernetes.io/hsts-max-age: "315360000"
     ingress.kubernetes.io/hsts-include-subdomains: "true"
     ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-host: "api.moov.io"
     ingress.kubernetes.io/ssl-force-host: "true"
 spec:
   rules:
