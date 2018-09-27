@@ -10,3 +10,7 @@ terraform.tfstate.backup*
 envs/*/client.crt
 envs/*/client.key
 envs/*/ca.crt
+/keyrings/live/pubring.gpg~
+/keyrings/live/pubring.kbx~
+/keyrings/live/secring.gpg
+/envs/sbx/infra/11-secrets.yml

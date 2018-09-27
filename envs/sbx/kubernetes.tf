@@ -17,8 +17,11 @@ variable "cluster_name" {
 variable "username" {}
 variable "password" {}
 
-variable "primary_pool_node_count" {
-  default = 3
+variable "permanent_pool_node_count" {
+  default = 0
+}
+variable "preemptible_pool_node_count" {
+  default = 2
 }
 
 variable "node_disk_size_gb" {
@@ -32,20 +35,9 @@ variable "node_machine_type" {
   default = "g1-small"
 }
 
-variable "node_preemptible" {
-  default = true
-}
-
 variable "min_master_version" {
   default = "1.10.7-gke.1"
 }
-
-locals {
-  # random_shuffle.zones returns with one of the original zones removed,
-  # which becomes our primary zone.
-  primary_gcp_zone = "${element(random_shuffle.zones.result, 0)}"
-}
-
 
 # Setup for a GCP kubernetes cluster.
 resource "google_container_cluster" "primary" {
@@ -54,6 +46,11 @@ resource "google_container_cluster" "primary" {
   initial_node_count = 1
 
   min_master_version = "${var.min_master_version}"
+
+  lifecycle {
+    create_before_destroy = true
+    prevent_destroy = true
+  }
 
   maintenance_policy {
     daily_maintenance_window {
@@ -66,15 +63,11 @@ resource "google_container_cluster" "primary" {
     password = "${var.password}"
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   node_config {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
     machine_type = "${var.node_machine_type}"
-    preemptible  = "${var.node_preemptible}"
+    preemptible  = true
 
     oauth_scopes = [
       "compute-rw",
@@ -85,17 +78,46 @@ resource "google_container_cluster" "primary" {
   }
 }
 
-resource "google_container_node_pool" "primary" {
-  name       = "${var.cluster_name}-primary-nodes"
+resource "google_container_node_pool" "permanent" {
+  name       = "${var.cluster_name}-permanent-nodes"
   zone       = "${local.primary_gcp_zone}"
   cluster    = "${google_container_cluster.primary.name}"
 
-  node_count = "${max(1, var.primary_pool_node_count - 1)}"
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  node_count = "${var.permanent_pool_node_count}"
   node_config {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
     machine_type = "${var.node_machine_type}"
-    preemptible  = "${var.node_preemptible}"
+    preemptible  = "false"
+
+    oauth_scopes = [
+      "compute-rw",
+      "storage-ro",
+      "logging-write",
+      "monitoring",
+    ]
+  }
+}
+
+resource "google_container_node_pool" "preemptible" {
+  name       = "${var.cluster_name}-preemptible-nodes"
+  zone       = "${local.primary_gcp_zone}"
+  cluster    = "${google_container_cluster.primary.name}"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  node_count = "${var.preemptible_pool_node_count}"
+  node_config {
+    disk_size_gb = "${var.node_disk_size_gb}"
+    disk_type    = "${var.node_disk_type}"
+    machine_type = "${var.node_machine_type}"
+    preemptible  = "true"
 
     oauth_scopes = [
       "compute-rw",

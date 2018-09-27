@@ -1,0 +1,3 @@
+[submodule "lib/blackbox"]
+	path = lib/blackbox
+	url = https://github.com/StackExchange/blackbox.git
