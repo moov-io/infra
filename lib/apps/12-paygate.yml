@@ -27,6 +27,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.frontend.rule.type: PathPrefixStrip
+    ingress.kubernetes.io/auth-type: forward
+    ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/users/login
+    ingress.kubernetes.io/auth-response-headers: X-User-Id
     ingress.kubernetes.io/content-type-nosniff: "true"
     ingress.kubernetes.io/force-hsts: "true"
     ingress.kubernetes.io/hsts-max-age: "315360000"
@@ -73,7 +76,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/paygate:v0.1.0-dev
+      - image: moov/paygate:v0.1.0-dev2018092701
         imagePullPolicy: Always
         name: paygate
         ports:
