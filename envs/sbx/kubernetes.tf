@@ -17,8 +17,11 @@ variable "cluster_name" {
 variable "username" {}
 variable "password" {}
 
-variable "primary_pool_node_count" {
-  default = 3
+variable "permanent_pool_node_count" {
+  default = 0
+}
+variable "preemptible_pool_node_count" {
+  default = 2
 }
 
 variable "node_disk_size_gb" {
@@ -30,10 +33,6 @@ variable "node_disk_type" {
 
 variable "node_machine_type" {
   default = "g1-small"
-}
-
-variable "node_preemptible" {
-  default = true
 }
 
 variable "min_master_version" {
@@ -68,7 +67,7 @@ resource "google_container_cluster" "primary" {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
     machine_type = "${var.node_machine_type}"
-    preemptible  = "${var.node_preemptible}"
+    preemptible  = true
 
     oauth_scopes = [
       "compute-rw",
@@ -79,8 +78,8 @@ resource "google_container_cluster" "primary" {
   }
 }
 
-resource "google_container_node_pool" "primary" {
-  name       = "${var.cluster_name}-primary-nodes"
+resource "google_container_node_pool" "permanent" {
+  name       = "${var.cluster_name}-permanent-nodes"
   zone       = "${local.primary_gcp_zone}"
   cluster    = "${google_container_cluster.primary.name}"
 
@@ -88,12 +87,37 @@ resource "google_container_node_pool" "primary" {
     prevent_destroy = true
   }
 
-  node_count = "${max(1, var.primary_pool_node_count - 1)}"
+  node_count = "${var.permanent_pool_node_count}"
   node_config {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
     machine_type = "${var.node_machine_type}"
-    preemptible  = "${var.node_preemptible}"
+    preemptible  = "false"
+
+    oauth_scopes = [
+      "compute-rw",
+      "storage-ro",
+      "logging-write",
+      "monitoring",
+    ]
+  }
+}
+
+resource "google_container_node_pool" "preemptible" {
+  name       = "${var.cluster_name}-preemptible-nodes"
+  zone       = "${local.primary_gcp_zone}"
+  cluster    = "${google_container_cluster.primary.name}"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  node_count = "${var.preemptible_pool_node_count}"
+  node_config {
+    disk_size_gb = "${var.node_disk_size_gb}"
+    disk_type    = "${var.node_disk_type}"
+    machine_type = "${var.node_machine_type}"
+    preemptible  = "true"
 
     oauth_scopes = [
       "compute-rw",
