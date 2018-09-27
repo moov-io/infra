@@ -109,7 +109,7 @@ data:
             regex: '(pod_template_hash)'
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
@@ -128,6 +128,12 @@ spec:
     spec:
       serviceAccountName: prometheus
       terminationGracePeriodSeconds: 30
+      # TODO(adam): enable this once we run non pre-emptible nodes
+      # tolerations:
+      #   - key: cloud.google.com/gke-preemptible
+      #     operator: Equal
+      #     value: "true"
+      #     effect: NoSchedule
       containers:
       - image: prom/prometheus:v2.4.0
         imagePullPolicy: Always
