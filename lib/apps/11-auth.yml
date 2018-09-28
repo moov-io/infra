@@ -45,6 +45,19 @@ spec:
               servicePort: 8080
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: auth-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,12 +79,16 @@ spec:
       labels:
         app: auth
     spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-              weight: 1
+      # TODO(adam): enable this once we run non pre-emptible nodes
+      # tolerations:
+      #   - key: cloud.google.com/gke-preemptible
+      #     operator: Equal
+      #     value: "true"
+      #     effect: NoSchedule
+      volumes:
+        - name: auth-data
+          persistentVolumeClaim:
+            claimName: auth-data
       containers:
       - image: moov/auth:v0.3.0-dev2018092701
         imagePullPolicy: Always
@@ -83,6 +100,18 @@ spec:
           - containerPort: 9090
             name: metrics
             protocol: TCP
+        volumeMounts:
+          - name: auth-data
+            mountPath: /opt/moov/auth
+        env:
+          - name: DOMAIN
+            value: api.moov.io
+          - name: OAUTH2_CLIENTS_DB_PATH
+            value: /opt/moov/auth/oauth2_clients.db
+          - name: OAUTH2_TOKENS_DB_PATH
+            value: /opt/moov/auth/oauth2_tokens.db
+          - name: SQLITE_DB_PATH
+            value: /opt/moov/auth/auth.db
         resources:
           limits:
             cpu: 0.1
