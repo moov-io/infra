@@ -75,4 +75,6 @@ terraform {
     credentials = "~/.google/credentials.json"
     # encryption_key = ""
   }
+
+  version = "> 0.11"
 }
