@@ -59,6 +59,8 @@ variable "gcp_zones" {
   ]
 }
 
+// All projects have this (default storage service account)
+// We need to add a policy to the bucket created.
 data "google_storage_project_service_account" "gcs_account" {}
 
 locals {

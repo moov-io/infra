@@ -1,17 +1,16 @@
 ## Google Cloud setup
 
+We currently deploy moov.io services on [Google Cloud Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/) (GKE) which allows us to deploy on Kubernetes.
 
-1. Create credentials
-  https://www.terraform.io/docs/providers/google/index.html#configuration-reference
-1. Save to laptop
-  1. I saved at `~/.google/credentials.json`
-  1. `chmod 400 ~/.google/credentials.json`
+Links: [GKE Dashboard](https://console.cloud.google.com/kubernetes/list)
 
-gcloud cli
-https://cloud.google.com/sdk/docs/quickstart-linux
-https://cloud.google.com/sdk/docs/quickstart-macos
-^ still requires python 2.7
+### Credentials
 
-Grab kubectl configs
-https://console.cloud.google.com/kubernetes/list
- Click "Connect" -> "Command-line access"
+1. Download your [Google Cloud credentials file](https://console.cloud.google.com/apis/credentials/serviceaccountkey) (JSON format)
+1. Save this file in `~/.google/credentials.json` according to [Terraform's Google Cloud guide](https://www.terraform.io/docs/providers/google/index.html#configuration-reference)
+  1. Prevent other users reading this file: `chmod 400 ~/.google/credentials.json`
+1. [Optional] Install gcloud cli
+   - Quick start: [Linux](https://cloud.google.com/sdk/docs/quickstart-linux) | [macOS](https://cloud.google.com/sdk/docs/quickstart-macos)
+   - Requires Python 2.7
+1. Download your [`kubectl` config](https://console.cloud.google.com/kubernetes/list)
+   - Click "Connect" -> "Command-line access"

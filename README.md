@@ -2,9 +2,39 @@
 
 This repository holds the configurion for [moov.io](https://github.com/moov-io)'s infrastructure. If you find a problem (security or otherwise), please contact us at [`security@moov.io`](mailto:security@moov.io).
 
-### Assumptions / Project Goals
+[![Build Status](https://travis-ci.com/moov-io/infra.svg?branch=master)](https://travis-ci.com/moov-io/infra)
+[![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/infra/master/LICENSE)
+
+Links: [Grafana](https://infra.moov.io/grafana/) | [Prometheus](https://infra.moov.io/prometheus/) | [Traefik](https://infra.moov.io/traefik/dashboard/)
+
+### Project Goals
+
+This project aims to be the structure and runtime for a fully automated hosting of moov.io services.
 
 ### Getting started
+
+To get started working on this project, pull down (`git clone git@github.com:moov-io/infra`) the source code and setup some configs.
+
+You'll need to have the following tools setup as well:
+
+- Terraform | [Download](https://www.terraform.io/downloads.html) | [Intro](https://www.terraform.io/intro/index.html)
+- kubectl | [Download](https://kubernetes.io/docs/tasks/tools/install-kubectl/) | [Intro](https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes)
+- [Blackbox](https://github.com/StackExchange/blackbox#blackbox-) (Installed at `lib/blackbox`)
+
+The project has the following directories:
+
+- [`docs/`](https://github.com/moov-io/infra/tree/master/docs) - Human readable documentation.
+- `envs/`
+  - [`envs/sbx/`](https://github.com/moov-io/infra/tree/master/envs/sbx) - Our production (and only) environment currently.
+- [`images/`](https://github.com/moov-io/infra/tree/master/images) - Docker images we create and manage
+- [`lib/`](https://github.com/moov-io/infra/tree/master/lib) - Shared (Kubernetes) resources across environments
+
+### Runbooks
+
+- [Google Cloud (GKE)](docs/google-cloud.md)
+- [In-repo Secrets (Blackbox)](docs/secrets.md)
+- [Kubernetes](docs/kubernetes.md)
+- [Load balancing / Routing (Traefik)](docs/traefik.md)
 
 ### Getting Help
 
