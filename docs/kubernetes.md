@@ -1,8 +1,14 @@
 ## Kubernetes Runbooks
 
-You should be [familiar with Kubernetes](https://kubernetes.io/docs/tutorials/kubernetes-basics/). We use lots of `Service`, `Deployment`, `Ingress` and `PersistentVolumeClaim` objects along with a few others where needed.
+You should be [familiar with Kubernetes](https://kubernetes.io/docs/tutorials/kubernetes-basics/) (k8s). We use lots of `Service`, `Deployment`, `Ingress` and `PersistentVolumeClaim` objects along with a few others where needed.
 
 Our clusters run with [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+
+There are also several gommunity guides for troubleshooting Kubernetes problems
+
+- [Kubernetes.io Guide](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
+- [Cloud.gov Guide](https://cloud.gov/docs/ops/runbook/troubleshooting-kubernetes/)
+- [Codefresh.io Guide](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)
 
 ### Viewing Pod/Container logs
 
