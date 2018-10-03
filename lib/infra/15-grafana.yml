@@ -147,16 +147,20 @@ spec:
             name: http
             protocol: TCP
         resources:
+          limits:
+            cpu: 0.1
+            memory: 25Mi
           requests:
             memory: 25Mi
-            cpu: 0.1
       - image: grafana/grafana:master # 5.3.0-beta1 # 5.2.4
         imagePullPolicy: Always
         name: grafana
         resources:
+          limits:
+            cpu: 0.1
+            memory: 50Mi
           requests:
             memory: 50Mi
-            cpu: 0.1
         env:
           - name: GF_PATHS_DATA
             value: /opt/grafana/
