@@ -39,9 +39,9 @@ uid                  Adam Shannon (moov.io) <adam@moov.io>
 sub   4096R/CBA93839 2018-09-26
 
 $ ./blackbox/bin/blackbox_addadmin 700D183B
-gpg: keyring `/home/adam/code/src/github.com/moov-io/secrets/keyrings/live/secring.gpg' created
-gpg: keyring `/home/adam/code/src/github.com/moov-io/secrets/keyrings/live/pubring.gpg' created
-gpg: /home/adam/code/src/github.com/moov-io/secrets/keyrings/live/trustdb.gpg: trustdb created
+gpg: keyring `/home/adam/code/src/github.com/moov-io/infra/keyrings/live/secring.gpg' created
+gpg: keyring `/home/adam/code/src/github.com/moov-io/infra/keyrings/live/pubring.gpg' created
+gpg: /home/adam/code/src/github.com/moov-io/infra/keyrings/live/trustdb.gpg: trustdb created
 gpg: key 700D183B: public key "Adam Shannon (moov.io) <adam@moov.io>" imported
 gpg: Total number processed: 1
 gpg:               imported: 1  (RSA: 1)
