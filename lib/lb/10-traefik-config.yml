@@ -1,0 +1,105 @@
+# TODO(adam): notes from docs
+# - store certs in kv? (Why not k8s Secret?)
+#   - https://docs.traefik.io/configuration/acme/#as-a-key-value-store-entry
+# - https://docs.traefik.io/configuration/commons/#custom-error-pages
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+  namespace: lb
+data:
+  traefik.toml: |
+      defaultEntryPoints = ["http","https"]
+      # logging
+      logLevel = "INFO"
+      [file]
+      watch = true
+      [traefikLog]
+      # filePath = "/path/to/traefik.log"
+      # format   = "json"
+      [accessLog]
+      # filePath = "/path/to/access.log"
+      # format   = "json
+      [entryPoints]
+      [entryPoints.http]
+      address = ":80"
+      compress = true
+      [entryPoints.http.redirect]
+      entryPoint = "https"
+      [entryPoints.https]
+      address = ":443"
+      compress = true
+      [entryPoints.https.tls]
+      minVersion = "VersionTLS12"
+      snistrict = true
+      [entryPoints.traefik]
+      address = ":8081"
+      # Enable /ping
+      [ping]
+      entryPoint = "https"
+      # Enable api / dashboard
+      [api]
+      dashboard = true
+      # Let's Encrypt setup
+      [acme]
+      email = "security@moov.io"
+      storage = "/opt/traefik/letsencrypt.json"
+      entryPoint = "https"
+      onDemand = true
+      onHostRule = true
+      # caServer = "https://acme-staging.api.letsencrypt.org/directory"
+      caServer = "https://acme-v02.api.letsencrypt.org/directory"
+      KeyType = "EC384"
+      acmeLogging = true
+      [acme.tlsChallenge]
+      entryPoint = "http"
+      # TODO(adam): why does disabling this fix acme error
+      # (I think traefik/LE are mis-matched on domains per-challenge.)
+      # [[acme.domains]]
+      # main = "api.moov.io"
+      # sans = ["infra.moov.io"]
+      [kubernetes]
+      namespaces = ["apps", "infra", "lb"]
+      [metrics]
+      [metrics.prometheus]
+  nginx.conf: |
+    daemon off;
+    worker_processes  1;
+    error_log  /var/log/nginx/error.log warn;
+    # error_log /dev/stdout warn;
+    pid       /var/run/nginx.pid;
+    events {
+      worker_connections  1024;
+    }
+    http {
+      include       /etc/nginx/mime.types;
+      default_type  application/octet-stream;
+      log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+      '$status $body_bytes_sent "$http_referer" '
+      '"$http_user_agent" "$http_x_forwarded_for"';
+
+      access_log  /var/log/nginx/access.log  main;
+      # access_log /dev/stdout main;
+      sendfile        on;
+      #tcp_nopush     on;
+      keepalive_timeout 65;
+      gzip  on;
+      include /opt/nginx/conf.d/*.conf;
+    }
+  default.conf: |
+    server {
+      listen 8080;
+      root /usr/share/nginx/www;
+      index index.html index.htm;
+      location /traefik/ {
+        rewrite    /traefik/(.*) /$1 break;
+        proxy_pass http://localhost:8081/;
+      }
+    }
+  # metrics is for prometheus metrics scraping
+  # (avoid error logs)
+  metrics: |
+    # no content
+  index.html: |
+    nginx - traefik
+---
