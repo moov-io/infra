@@ -21,7 +21,7 @@ variable "permanent_pool_node_count" {
   default = 0
 }
 variable "preemptible_pool_node_count" {
-  default = 2
+  default = 3
 }
 
 variable "node_disk_size_gb" {
