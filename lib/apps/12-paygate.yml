@@ -31,7 +31,7 @@ metadata:
     traefik.ingress.kubernetes.io/redirect-replacement: /$1
     ingress.kubernetes.io/auth-type: forward
     ingress.kubernetes.io/auth-url: https://api.moov.io/v1/users/login
-    ingress.kubernetes.io/auth-response-headers: X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials
+    ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
     ingress.kubernetes.io/content-type-nosniff: "true"
     ingress.kubernetes.io/force-hsts: "true"
     ingress.kubernetes.io/hsts-max-age: "315360000"
