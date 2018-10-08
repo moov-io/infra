@@ -23,3 +23,5 @@ script:
   # Prometheus
   - promtool-configmap --version
   - promtool-configmap envs/sbx/infra/14-prometheus.yml
+  # Run infra tests
+  - make test
