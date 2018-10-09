@@ -1,9 +1,14 @@
-FROM alpine:latest as builder
-RUN apk add -U ca-certificates wget
-RUN wget -O oauth2_proxy.tar.gz https://github.com/bitly/oauth2_proxy/releases/download/v2.2/oauth2_proxy-2.2.0.linux-amd64.go1.8.1.tar.gz
-RUN tar xf oauth2_proxy.tar.gz
+FROM golang:1.11-stretch as builder
+WORKDIR /go/src/github.com/bitly/
+RUN apt-get update && apt-get install -y ca-certificates gcc g++ git make wget
+RUN git clone https://github.com/bitly/oauth2_proxy.git
+WORKDIR /go/src/github.com/bitly/oauth2_proxy
+RUN git checkout tags/v2.2 -b v2.2
+RUN git branch --set-upstream-to=origin/master v2.2
+RUN git log -n1
+RUN CGO_ENABLED=0 go get -u github.com/bitly/oauth2_proxy
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder /oauth2_proxy-*/oauth2_proxy /bin/oauth2_proxy
+COPY --from=builder /go/bin/oauth2_proxy /bin/oauth2_proxy
 ENTRYPOINT ["/bin/oauth2_proxy"]
