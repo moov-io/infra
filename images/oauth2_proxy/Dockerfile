@@ -7,8 +7,12 @@ RUN git checkout tags/v2.2 -b v2.2
 RUN git branch --set-upstream-to=origin/master v2.2
 RUN git log -n1
 RUN CGO_ENABLED=0 go get -u github.com/bitly/oauth2_proxy
+RUN adduser -q --gecos '' --disabled-login --shell /bin/false moov
+USER moov
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/bin/oauth2_proxy /bin/oauth2_proxy
+COPY --from=builder /etc/passwd /etc/passwd
+USER moov
 ENTRYPOINT ["/bin/oauth2_proxy"]
