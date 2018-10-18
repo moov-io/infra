@@ -25,3 +25,4 @@ script:
   - promtool-configmap envs/sbx/infra/14-prometheus.yml
   # Run infra tests
   - make test
+  - CGO_ENABLED=0 go test ./...
