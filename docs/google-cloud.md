@@ -12,5 +12,11 @@ Links: [GKE Dashboard](https://console.cloud.google.com/kubernetes/list)
 1. [Optional] Install gcloud cli
    - Quick start: [Linux](https://cloud.google.com/sdk/docs/quickstart-linux) | [macOS](https://cloud.google.com/sdk/docs/quickstart-macos)
    - Requires Python 2.7
+   - Install the *kubectl module* `gcloud components install kubectl`
+   - Login `gcloud auth login`
+   - Set the default project `gcloud config set project sbx`
 1. Download your [`kubectl` config](https://console.cloud.google.com/kubernetes/list)
    - Click "Connect" -> "Command-line access"
+   - You can also have terraform setup the credentials for you.
+     - First, you need `.google/credentials.json`, `envs/sbx/ca.crt`, and `envs/sbx/client.*` setup.
+   - Then `terraform taint null_resource.kubectl_setup` and `terraform apply` (verifying only that resource changes)
