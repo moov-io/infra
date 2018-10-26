@@ -1,1 +1,4 @@
+envs/sbx/ca.crt
+envs/sbx/client.crt
+envs/sbx/client.key
 envs/sbx/infra/11-secrets.yml

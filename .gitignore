@@ -7,10 +7,10 @@ terraform.tfstate.backup*
 .gcp/
 
 # secrets
-envs/*/client.crt
-envs/*/client.key
-envs/*/ca.crt
 /keyrings/live/pubring.gpg~
 /keyrings/live/pubring.kbx~
 /keyrings/live/secring.gpg
 /envs/sbx/infra/11-secrets.yml
+/envs/sbx/ca.crt
+/envs/sbx/client.crt
+/envs/sbx/client.key
