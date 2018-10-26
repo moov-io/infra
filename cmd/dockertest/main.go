@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"sync"
 )
 
@@ -31,6 +32,11 @@ var (
 
 func main() {
 	flag.Parse()
+
+	if !dockerEnabled() {
+		log.Printf("Docker is not enabled on %s, quitting...", runtime.GOOS)
+		return
+	}
 
 	parent, err := os.Getwd() // Should be root of infra repository
 	if err != nil {
@@ -56,6 +62,20 @@ func main() {
 	} else {
 		log.Println("all docker tests passed")
 	}
+}
+
+func dockerEnabled() bool {
+	out, err := exec.Command("docker", "ps").CombinedOutput()
+	if err == nil {
+		return true // worked, so we have docker
+	}
+	if err != nil || bytes.Contains(out, []byte("Cannot connect to the Docker daemon")) {
+		return false
+	}
+	// Docker creates '.dockerenv' in the FS root, so if we see that
+	// declare docker is disabled (avoid docker-in-docker)
+	_, err = os.Stat("/.dockerenv")
+	return err == nil // file must exist
 }
 
 type tester struct {
