@@ -1,3 +1,8 @@
+.PHONY: check
+check:
+	go fmt ./...
+	go vet ./...
+
 # From https://github.com/genuinetools/img
 .PHONY: AUTHORS
 AUTHORS:
@@ -8,6 +13,6 @@ AUTHORS:
 release: AUTHORS
 
 .PHONY: test
-test:
+test: check
 # Test our docker images
-	@./images/test.sh
+	@go run ./cmd/dockertest

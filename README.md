@@ -17,6 +17,7 @@ To get started working on this project, pull down (`git clone git@github.com:moo
 
 You'll need to have the following tools setup as well:
 
+- [Golang](https://golang.org/dl)
 - Terraform | [Download](https://www.terraform.io/downloads.html) | [Intro](https://www.terraform.io/intro/index.html)
 - kubectl | [Download](https://kubernetes.io/docs/tasks/tools/install-kubectl/) | [Intro](https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes)
 - [Blackbox](https://github.com/StackExchange/blackbox#blackbox-) (Installed at `./lib/blackbox/bin`, add this to `PATH`)
@@ -25,7 +26,7 @@ You'll need to have the following tools setup as well:
 On macOS these tools can be installed with the following homebrew command:
 
 ```
-$ brew install gpg2 jq make terraform
+$ brew install gpg2 jq make terraform go
 ```
 
 The project has the following directories:
