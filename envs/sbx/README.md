@@ -17,7 +17,9 @@ Make sure your [Google Cloud credentials.json is setup](../../docs/google-cloud.
 
 ### Decrypting secrets
 
-You'll need to [decrypt the files with blackbox](../../docs/secrets.md).
+You'll need to [decrypt the files with blackbox](../../docs/secrets.md). Run `blackbox_decrypt_all_files` at the root of this repository.
+
+Note: The `sbx` environment is a testing ground. Never put production secrets into this repository.
 
 ### Kubernetes Namespaces
 
