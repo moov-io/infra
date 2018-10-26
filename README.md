@@ -19,7 +19,14 @@ You'll need to have the following tools setup as well:
 
 - Terraform | [Download](https://www.terraform.io/downloads.html) | [Intro](https://www.terraform.io/intro/index.html)
 - kubectl | [Download](https://kubernetes.io/docs/tasks/tools/install-kubectl/) | [Intro](https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes)
-- [Blackbox](https://github.com/StackExchange/blackbox#blackbox-) (Installed at `lib/blackbox`)
+- [Blackbox](https://github.com/StackExchange/blackbox#blackbox-) (Installed at `./lib/blackbox/bin`, add this to `PATH`)
+- [gcloud CLI](docs/google-cloud.md)
+
+On macOS these tools can be installed with the following homebrew command:
+
+```
+$ brew install gpg2 jq make terraform
+```
 
 The project has the following directories:
 
