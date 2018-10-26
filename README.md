@@ -22,6 +22,7 @@ You'll need to have the following tools setup as well:
 - kubectl | [Download](https://kubernetes.io/docs/tasks/tools/install-kubectl/) | [Intro](https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes)
 - [Blackbox](https://github.com/StackExchange/blackbox#blackbox-) (Installed at `./lib/blackbox/bin`, add this to `PATH`)
 - [gcloud CLI](docs/google-cloud.md)
+- Docker for either [Linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/) or [macOS](https://docs.docker.com/docker-for-mac/install/).
 
 On macOS these tools can be installed with the following homebrew command:
 
@@ -36,6 +37,16 @@ The project has the following directories:
   - [`envs/sbx/`](https://github.com/moov-io/infra/tree/master/envs/sbx) - Our production (and only) environment currently.
 - [`images/`](https://github.com/moov-io/infra/tree/master/images) - Docker images we create and manage
 - [`lib/`](https://github.com/moov-io/infra/tree/master/lib) - Shared (Kubernetes) resources across environments
+
+### Testing
+
+We run several kinds of tests against this repository. Linters/validators (over Kubernetes, Terraform, Prometheus configs) as well as Docker image builds. To run all these:
+
+```
+$ make test
+```
+
+Note: To run these tests you need Docker installed.
 
 ### Runbooks
 
