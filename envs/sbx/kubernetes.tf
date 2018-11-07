@@ -20,6 +20,7 @@ variable "password" {}
 variable "permanent_pool_node_count" {
   default = 0
 }
+
 variable "preemptible_pool_node_count" {
   default = 3
 }
@@ -27,6 +28,7 @@ variable "preemptible_pool_node_count" {
 variable "node_disk_size_gb" {
   default = 25
 }
+
 variable "node_disk_type" {
   default = "pd-standard"
 }
