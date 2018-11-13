@@ -36,6 +36,16 @@ $ kubectl delete pod -n infra kube-ingress-index-5cb86955ff-rtdms
 pod "kube-ingress-index-5cb86955ff-rtdms" deleted
 ```
 
+### Node Sizing / Availability
+
+Currently our Kubernetes cluster runs on preemptible instances which can terminate themselves in under 60s. We largely do this for cost savings before having a product, but will likely run a combination of permanent and preemptible nodes going forward. It's important to remember several guidelines: ([Source](https://learnk8s.io/blog/kubernetes-spot-instances))
+
+- Have a backup plan (permanent node pool)
+- Find unpopular instance sizes
+   - If a new family comes out (i.e. m5) m4's might become cheaper and less requested.
+- Set a maximum bid price
+- Run mult-zone setups to avoid shortages in a single GCP zone
+
 ### Emacs
 
 [chrisbarrett/kubernetes-el](https://github.com/chrisbarrett/kubernetes-el) works with our setup. Talk to @adamdecaf for help.
