@@ -2,7 +2,7 @@
 
 We currently deploy moov.io services on [Google Cloud Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/) (GKE) which allows us to deploy on Kubernetes.
 
-Links: [GKE Dashboard](https://console.cloud.google.com/kubernetes/list)
+**Links**: [GKE Dashboard](https://console.cloud.google.com/kubernetes/list) | [Google Cloud Status](https://status.cloud.google.com/)
 
 ### Credentials
 

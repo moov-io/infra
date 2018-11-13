@@ -2,18 +2,15 @@
 
 You should be [familiar with Kubernetes](https://kubernetes.io/docs/tutorials/kubernetes-basics/) (k8s). We use lots of `Service`, `Deployment`, `Ingress` and `PersistentVolumeClaim` objects along with a few others where needed.
 
-Our clusters run with [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+Our clusters run with [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) on Google's Kubernetes Engine (GKE).
 
-There are also several gommunity guides for troubleshooting Kubernetes problems
+**Links**: [infra.moov.io](https://infra.moov.io) | [Google Cloud Status](https://status.cloud.google.com/) | [GKE Dashboard](https://console.cloud.google.com/kubernetes/list)
+
+There are also several gommunity guides for troubleshooting Kubernetes problems:
 
 - [Kubernetes.io Guide](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
 - [Cloud.gov Guide](https://cloud.gov/docs/ops/runbook/troubleshooting-kubernetes/)
 - [Codefresh.io Guide](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)
-
-### Handy links
-
-- [Google Kubernetes Cluster Dashboard](https://console.cloud.google.com/kubernetes/list)
-- [infra.moov.io](https://infra.moov.io)
 
 ### Viewing Pod/Container logs
 
