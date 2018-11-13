@@ -111,7 +111,7 @@ resource "google_container_node_pool" "preemptible" {
   cluster    = "${google_container_cluster.primary.name}"
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 
   node_count = "${var.preemptible_pool_node_count}"
@@ -119,7 +119,7 @@ resource "google_container_node_pool" "preemptible" {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
     machine_type = "${var.node_machine_type}"
-    preemptible  = "true"
+    preemptible  = true
 
     oauth_scopes = [
       "compute-rw",
