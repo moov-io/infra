@@ -1,4 +1,4 @@
-envs/sbx/ca.crt
-envs/sbx/client.crt
-envs/sbx/client.key
-envs/sbx/infra/11-secrets.yml
+envs/prod/ca.crt
+envs/prod/client.crt
+envs/prod/client.key
+envs/prod/infra/11-secrets.yml
