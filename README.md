@@ -2,6 +2,7 @@
 
 This repository holds the configurion for [moov.io](https://github.com/moov-io)'s infrastructure. If you find a problem (security or otherwise), please contact us at [`security@moov.io`](mailto:security@moov.io).
 
+[![GoDoc](https://godoc.org/github.com/moov-io/infra?status.svg)](https://godoc.org/github.com/moov-io/infra)
 [![Build Status](https://travis-ci.com/moov-io/infra.svg?branch=master)](https://travis-ci.com/moov-io/infra)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/infra/master/LICENSE)
 
