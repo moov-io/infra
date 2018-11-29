@@ -124,7 +124,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/paygate:v0.1.0-dev2018100101
+      - image: moov/paygate:v0.1.0-dev
         imagePullPolicy: Always
         name: paygate
         ports:
