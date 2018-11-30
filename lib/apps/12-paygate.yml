@@ -96,6 +96,19 @@ spec:
               servicePort: 8080
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paygate-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -123,10 +136,22 @@ spec:
             - podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
+      volumes:
+        - name: paygate-data
+          persistentVolumeClaim:
+            claimName: paygate-data
       containers:
-      - image: moov/paygate:v0.1.0-dev
+      - image: moov/paygate:v0.1.0-rc1
         imagePullPolicy: Always
         name: paygate
+        volumeMounts:
+          - name: paygate-data
+            mountPath: /opt/moov/paygate
+        securityContext:
+          fsGroup:
+        env:
+          - name: SQLITE_DB_PATH
+            value: /opt/moov/paygate
         ports:
           - containerPort: 8080
             name: http
