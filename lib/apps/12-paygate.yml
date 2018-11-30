@@ -144,14 +144,15 @@ spec:
       - image: moov/paygate:v0.1.0-rc1
         imagePullPolicy: Always
         name: paygate
+        args:
+          - -http.addr=:8080
+          - -admin.addr=:9090
         volumeMounts:
           - name: paygate-data
-            mountPath: /opt/moov/paygate
-        securityContext:
-          fsGroup:
+            mountPath: /opt/moov/paygate/
         env:
           - name: SQLITE_DB_PATH
-            value: /opt/moov/paygate
+            value: /opt/moov/paygate/paygate.db
         ports:
           - containerPort: 8080
             name: http
