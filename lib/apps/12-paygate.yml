@@ -26,9 +26,8 @@ metadata:
   namespace: apps
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.frontend.rule.type: PathPrefixStrip
-    traefik.ingress.kubernetes.io/redirect-regex: ^/v1/ach/((events|customers|gateways|depositories|originators|transfers)/?.*)$
-    traefik.ingress.kubernetes.io/redirect-replacement: /$1
+    traefik.frontend.rule.type: PathPrefix
+    traefik.ingress.kubernetes.io/request-modifier: 'ReplacePathRegex: ^/v1/ach/(.*) /$1'
     ingress.kubernetes.io/auth-type: forward
     ingress.kubernetes.io/auth-url: https://api.moov.io/v1/users/login
     ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
@@ -44,27 +43,27 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/events
+          - path: /v1/ach/customers
             backend:
               serviceName: paygate
               servicePort: 8080
-          - path: /v1/customers
+          - path: /v1/ach/depositories
             backend:
               serviceName: paygate
               servicePort: 8080
-          - path: /v1/gateways
+          - path: /v1/ach/events
             backend:
               serviceName: paygate
               servicePort: 8080
-          - path: /v1/depositories
+          - path: /v1/ach/gateways
             backend:
               serviceName: paygate
               servicePort: 8080
-          - path: /v1/originators
+          - path: /v1/ach/originators
             backend:
               serviceName: paygate
               servicePort: 8080
-          - path: /v1/transfers
+          - path: /v1/ach/transfers
             backend:
               serviceName: paygate
               servicePort: 8080
