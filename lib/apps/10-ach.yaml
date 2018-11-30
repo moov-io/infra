@@ -101,6 +101,9 @@ spec:
       - image: moov/ach:v0.5.0
         imagePullPolicy: Always
         name: ach
+        args:
+          - -http.addr=:8080
+          - -admin.addr=:9090
         ports:
           - containerPort: 8080
             name: htp
