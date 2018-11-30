@@ -145,6 +145,9 @@ spec:
       - image: moov/auth:v0.4.1
         imagePullPolicy: Always
         name: auth
+        args:
+          - -http.addr=:8080
+          - -admin.addr=:9090
         ports:
           - containerPort: 8080
             name: http
