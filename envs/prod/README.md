@@ -1,4 +1,4 @@
-## envs/sbx
+## envs/prod
 
 `sbx` is our only environment currently. It's organized with terraform to setup a Kubernetes cluster and then `kubectl` object files laid out in the directories (by each namespace).
 
