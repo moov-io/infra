@@ -120,7 +120,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: 0
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: paygate
