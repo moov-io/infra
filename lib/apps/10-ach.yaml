@@ -28,7 +28,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/rewrite-target: /files/
     ingress.kubernetes.io/auth-type: forward
-    ingress.kubernetes.io/auth-url: https://api.moov.io/v1/users/login
+    ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
     ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
     ingress.kubernetes.io/content-type-nosniff: "true"
     ingress.kubernetes.io/force-hsts: "true"
