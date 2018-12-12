@@ -186,7 +186,7 @@ spec:
             mountPath: /opt/moov/auth
         env:
           - name: DOMAIN
-            value: api.moov.io
+            value: moov.io
           - name: OAUTH2_CLIENTS_DB_PATH
             value: /opt/moov/auth/oauth2_clients.db
           - name: OAUTH2_TOKENS_DB_PATH
