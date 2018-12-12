@@ -106,7 +106,7 @@ spec:
           - -admin.addr=:9090
         ports:
           - containerPort: 8080
-            name: htp
+            name: http
             protocol: TCP
           - containerPort: 9090
             name: metrics
