@@ -152,7 +152,7 @@ spec:
             memory: 25Mi
           requests:
             memory: 25Mi
-      - image: grafana/grafana:5.3.4
+      - image: grafana/grafana:5.4.2
         imagePullPolicy: Always
         name: grafana
         resources:
