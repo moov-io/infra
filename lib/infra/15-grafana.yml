@@ -128,7 +128,7 @@ spec:
       serviceAccountName: grafana
       terminationGracePeriodSeconds: 30
       containers:
-      - image: nginx:1.15.6
+      - image: nginx:1.15
         imagePullPolicy: Always
         name: nginx
         args:
@@ -152,7 +152,7 @@ spec:
             memory: 25Mi
           requests:
             memory: 25Mi
-      - image: grafana/grafana:5.3.0-beta3
+      - image: grafana/grafana:5.3.4
         imagePullPolicy: Always
         name: grafana
         resources:
