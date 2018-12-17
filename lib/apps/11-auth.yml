@@ -196,9 +196,9 @@ spec:
         resources:
           limits:
             cpu: 0.1
-            memory: 25Mi
+            memory: 50Mi
           requests:
-            memory: 10Mi
+            memory: 25Mi
         readinessProbe:
           httpGet:
             path: /ping
