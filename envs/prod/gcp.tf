@@ -27,6 +27,7 @@ resource "google_project_services" "ach" {
     "containerregistry.googleapis.com",
     "dns.googleapis.com",
     "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
     "iap.googleapis.com",
     "oslogin.googleapis.com",
     "pubsub.googleapis.com",
