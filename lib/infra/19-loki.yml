@@ -1,0 +1,163 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: loki
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3100
+      targetPort: 3100
+    - name: grpc
+      protocol: TCP
+      port: 9095
+      targetPort: 9095
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: loki
+  namespace: infra
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: loki
+  namespace: infra
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: infra.moov.io
+      http:
+        paths:
+          - path: /loki
+            backend:
+              # serviceName: oauth2-proxy
+              # servicePort: 4180
+              serviceName: loki
+              servicePort: 3100
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loki-data
+  namespace: infra
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 25Gi
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loki-config
+  namespace: infra
+data:
+  loki.yml: |
+    auth_enabled: false
+    server:
+      http_listen_port: 3100
+    ingester:
+      lifecycler:
+        address: 127.0.0.1
+        ring:
+          store: inmemory
+          replication_factor: 1
+    schema_config:
+      configs:
+        - from: 0
+          store: boltdb
+          object_store: filesystem
+          schema: v9
+          index:
+            prefix: index_
+            period: 168h
+    storage_config:
+      boltdb:
+        directory: /data/loki/index
+      filesystem:
+        directory: /data/loki/chunks
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki
+  namespace: infra
+  labels:
+    app: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      serviceAccountName: loki
+      terminationGracePeriodSeconds: 30
+      containers:
+        - image: grafana/loki:master
+          imagePullPolicy: Always
+          name: loki
+          args:
+            - -config.file=/etc/loki/loki.yml
+            - -log.level=info
+          volumeMounts:
+            - name: loki-config
+              mountPath: /etc/loki/
+            - name: loki-data
+              mountPath: /data/loki
+          ports:
+            - containerPort: 3100
+              name: http
+              protocol: TCP
+            - containerPort: 9095
+              name: grpc
+              protocol: TCP
+          # readinessProbe:
+          #   httpGet:
+          #     path: /ping # TODO ?
+          #     port: 3100
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /ping # TOOD ?
+          #     port: 3100
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          # securityContext: # TODO
+          #   runAsUser: 0
+      volumes:
+        - name: loki-config
+          configMap:
+            name: loki-config
+            items:
+              - key: loki.yml
+                path: loki.yml
+        - name: loki-data
+          persistentVolumeClaim:
+            claimName: loki-data
+      restartPolicy: Always
+---
