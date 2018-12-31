@@ -1,4 +1,4 @@
-VERSION := v2.2-moov2-dev
+VERSION := v2.2-moov2
 
 .PHONY: docker release
 
