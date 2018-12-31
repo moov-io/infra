@@ -71,7 +71,7 @@ spec:
       serviceAccountName: oauth2-proxy
       terminationGracePeriodSeconds: 30
       containers:
-      - image: moov/oauth2_proxy:v2.2-moov1
+      - image: moov/oauth2_proxy:v2.2-moov2
         imagePullPolicy: Always
         name: oauth2-proxy
         resources:
