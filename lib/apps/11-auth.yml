@@ -168,7 +168,7 @@ spec:
           persistentVolumeClaim:
             claimName: auth-data
       containers:
-      - image: moov/auth:v0.5.0-rc2
+      - image: moov/auth:v0.5.0-rc3
         imagePullPolicy: Always
         name: auth
         args:
@@ -196,9 +196,9 @@ spec:
         resources:
           limits:
             cpu: 0.1
-            memory: 50Mi
+            memory: 100Mi
           requests:
-            memory: 25Mi
+            memory: 50Mi
         readinessProbe:
           httpGet:
             path: /ping
