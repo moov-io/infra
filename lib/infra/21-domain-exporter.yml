@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - name: domain-exporter
-        image: quay.io/shift/domain_exporter:v0.1.7
+        image: quay.io/shift/domain_exporter:v0.1.8-go1.11.4
         ports:
           - containerPort: 9203
         args: [
