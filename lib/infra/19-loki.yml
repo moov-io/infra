@@ -105,6 +105,10 @@ metadata:
     app: loki
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: loki
@@ -121,6 +125,7 @@ spec:
           name: loki
           args:
             - -config.file=/etc/loki/loki.yml
+            - -server.path-prefix=/loki/
             - -log.level=info
           volumeMounts:
             - name: loki-config
