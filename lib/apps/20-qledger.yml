@@ -38,7 +38,7 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/qledger
+          - path: /v1/ledger
             backend:
               serviceName: qledger
               servicePort: 7000
@@ -63,7 +63,7 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/qledger/ping
+          - path: /v1/ledger/ping
             backend:
               serviceName: qledger
               servicePort: 7000
