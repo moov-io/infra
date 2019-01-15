@@ -161,13 +161,13 @@ spec:
             path: /prometheus/status
             port: 9090
           initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 30
         livenessProbe:
           httpGet:
             path: /prometheus/status
             port: 9090
           initialDelaySeconds: 30
-          periodSeconds: 10
+          periodSeconds: 30
         securityContext:
           # TODO(adam): shouldn't need root
           # https://github.com/kubernetes/kubernetes/issues/2630
