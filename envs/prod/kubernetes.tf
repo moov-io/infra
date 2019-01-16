@@ -38,7 +38,7 @@ variable "node_machine_type" {
 }
 
 variable "min_master_version" {
-  default = "1.11.2-gke.9"
+  default = "1.11.5-gke.5"
 }
 
 # Setup for a GCP kubernetes cluster.
