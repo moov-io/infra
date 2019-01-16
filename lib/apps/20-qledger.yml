@@ -146,13 +146,13 @@ spec:
             path: /ping
             port: 7000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 10
         livenessProbe:
           httpGet:
             path: /ping
             port: 7000
           initialDelaySeconds: 5
-          periodSeconds: 5
+          periodSeconds: 10
       restartPolicy: Always
 
 ---
