@@ -104,6 +104,9 @@ spec:
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
+        env:
+          - name: ACH_FILE_TTL
+            value: 240m # 4 hours
         ports:
           - containerPort: 8080
             name: http
