@@ -72,7 +72,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/ofac:v0.0.0
+      - image: moov/ofac:v0.1.0
         imagePullPolicy: Always
         name: ofac
         args:
