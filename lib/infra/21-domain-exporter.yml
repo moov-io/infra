@@ -44,6 +44,13 @@ spec:
           "--log.level=info",
         ]
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 0.1
+            memory: 50Mi
+          requests:
+            cpu: 25m
+            memory: 25Mi
         volumeMounts:
         - name: domain-exporter
           mountPath: /etc/domain-exporter

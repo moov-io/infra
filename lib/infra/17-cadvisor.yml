@@ -21,12 +21,12 @@ spec:
       - name: cadvisor
         image: k8s.gcr.io/cadvisor:v0.31.0
         resources:
-          requests:
-            cpu: 500m
-            memory: 150Mi
           limits:
-            cpu: 1
-            memory: 250Mi
+            cpu: 0.25
+            memory: 50Mi
+          requests:
+            cpu: 0.1
+            memory: 25Mi
         volumeMounts:
         - name: rootfs
           mountPath: /rootfs

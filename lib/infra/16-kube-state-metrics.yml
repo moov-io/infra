@@ -55,6 +55,13 @@ spec:
           containerPort: 8080
         - name: telemetry
           containerPort: 8081
+        resources:
+          limits:
+            cpu: 0.25
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 25Mi
         readinessProbe:
           httpGet:
             path: /healthz
@@ -65,11 +72,10 @@ spec:
         image: k8s.gcr.io/addon-resizer:1.8.4
         resources:
           limits:
-            cpu: 100m
-            memory: 30Mi
+            memory: 50Mi
           requests:
-            cpu: 100m
-            memory: 30Mi
+            cpu: 0.1
+            memory: 25Mi
         env:
           - name: MY_POD_NAME
             valueFrom:

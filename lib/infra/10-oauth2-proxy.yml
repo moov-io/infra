@@ -75,8 +75,12 @@ spec:
         imagePullPolicy: Always
         name: oauth2-proxy
         resources:
+          limits:
+            cpu: 0.1
+            memory: 50Mi
           requests:
-            memory: 20Mi
+            cpu: 25m
+            memory: 10Mi
         env:
           - name: OAUTH2_PROXY_CLIENT_ID
             valueFrom:

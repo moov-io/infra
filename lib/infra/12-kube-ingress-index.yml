@@ -78,8 +78,12 @@ spec:
           - -force-tls
           - -namespaces=apps,infra,lb
         resources:
+          limits:
+            cpu: 0.1
+            memory: 25Mi
           requests:
-            memory: 20Mi
+            cpu: 25m
+            memory: 10Mi
         ports:
           - containerPort: 8080
             name: http

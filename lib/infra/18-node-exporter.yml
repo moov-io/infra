@@ -56,10 +56,10 @@ spec:
             name: metrics
         resources:
           limits:
-            cpu: 102m
-            memory: 180Mi
-          requests:
             cpu: 0.1
+            memory: 50Mi
+          requests:
+            cpu: 50m
             memory: 25Mi
         volumeMounts:
         - mountPath: /host/proc

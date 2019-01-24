@@ -148,9 +148,9 @@ spec:
             protocol: TCP
         resources:
           limits:
-            cpu: 0.1
-            memory: 25Mi
+            memory: 50Mi
           requests:
+            cpu: 0.1
             memory: 25Mi
       - image: grafana/grafana:5.4.3
         imagePullPolicy: Always

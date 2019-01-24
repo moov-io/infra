@@ -130,6 +130,13 @@ spec:
         ports:
         - containerPort: 80
           name: http-metrics
+        resources:
+          limits:
+            cpu: 0.25
+            memory: 50Mi
+          requests:
+            cpu: 0.1
+            memory: 25Mi
         securityContext:
           privileged: true
           runAsUser: 0
