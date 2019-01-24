@@ -198,7 +198,8 @@ spec:
             cpu: 0.1
             memory: 100Mi
           requests:
-            memory: 50Mi
+            cpu: 50m
+            memory: 25Mi
         readinessProbe:
           httpGet:
             path: /ping

@@ -75,8 +75,10 @@ spec:
             protocol: TCP
         resources:
           limits:
+            cpu: 0.1
             memory: 25Mi
           requests:
+            cpu: 25m
             memory: 10Mi
         readinessProbe:
           httpGet:
