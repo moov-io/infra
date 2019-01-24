@@ -23,10 +23,10 @@ spec:
         resources:
           limits:
             cpu: 0.25
-            memory: 50Mi
+            memory: 100Mi
           requests:
             cpu: 0.1
-            memory: 25Mi
+            memory: 50Mi
         volumeMounts:
         - name: rootfs
           mountPath: /rootfs
