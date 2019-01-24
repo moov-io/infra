@@ -34,11 +34,11 @@ variable "node_disk_type" {
 }
 
 variable "node_machine_type" {
-  default = "g1-small"
+  default = "n1-standard-1"
 }
 
 variable "min_master_version" {
-  default = "1.11.5-gke.5"
+  default = "1.11.6-gke.3"
 }
 
 # Setup for a GCP kubernetes cluster.
@@ -68,7 +68,7 @@ resource "google_container_cluster" "primary" {
   node_config {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
-    machine_type = "${var.node_machine_type}"
+    machine_type = "g1-small"
     preemptible  = true
 
     oauth_scopes = [
@@ -94,7 +94,7 @@ resource "google_container_node_pool" "permanent" {
     disk_size_gb = "${var.node_disk_size_gb}"
     disk_type    = "${var.node_disk_type}"
     machine_type = "${var.node_machine_type}"
-    preemptible  = "false"
+    preemptible  = false
 
     oauth_scopes = [
       "compute-rw",
