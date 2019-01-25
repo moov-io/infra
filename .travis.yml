@@ -18,7 +18,9 @@ before_install:
   # adamdecaf/promtool-configmap
   - go get github.com/prometheus/prometheus/cmd/promtool
   - go get -u github.com/adamdecaf/promtool-configmap
+  - go get github.com/zricethezav/gitleaks
 script:
+  - gitleaks --repo-path=$(pwd)
   # Terraform
   # cd envs/sbx && terraform init && terraform validate
   # Prometheus
