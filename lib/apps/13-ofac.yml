@@ -113,10 +113,10 @@ spec:
             protocol: TCP
         resources:
           limits:
-            cpu: 0.25
+            cpu: 0.2
             memory: 50Mi
           requests:
-            cpu: 0.1
+            cpu: 25m
             memory: 10Mi
         readinessProbe:
           httpGet:
