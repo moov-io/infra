@@ -98,7 +98,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/ofac:v0.1.0
+      - image: moov/ofac:v0.2.0
         imagePullPolicy: Always
         name: ofac
         args:
@@ -110,6 +110,55 @@ spec:
             protocol: TCP
           - containerPort: 9090
             name: metrics
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 0.2
+            memory: 50Mi
+          requests:
+            cpu: 25m
+            memory: 10Mi
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      restartPolicy: Always
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ofac-example
+  namespace: apps
+  labels:
+    app: ofac-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ofac-example
+  template:
+    metadata:
+      labels:
+        app: ofac-example
+    spec:
+      containers:
+      - image: moov/ofac-example:v0.2.0
+        imagePullPolicy: Always
+        name: ofac-example
+        args:
+          - -http.addr=:8080
+        ports:
+          - containerPort: 8080
+            name: http
             protocol: TCP
         resources:
           limits:
