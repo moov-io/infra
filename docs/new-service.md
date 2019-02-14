@@ -12,3 +12,9 @@
 Once the application is setup we will deploy (manually, as all deploys are) the application into Kubernetes. This involves [adding a symlink and the Kubernetes objects](https://github.com/moov-io/infra/commit/b282521a7fa3cf1ab2659b19e79ba8ed0e2aa2d8) followed by someone with access running `kubectl apply -f apps/NN-your-app.yml`.
 
 As always, talk with Adam for any questions. This process will be automated further as demand grows.
+
+### Persistence
+
+Right now our default database is [SQLite](https://sqlite.org/index.html). We chose this because it's SQL-like and fairly dependency free. "SQL-like" means we should be able to translate the SQL queries over to another database such as Postgres, MySQL, or Oracle in the future. "fairly dependency free" refers to only requiring libc and a filesystem. The SQLite code is extremely well tested and performant for our initial usecases. This means backups consist of saving/encrypting two files and deployment requires C/CGO and a filesystem.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/RqubKSF3wig" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
