@@ -23,6 +23,8 @@ $ kubectl logs -n infra [--tail 10] [-f] kube-ingress-index-5cb86955ff-xdb5m
 ...
 ```
 
+See also: [Viewing logs in Kubernetes](https://medium.com/devopslinks/viewing-logs-in-kubernetes-e055f936e187)
+
 ### Rolling Pods / Containers
 
 If you need to restart a Pod/Container simply list out the pods and issue `kubectl delete`:
