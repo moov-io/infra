@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-ofac-rules
+  namespace: infra
+data:
+  prometheus-ofac-rules.yml: |
+    groups:
+      - name: ./ofac.rules
+        rules:
+          - alert: StaleOFACData
+            expr: (time() - last_ofac_data_refresh_success) > 60*60*24
+            for: 1h
+            labels:
+              severity: warning
+            annotations:
+              description: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
+
+---
