@@ -205,3 +205,25 @@ spec:
       restartPolicy: Always
 
 ---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: ofactest
+  namespace: apps
+spec:
+  suspend: false
+  concurrencyPolicy: Forbid
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: ofactest
+            image: moov/ofactest:v0.5.0
+            args:
+              # Stay internal to avoid auth requirement
+              # There isn't a great way to create an OAuth token for this test binary right now.
+              - -address=http://ofac.apps.svc.cluster.local:8080/
+          restartPolicy: OnFailure
+---
