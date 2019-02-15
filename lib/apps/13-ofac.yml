@@ -74,6 +74,19 @@ spec:
               servicePort: 8080
 
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ofac-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -97,6 +110,10 @@ spec:
             - podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
+      volumes:
+        - name: ofac-data
+          persistentVolumeClaim:
+            claimName: ofac-data
       containers:
       - image: moov/ofac:v0.2.1
         imagePullPolicy: Always
@@ -104,6 +121,12 @@ spec:
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
+        volumeMounts:
+          - name: ofac-data
+            mountPath: /opt/moov/ofac/
+        env:
+          - name: SQLITE_DB_PATH
+            value: /opt/moov/ofac/ofac.db
         ports:
           - containerPort: 8080
             name: http
