@@ -108,9 +108,9 @@ spec:
       template:
         spec:
           containers:
-          - name: apitest-cookie
+          - name: cookie
             image: moov/apitest:v0.5.3
-          - name: apitest-oauth
+          - name: oauth
             image: moov/apitest:v0.5.3
             args:
             - -oauth
