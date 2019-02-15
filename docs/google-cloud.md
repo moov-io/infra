@@ -1,6 +1,6 @@
 ## Google Cloud setup
 
-We currently deploy moov.io services on [Google Cloud Kubernetes Engine](https://cloud.google.com/kubernetes-engine/docs/) (GKE) which allows us to deploy on Kubernetes.
+We currently deploy moov.io services on [Google Cloud Kubernetes Engine](https://console.cloud.google.com/apis/credentials/serviceaccountkey?project=automated-clearing-house) (GKE) which allows us to deploy on Kubernetes.
 
 **Links**: [GKE Dashboard](https://console.cloud.google.com/kubernetes/list) | [Google Cloud Status](https://status.cloud.google.com/)
 
@@ -13,10 +13,11 @@ We currently deploy moov.io services on [Google Cloud Kubernetes Engine](https:/
    - Quick start: [Linux](https://cloud.google.com/sdk/docs/quickstart-linux) | [macOS](https://cloud.google.com/sdk/docs/quickstart-macos)
    - Requires Python 2.7
    - Install the *kubectl module* `gcloud components install kubectl`
+     - Note: You should update the gcloud tools: `gcloud components update`
    - Login `gcloud auth login`
-   - Set the default project `gcloud config set project sbx`
+   - Set the default project `gcloud config set project automated-clearing-house`
 1. Download your [`kubectl` config](https://console.cloud.google.com/kubernetes/list)
-   - Click "Connect" -> "Command-line access"
+   - Run `gcloud container clusters get-credentials sbx --zone us-central1-a`
    - You can also have terraform setup the credentials for you.
-     - First, you need `.google/credentials.json`, `envs/sbx/ca.crt`, and `envs/sbx/client.*` setup.
+     - You also need the following files `.google/credentials.json`, `envs/sbx/ca.crt`, and `envs/sbx/client.*`, which you can get from Adam.
    - Then `terraform taint null_resource.kubectl_setup` and `terraform apply` (verifying only that resource changes)
