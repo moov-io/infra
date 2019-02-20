@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: infra
+data:
+  prometheus-domain-rules.yml: |
+    groups:
+      - name: ./domain.rules
+        rules:
+          - alert: DomainExpiring
+            expr: domain_expiration{} < 45
+            for: 24h
+            labels:
+              severity: warning
+            annotations:
+              description: "{{ $labels.domain }} expires in {{ $value }} days"
+          - alert: DomainUnfindable
+            expr: domain_expiration_unfindable > 0
+            for: 24h
+            labels:
+              severity: critical
+            annotations:
+              description: "Unable to find or parse expiry for {{ $labels.domain }}"
+  prometheus-ofac-rules.yml: |
+    groups:
+      - name: ./ofac.rules
+        rules:
+          - alert: StaleOFACData
+            expr: (time() - last_ofac_data_refresh_success) > 60*60*24
+            for: 1h
+            labels:
+              severity: warning
+            annotations:
+              description: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
+---
