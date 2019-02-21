@@ -115,7 +115,7 @@ spec:
           persistentVolumeClaim:
             claimName: ofac-data
       containers:
-      - image: moov/ofac:v0.5.0
+      - image: moov/ofac:v0.5.2
         imagePullPolicy: Always
         name: ofac
         args:
@@ -159,24 +159,24 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ofac-example
+  name: ofac-webhook-example
   namespace: apps
   labels:
-    app: ofac-example
+    app: ofac-webhook-example
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ofac-example
+      app: ofac-webhook-example
   template:
     metadata:
       labels:
-        app: ofac-example
+        app: ofac-webhook-example
     spec:
       containers:
-      - image: moov/ofac-example:v0.5.0
+      - image: moov/ofac-webhook-example:v0.5.2
         imagePullPolicy: Always
-        name: ofac-example
+        name: ofac-webhook-example
         args:
           - -http.addr=:8080
         ports:
@@ -220,7 +220,7 @@ spec:
         spec:
           containers:
           - name: ofactest
-            image: moov/ofactest:v0.5.0
+            image: moov/ofactest:v0.5.2
             args:
               # Stay internal to avoid auth requirement
               # There isn't a great way to create an OAuth token for this test binary right now.
