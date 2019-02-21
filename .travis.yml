@@ -26,6 +26,7 @@ script:
   # Prometheus
   - promtool-configmap --version
   - promtool-configmap envs/prod/infra/14-prometheus.yml
+  - promtool-configmap envs/prod/infra/14-prometheus-rules.yml
   # Run infra tests
   - make test
   - CGO_ENABLED=0 go test ./...
