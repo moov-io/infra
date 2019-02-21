@@ -77,26 +77,53 @@ data:
       alertmanagers:
         - static_configs:
             - targets:
-                # - http://alertmanaged.infra.svc.cluster.local:
+                # - alertmanager.infra.svc.cluster.local:9090
           scheme: http
-          timeout: 10s
+          timeout: 30s
     rule_files:
       - /opt/prometheus-kubernetes-monitoring/prometheus_alerts.yml
       - /opt/prometheus-kubernetes-monitoring/prometheus_rules.yml
       - /opt/prometheus-rules/*.yml
     scrape_configs:
-      - job_name: prometheus
-        scrape_interval: 15s
-        scrape_timeout: 10s
-        metrics_path: /metrics
-        scheme: http
-        static_configs:
-          - targets:
-              # - http://prometheus.infra.svc.cluster.local:9090/metrics
+      # Scrape kubernetes apiservers
+      - job_name: 'kubernetes-apiservers'
+        kubernetes_sd_configs:
+          - role: endpoints
+            # api_server: kubernetes.default.svc.cluster.local
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+            action: keep
+            regex: default;kubernetes;https
+      # Scrape cAdvisor TODO(adam): not quite working, wrong endpoint (:10250)
+      # - job_name: 'kubernetes-cadvisor'
+      #   kubernetes_sd_configs:
+      #     - role: node
+      #       # api_server: kubernetes.default.svc.cluster.local
+      #   # scheme: https
+      #   # tls_config:
+      #   #   ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      #   # bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      #   relabel_configs:
+      #     - action: labelmap
+      #       regex: __meta_kubernetes_node_label_(.+)
+      #     # We need to relabel the addresses as it was using a GKE hostname not ip address.
+      #     - source_labels: [__address__]
+      #       target_label: instance
+      #       regex: (.+):10250
+      #       replacement: ${1}:8080
       # Scrape pods
       - job_name: 'kubernetes-pods'
         kubernetes_sd_configs:
           - role: pod
+            # api_server: kubernetes.default.svc.cluster.local
+        # scheme: https
+        # tls_config:
+        #   ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        # bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
         relabel_configs:
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
@@ -209,55 +236,21 @@ kind: ClusterRole
 metadata:
   name: prometheus
 rules:
-  - apiGroups:
-      - extensions
-    resources:
-      - thirdpartyresources
-    verbs:
-      - "*"
-  - apiGroups:
-      - apiextensions.k8s.io
-    resources:
-      - customresourcedefinitions
-    verbs:
-      - "*"
-  - apiGroups:
-      - monitoring.coreos.com
-    resources:
-      - alertmanagers
-      - prometheuses
-      - prometheuses/finalizers
-      - servicemonitors
-    verbs:
-      - "*"
-  - apiGroups:
-      - apps
-    resources:
-      - statefulsets
-    verbs: ["*"]
-  - apiGroups: [""]
-    resources:
-      - configmaps
-      - secrets
-    verbs: ["*"]
-  - apiGroups: [""]
-    resources:
-      - pods
-    verbs: ["get", "list", "delete", "watch"]
-  - apiGroups: [""]
-    resources:
-      - services
-      - endpoints
-    verbs: ["get", "create", "update"]
-  - apiGroups: [""]
-    resources:
-      - nodes
-    verbs: ["list", "watch"]
-  - apiGroups: [""]
-    resources:
-      - namespaces
-    verbs: ["list"]
-
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
