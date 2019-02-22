@@ -224,7 +224,7 @@ spec:
             args:
               # Stay internal to avoid auth requirement
               # There isn't a great way to create an OAuth token for this test binary right now.
-              - -address=http://ofac.apps.svc.cluster.local:8080/
+              - -address=http://ofac.apps.svc.cluster.local:8080
             env:
               - name: OAUTH_TOKEN
                 value: moov # dummy value since we're hitting an internal k8s address without auth
