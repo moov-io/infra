@@ -13,10 +13,6 @@ spec:
       protocol: TCP
       port: 3100
       targetPort: 3100
-    - name: grpc
-      protocol: TCP
-      port: 9095
-      targetPort: 9095
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -47,6 +43,7 @@ spec:
             backend:
               serviceName: oauth2-proxy
               servicePort: 4180
+              # Uncommenting these would bypass auth and allow anonymous requests to loki.
               # serviceName: loki
               # servicePort: 3100
 ---
@@ -80,6 +77,7 @@ data:
         ring:
           store: inmemory
           replication_factor: 1
+      chunk_idle_period: 15m
     schema_config:
       configs:
         - from: 0
@@ -94,6 +92,8 @@ data:
         directory: /data/loki/index
       filesystem:
         directory: /data/loki/chunks
+    limits_config:
+      enforce_metric_name: false
 
 ---
 apiVersion: apps/v1
@@ -136,9 +136,6 @@ spec:
             - containerPort: 3100
               name: http
               protocol: TCP
-            - containerPort: 9095
-              name: grpc
-              protocol: TCP
           resources:
             limits:
               cpu: 0.25
@@ -146,19 +143,20 @@ spec:
             requests:
               cpu: 50m
               memory: 25Mi
-          # readinessProbe:
-          #   httpGet:
-          #     path: /ping # TODO ?
-          #     port: 3100
-          #   initialDelaySeconds: 30
-          #   periodSeconds: 10
-          # livenessProbe:
-          #   httpGet:
-          #     path: /ping # TOOD ?
-          #     port: 3100
-          #   initialDelaySeconds: 30
-          #   periodSeconds: 10
-          # securityContext: # TODO
+          readinessProbe:
+            httpGet:
+              # GET /ready returns 204, which doesn't seem to work
+              path: /loki/api/prom/label
+              port: 3100
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /loki/api/prom/label
+              port: 3100
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          # securityContext: # TODO(adam): K8s pods have problems running as non-root
           #   runAsUser: 0
       volumes:
         - name: loki-config
