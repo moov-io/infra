@@ -106,7 +106,7 @@ spec:
           - -admin.addr=:9090
         env:
           - name: ACH_FILE_TTL
-            value: 240m # 4 hours
+            value: 30m # 30 minutes
         ports:
           - containerPort: 8080
             name: http
