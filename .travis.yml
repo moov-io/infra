@@ -6,7 +6,7 @@ os:
   - linux
   - osx
 go:
-  - 1.11
+  - 1.12.x
 
 osx_image: xcode9.1
 
