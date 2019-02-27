@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: cadvisor
-        image: k8s.gcr.io/cadvisor:v0.31.0
+        image: google/cadvisor:v0.33.0
         resources:
           limits:
             cpu: 0.1
