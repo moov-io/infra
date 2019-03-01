@@ -75,10 +75,12 @@ data:
       evaluation_interval: 15s
     alerting:
       alertmanagers:
-        - static_configs:
-            - targets:
-                # - alertmanager.infra.svc.cluster.local:9090
+        # We need to prefix since the Ingress has a prefix
+        - path_prefix: '/alertmanager/'
           scheme: http
+          static_configs:
+            - targets:
+                - alertmanager.infra.svc.cluster.local:9090
           timeout: 30s
     rule_files:
       - /opt/prometheus-kubernetes-monitoring/prometheus_alerts.yml
@@ -882,3 +884,4 @@ data:
               node_namespace_pod:kube_pod_info:
               )
             "record": "node:node_net_saturation:sum_irate"
+---

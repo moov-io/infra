@@ -1,0 +1,131 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: alertmanager
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: alertmanager
+  namespace: infra
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: alertmanager
+  namespace: infra
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: infra.moov.io
+      http:
+        paths:
+          - path: /alertmanager/
+            backend:
+              serviceName: oauth2-proxy
+              servicePort: 4180
+              # serviceName: alertmanager
+              # servicePort: 9090
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: alertmanager-data
+  namespace: infra
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 25Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: infra
+  labels:
+    app: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      serviceAccountName: alertmanager
+      terminationGracePeriodSeconds: 30
+      containers:
+      - image: prom/alertmanager:v0.16.1
+        imagePullPolicy: Always
+        name: alertmanager
+        args:
+          - --config.file=/opt/alertmanager/alertmanager.yml
+          - --web.listen-address=:9090
+          - --storage.path=/data/alertmanager/
+          - --data.retention=336h # 14*24h (2 weeks)
+          - --alerts.gc-interval=30m
+          - --web.external-url=https://infra.moov.io/alertmanager/
+        volumeMounts:
+          - name: alertmanager-config
+            mountPath: /opt/alertmanager/
+          - name: alertmanager-data
+            mountPath: /data/alertmanager/
+        ports:
+          - containerPort: 9090
+            name: http
+            protocol: TCP
+        # TODO(adam): What route to put for these endpoints?
+        # readinessProbe:
+        #   httpGet:
+        #     path: /alertmanager/status # TODO(adam): path?
+        #     port: 9090
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 30
+        # livenessProbe:
+        #   httpGet:
+        #     path: /alertmanager/status
+        #     port: 9090
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 30
+        securityContext:
+          # TODO(adam): shouldn't need root
+          # https://github.com/kubernetes/kubernetes/issues/2630
+          runAsUser: 0
+      volumes:
+        - name: alertmanager-config
+          configMap:
+            name: alertmanager-config
+            items:
+              - key: alertmanager.yml
+                path: alertmanager.yml
+        - name: alertmanager-data
+          persistentVolumeClaim:
+            claimName: alertmanager-data
+      restartPolicy: Always
+---
