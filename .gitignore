@@ -14,3 +14,4 @@ terraform.tfstate.backup*
 /envs/prod/ca.crt
 /envs/prod/client.crt
 /envs/prod/client.key
+/envs/prod/infra/22-alertmanager-config.yml
