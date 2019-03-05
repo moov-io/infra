@@ -15,14 +15,14 @@ data:
             labels:
               severity: warning
             annotations:
-              description: "{{ $labels.domain }} expires in {{ $value }} days"
+              message: "{{ $labels.domain }} expires in {{ $value }} days"
           - alert: DomainUnfindable
             expr: domain_expiration_unfindable > 0
             for: 24h
             labels:
               severity: critical
             annotations:
-              description: "Unable to find or parse expiry for {{ $labels.domain }}"
+              message: "Unable to find or parse expiry for {{ $labels.domain }}"
   prometheus-ofac-rules.yml: |
     groups:
       - name: ./ofac.rules
@@ -33,5 +33,5 @@ data:
             labels:
               severity: warning
             annotations:
-              description: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
+              message: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
 ---
