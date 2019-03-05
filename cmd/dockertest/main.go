@@ -38,9 +38,10 @@ func main() {
 		return
 	}
 
-	parent, err := os.Getwd() // Should be root of infra repository
-	if err != nil {
-		log.Printf("ERROR: getting current working directory: %v", err)
+	// Verify we are in the root of infra/
+	parent, err := os.Getwd()
+	if dir := filepath.Base(parent); dir != "infra" || parent == "" {
+		log.Fatalf("ERROR: unknown directory 'dockertest' is ran from: %s", dir)
 	}
 	parent = filepath.Join(parent, "images")
 
