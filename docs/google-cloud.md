@@ -21,3 +21,21 @@ We currently deploy moov.io services on [Google Cloud Kubernetes Engine](https:/
    - You can also have terraform setup the credentials for you.
      - You also need the following files `.google/credentials.json`, `envs/sbx/ca.crt`, and `envs/sbx/client.*`, which you can get from Adam.
    - Then `terraform taint null_resource.kubectl_setup` and `terraform apply` (verifying only that resource changes)
+
+### Troubleshooting
+
+#### "cannot construct google default token source"
+
+Sometimes after a homebrew update `kubectl` breaks with the following error:
+
+```
+$ kubectl get pods -n infra | grep alertm
+error: cannot construct google default token source: google: could not find default credentials. See https://developers.google.com/accounts/docs/application-default-credentials for more information.
+```
+
+**Solution**
+
+1. Update the gcloud components `gcloud components update`
+1. Login `gcloud auth login`
+1. Set the project (i.e. `gcloud config set project automated-clearing-house`)
+1. Fetch the credentials again (i.e. `gcloud container clusters get-credentials sbx --zone us-central1-a`)
