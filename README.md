@@ -39,6 +39,29 @@ The project has the following directories:
 - [`images/`](https://github.com/moov-io/infra/tree/master/images) - Docker images we create and manage
 - [`lib/`](https://github.com/moov-io/infra/tree/master/lib) - Shared (Kubernetes) resources across environments
 
+### Local Development
+
+We support a local development environment to allow anyone the ability to run Moov's application stack locally on a machine. This currently requires a few tools to be installed, such as:
+
+- Docker
+  - [Docker for Mac](https://docs.docker.com/docker-for-mac/) - [Install Guide](https://docs.docker.com/docker-for-mac/install/)
+  - [Docker on Linux](https://docs.docker.com/install/)
+  - [Docker for Windows](https://docs.docker.com/docker-for-windows/) - [Install Guide](https://docs.docker.com/docker-for-windows/install/)
+- [Tilt](https://tilt.dev/) - [Install Guide](https://docs.tilt.dev/install.html)
+
+Once these tools are setup run the following commands from the root of this repository.
+
+```
+$ cd envs/dev
+$ tilt up
+```
+
+This brings up a prompt that looks like the following image. Use the arrow keys to move between containers and `<enter>` to pull up a specific container's log.
+
+![](docs/images/tilt.png)
+
+You should also be able to ping services (ACH ping: http://localhost:8080/ping) or even run [`apitest -local`](https://github.com/moov-io/api/tree/master/cmd/apitest). `apitest` can be installed with `go get github.com/moov-io/api/cmd/apitest`.
+
 ### Testing
 
 We run several kinds of tests against this repository. Linters/validators (over Kubernetes, Terraform, Prometheus configs) as well as Docker image builds. To run all these:
