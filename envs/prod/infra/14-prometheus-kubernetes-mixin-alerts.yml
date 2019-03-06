@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-kubernets-monitoring
+  name: prometheus-kubernets-monitoring-alerts
   namespace: infra
 data:
   # THIS FILE WAS GENERATED FROM https://github.com/kubernetes-monitoring/kubernetes-mixin
@@ -375,9 +375,9 @@ data:
             "message": "API server is returning errors for {{ $value }}% of requests."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
           "expr": |
-            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) without(instance, pod)
+            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m]))
               /
-            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) without(instance, pod) * 100 > 10
+            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) * 100 > 3
           "for": "10m"
           "labels": 
             "severity": "critical"
@@ -386,9 +386,31 @@ data:
             "message": "API server is returning errors for {{ $value }}% of requests."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
           "expr": |
-            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) without(instance, pod)
+            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m]))
               /
-            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) without(instance, pod) * 100 > 5
+            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) * 100 > 1
+          "for": "10m"
+          "labels": 
+            "severity": "warning"
+        - "alert": "KubeAPIErrorsHigh"
+          "annotations": 
+            "message": "API server is returning errors for {{ $value }}% of requests for {{ $labels.verb }} {{ $labels.resource }} {{ $labels.subresource }}."
+            "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
+          "expr": |
+            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) by (resource,subresource,verb)
+              /
+            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) by (resource,subresource,verb) * 100 > 10
+          "for": "10m"
+          "labels": 
+            "severity": "critical"
+        - "alert": "KubeAPIErrorsHigh"
+          "annotations": 
+            "message": "API server is returning errors for {{ $value }}% of requests for {{ $labels.verb }} {{ $labels.resource }} {{ $labels.subresource }}."
+            "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
+          "expr": |
+            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) by (resource,subresource,verb)
+              /
+            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) by (resource,subresource,verb) * 100 > 5
           "for": "10m"
           "labels": 
             "severity": "warning"

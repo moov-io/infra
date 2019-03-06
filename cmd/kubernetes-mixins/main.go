@@ -18,14 +18,16 @@ import (
 var (
 	flagVerbose = flag.Bool("verbose", false, "Verbose: show all log output")
 
-	mixinConfigMap = []byte(`apiVersion: v1
+	// baseConfigMap is a Kubernetes object template for the ConfigMap's that
+	// hold the Prometheus configuration.
+	baseConfigMap = []byte(`apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-kubernets-monitoring
+  name: prometheus-kubernets-monitoring-%s
   namespace: infra
 data:
   # THIS FILE WAS GENERATED FROM https://github.com/kubernetes-monitoring/kubernetes-mixin
-  prometheus_alerts.yml: |
+  prometheus_%s.yml: |
 `)
 )
 
@@ -58,21 +60,11 @@ func main() {
 	defer os.RemoveAll(dir)
 
 	// Copy over generated files to infra/ repository
-	// We only care about 'prometheus_alerts.yaml' right now.
-	bs, err := ioutil.ReadFile(filepath.Join(dir, "kubernetes-mixin", "prometheus_alerts.yaml"))
-	if os.IsNotExist(err) {
+	if err := copyFile(dir, wd, "alerts"); err != nil {
 		log.Fatal(err)
 	}
-
-	// Rigth now we only render envs/prod and the rendered prometheus_alerts.yaml file
-	path := filepath.Join(wd, "envs", "prod", "infra", "14-prometheus-kubernetes-mixin.yml")
-
-	indent := []byte("\n      ")
-	content := append(append(mixinConfigMap, []byte("    ")...), bytes.Replace(bs, []byte("\n"), indent, -1)...)
-
-	// Write YAML files into repo
-	if err := ioutil.WriteFile(path, content, 0644); err != nil {
-		log.Fatalf("ERROR writing prometheus alerts/rules: %v", err)
+	if err := copyFile(dir, wd, "rules"); err != nil {
+		log.Fatal(err)
 	}
 
 	// TODO(adam): copy over dashboards
@@ -87,4 +79,27 @@ func main() {
 	// dashboards_out/persistentvolumesusage.json
 	// dashboards_out/pods.json
 	// dashboards_out/statefulset.json
+}
+
+func copyFile(dir, wd, stub string) error {
+	filename := fmt.Sprintf("prometheus_%s.yaml", stub)
+	bs, err := ioutil.ReadFile(filepath.Join(dir, "kubernetes-mixin", filename))
+	if os.IsNotExist(err) {
+		return fmt.Errorf("file %s didn't exist: %v", filename, err)
+	}
+
+	// Right now we only render envs/prod and the rendered prometheus_alerts.yaml file
+	path := filepath.Join(wd, "envs", "prod", "infra", fmt.Sprintf("14-prometheus-kubernetes-mixin-%s.yml", stub))
+
+	indent := []byte("\n      ")
+
+	base := bytes.Replace(baseConfigMap, []byte("%s"), []byte(stub), -1)
+	content := append(append(base, []byte("    ")...), bytes.Replace(bs, []byte("\n"), indent, -1)...)
+
+	// Write YAML files into repo
+	if err := ioutil.WriteFile(path, content, 0644); err != nil {
+		return fmt.Errorf("ERROR writing prometheus %s: %v", stub, err)
+	}
+	return nil
+
 }

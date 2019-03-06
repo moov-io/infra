@@ -80,9 +80,9 @@ func buildMixins() (string, error) {
 	if err := mk("prometheus_alerts.yaml"); err != nil {
 		return dir, err
 	}
-	// if err := mk("prometheus_rules.yaml"); err != nil {
-	// 	return dir, err // ignored for now
-	// }
+	if err := mk("prometheus_rules.yaml"); err != nil {
+		return dir, err // ignored for now
+	}
 	// if err := mk("dashboards_out"); err != nil {
 	// 	return dir, err // TODO(adam): upload to grafana?
 	// }

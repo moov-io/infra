@@ -83,8 +83,8 @@ data:
                 - alertmanager.infra.svc.cluster.local:9090
           timeout: 30s
     rule_files:
-      - /opt/prometheus-kubernetes-monitoring/prometheus_alerts.yml
-      - /opt/prometheus-kubernetes-monitoring/prometheus_rules.yml
+      - /opt/prometheus-kubernets-monitoring-alerts/prometheus_alerts.yml
+      - /opt/prometheus-kubernets-monitoring-rules/prometheus_rules.yml
       - /opt/prometheus-rules/*.yml
     scrape_configs:
       # Scrape kubernetes apiservers
@@ -178,8 +178,10 @@ spec:
         volumeMounts:
           - name: prometheus-config
             mountPath: /opt/prometheus/
-          - name: prometheus-kubernets-monitoring
-            mountPath: /opt/prometheus-kubernetes-monitoring/
+          - name: prometheus-kubernets-monitoring-alerts
+            mountPath: /opt/prometheus-kubernets-monitoring-alerts/
+          - name: prometheus-kubernets-monitoring-rules
+            mountPath: /opt/prometheus-kubernets-monitoring-rules/
           - name: prometheus-rules
             mountPath: /opt/prometheus-rules/
           - name: prometheus-data
@@ -211,12 +213,16 @@ spec:
             items:
               - key: prometheus.yml
                 path: prometheus.yml
-        - name: prometheus-kubernets-monitoring
+        - name: prometheus-kubernets-monitoring-alerts
           configMap:
-            name: prometheus-kubernets-monitoring
+            name: prometheus-kubernets-monitoring-alerts
             items:
               - key: prometheus_alerts.yml
                 path: prometheus_alerts.yml
+        - name: prometheus-kubernets-monitoring-rules
+          configMap:
+            name: prometheus-kubernets-monitoring-rules
+            items:
               - key: prometheus_rules.yml
                 path: prometheus_rules.yml
         - name: prometheus-rules
