@@ -5,6 +5,17 @@ metadata:
   name: prometheus-rules
   namespace: infra
 data:
+  prometheus-app-rules.yml: |
+    groups:
+      - name: ./app.rules
+        rules:
+          - alert: MoovAppProblem
+            expr: 'up{ kubernetes_namespace="apps", instance =~ "(.*):9090" } < 1'
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              message: "{{ $labels.app }} has unhealthy pods {{ $labels.kubernetes_pod_name }}"
   prometheus-domain-rules.yml: |
     groups:
       - name: ./domain.rules

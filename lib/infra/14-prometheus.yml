@@ -229,6 +229,8 @@ spec:
           configMap:
             name: prometheus-rules
             items:
+              - key: prometheus-app-rules.yml
+                path: prometheus-app-rules.yml
               - key: prometheus-domain-rules.yml
                 path: prometheus-domain-rules.yml
               - key: prometheus-ofac-rules.yml
