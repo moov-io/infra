@@ -16,8 +16,7 @@ groups:
           description: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
 ```
 
-Right now the production alerts are defined in `envs/prod/14-prometheus-rules.yml` with each sub-object written as a file to disk (managed in the Prometheus `Deployment` in volumes).
-
+Right now the production alerts Moov has created are defined in [14-prometheus-rules.yml](../envs/prod/infra/14-prometheus-rules.yml) and we include [kubernetes-monitoring/kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin) alerts as well - these cover a base Kubernetes setup.
 
 ## Updating Prometheus Alerts
 
