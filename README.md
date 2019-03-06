@@ -74,6 +74,7 @@ Note: To run these tests you need Docker installed.
 
 ### Runbooks
 
+- [Alerting](docs/alerts.md)
 - [Google Cloud (GKE)](docs/google-cloud.md)
 - [In-repo Secrets (Blackbox)](docs/secrets.md)
 - [Kubernetes](docs/kubernetes.md)

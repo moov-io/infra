@@ -17,3 +17,15 @@ groups:
 ```
 
 Right now the production alerts are defined in `envs/prod/14-prometheus-rules.yml` with each sub-object written as a file to disk (managed in the Prometheus `Deployment` in volumes).
+
+
+## Updating Prometheus Alerts
+
+We have automation for updating most of the Prometheus alerts we deploy. This is done with the Go code at [`github.com/moov-io/infra/cmd/kubernetes-mixins`](../cmd/kubernetes-mixins/) following the steps [laid out on kubernetes-monitoring/kubernetes-mixin's documentation](https://github.com/kubernetes-monitoring/kubernetes-mixin#generate-config-files). To update the alets run:
+
+```
+$ go fmt ./cmd/kubernetes-mixins/ && make generate
+2019/03/05 16:29:20 Installing jsonnet and jsonnet-bundler to your system
+```
+
+**Note**: This is currently only supported on macOS and **will install jsonnet and [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler) to your system!
