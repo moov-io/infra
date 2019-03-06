@@ -23,7 +23,7 @@ Right now the production alerts Moov has created are defined in [14-prometheus-r
 We have automation for updating most of the Prometheus alerts we deploy. This is done with the Go code at [`github.com/moov-io/infra/cmd/kubernetes-mixins`](../cmd/kubernetes-mixins/) following the steps [laid out on kubernetes-monitoring/kubernetes-mixin's documentation](https://github.com/kubernetes-monitoring/kubernetes-mixin#generate-config-files). To update the alets run:
 
 ```
-$ go fmt ./cmd/kubernetes-mixins/ && make generate
+$ make generate
 2019/03/05 16:29:20 Installing jsonnet and jsonnet-bundler to your system
 ```
 
