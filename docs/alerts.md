@@ -27,4 +27,4 @@ $ go fmt ./cmd/kubernetes-mixins/ && make generate
 2019/03/05 16:29:20 Installing jsonnet and jsonnet-bundler to your system
 ```
 
-**Note**: This is currently only supported on macOS and **will install jsonnet and [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler) to your system!
+**Note**: This is currently only supported on macOS and **will install [jsonnet](https://jsonnet.org/) and [jsonnet-bundler](https://github.com/jsonnet-bundler/jsonnet-bundler) to your system**!
