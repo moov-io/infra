@@ -88,7 +88,7 @@ data:
       - /opt/prometheus-rules/*.yml
     scrape_configs:
       # Scrape kubernetes apiservers
-      - job_name: 'kubernetes-apiservers'
+      - job_name: kube-apiserver
         kubernetes_sd_configs:
           - role: endpoints
             # api_server: kubernetes.default.svc.cluster.local
@@ -100,23 +100,59 @@ data:
           - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
             action: keep
             regex: default;kubernetes;https
-      # Scrape cAdvisor TODO(adam): not quite working, wrong endpoint (:10250)
-      # - job_name: 'kubernetes-cadvisor'
-      #   kubernetes_sd_configs:
-      #     - role: node
-      #       # api_server: kubernetes.default.svc.cluster.local
-      #   # scheme: https
-      #   # tls_config:
-      #   #   ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-      #   # bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-      #   relabel_configs:
-      #     - action: labelmap
-      #       regex: __meta_kubernetes_node_label_(.+)
-      #     # We need to relabel the addresses as it was using a GKE hostname not ip address.
-      #     - source_labels: [__address__]
-      #       target_label: instance
-      #       regex: (.+):10250
-      #       replacement: ${1}:8080
+      # Scrape Kubernetes controller
+      - job_name: 'kube-controller-manager'
+        kubernetes_sd_configs:
+          - role: endpoints
+        scheme: http
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_component]
+            action: keep
+            regex: kube-system;kube-controller-manager
+      # Scrape Kubernetes scheduler
+      - job_name: 'kube-scheduler'
+        kubernetes_sd_configs:
+          - role: endpoints
+        scheme: http
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_component]
+            action: keep
+            regex: kube-system;kube-scheduler
+      # Scrape cAdvisor
+      - job_name: 'kubernetes-cadvisor'
+        kubernetes_sd_configs:
+          - role: node
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+          - action: labelmap
+            regex: __meta_kubernetes_node_label_(.+)
+          - target_label: __address__
+            replacement: kubernetes.default.svc:443
+          - source_labels: [__meta_kubernetes_node_name]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+      # Scrape kubelet
+      - job_name: kubelet
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+          - role: node
+        relabel_configs:
+          - source_labels: [__address__]
+            regex: '(.*):10250'
+            replacement: '${1}:10255'
+            target_label: __address__
       # Scrape pods
       - job_name: 'kubernetes-pods'
         kubernetes_sd_configs:
