@@ -115,7 +115,7 @@ spec:
           persistentVolumeClaim:
             claimName: ofac-data
       containers:
-      - image: moov/ofac:v0.5.2
+      - image: moov/ofac:v0.7.0-rc1
         imagePullPolicy: Always
         name: ofac
         args:
@@ -137,10 +137,10 @@ spec:
         resources:
           limits:
             cpu: 0.2
-            memory: 50Mi
+            memory: 200Mi
           requests:
             cpu: 25m
-            memory: 10Mi
+            memory: 100Mi
         readinessProbe:
           httpGet:
             path: /ping
