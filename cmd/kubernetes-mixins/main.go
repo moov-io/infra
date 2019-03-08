@@ -67,6 +67,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// TODO(adam): Since we run on GKE we should be ignoring the scrape jobs for
+	// kube-controller-manager and kube-scheduler because they're managed for us outside of our view.
+	//
+	// See: https://github.com/camilb/prometheus-kubernetes/issues/48
+
 	// TODO(adam): copy over dashboards
 	// $ make dashboards_out
 	// jsonnet -J vendor -m dashboards_out lib/dashboards.jsonnet
