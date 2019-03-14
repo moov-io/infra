@@ -10,6 +10,11 @@ There are also several gommunity guides for troubleshooting Kubernetes problems:
 - [Cloud.gov Guide](https://cloud.gov/docs/ops/runbook/troubleshooting-kubernetes/)
 - [Codefresh.io Guide](https://codefresh.io/Kubernetes-Tutorial/recover-broken-kubernetes-cluster/)
 
+**Useful Tools**
+
+- `kubespy`: Tool for observing Kubernetes resources in real time - [GitHub](https://github.com/pulumi/kubespy)
+   - [kubespy trace: a real-time view into the heart of a Kubernetes Service](https://blog.pulumi.com/kubespy-trace-a-real-time-view-into-the-heart-of-a-kubernetes-service)
+
 ### Viewing Pod/Container logs
 
 ```
