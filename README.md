@@ -60,7 +60,7 @@ This brings up a prompt that looks like the following image. Use the arrow keys 
 
 ![](docs/images/tilt.png)
 
-You should also be able to ping services (ACH ping: http://localhost:8080/ping) or even run [`apitest -local`](https://github.com/moov-io/api/tree/master/cmd/apitest). `apitest` can be installed with `go get github.com/moov-io/api/cmd/apitest`.
+You should also be able to ping services (ACH ping: http://localhost:9000/v1/ach/ping) or even run [`apitest -dev`](https://github.com/moov-io/api/tree/master/cmd/apitest). `apitest` can be installed with `go get github.com/moov-io/api/cmd/apitest`.
 
 ### Testing
 
