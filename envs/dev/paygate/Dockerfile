@@ -1,1 +1,0 @@
-../../../../paygate/Dockerfile
