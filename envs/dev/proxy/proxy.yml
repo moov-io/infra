@@ -39,7 +39,7 @@ spec:
               weight: 1
       containers:
         # This image is built from the api repository
-      - image: moov/localdevproxy:latest #v0.6.2-dev
+      - image: moov/localdevproxy:latest
         imagePullPolicy: Always
         name: proxy
         args:
