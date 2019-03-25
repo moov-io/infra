@@ -58,7 +58,7 @@ spec:
     - ReadWriteOnce # mountable only to a single node
   resources:
     requests:
-      storage: 25Gi
+      storage: 50Gi
 
 ---
 # Docs: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
@@ -201,7 +201,7 @@ spec:
       #     value: "true"
       #     effect: NoSchedule
       containers:
-      - image: prom/prometheus:v2.7.2
+      - image: prom/prometheus:v2.8.0
         imagePullPolicy: Always
         name: prometheus
         args:
