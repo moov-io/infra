@@ -23,7 +23,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     traefik.frontend.rule.type: PathPrefix
-    traefik.ingress.kubernetes.io/request-modifier: 'ReplacePathRegex: ^/v1/ledger/(.*) /v1/$1'
+    traefik.ingress.kubernetes.io/request-modifier: 'ReplacePathRegex: ^/v1/qledger/(.*) /$1'
     # ingress.kubernetes.io/auth-type: forward
     # ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
     # ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
@@ -39,7 +39,7 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/ledger
+          - path: /v1/qledger
             backend:
               serviceName: qledger
               servicePort: 7000
