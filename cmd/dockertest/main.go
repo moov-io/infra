@@ -87,23 +87,20 @@ type tester struct {
 func (t *tester) run(name string, parent string) {
 	defer t.wg.Done()
 
-	log.Printf("Running %s tests", name)
+	log.Printf("building docker image and running %s tests", name)
 
-	var buf bytes.Buffer
 	cmd := exec.Command("make", "docker")
 	cmd.Dir = filepath.Join(parent, name)
-	cmd.Stderr = &buf
-	cmd.Stderr = &buf
-	err := cmd.Run()
+	bs, err := cmd.CombinedOutput()
 
 	if *flagVerbose || err != nil {
-		fmt.Printf("\n%s docker build output:\n%s\n\n", name, buf.String())
+		fmt.Printf("\n%s docker build output:\n%s\n\n", name, string(bs))
 	}
 	if err != nil {
 		err = fmt.Errorf("ERROR running %s tests: %v", name, err)
 		t.errors = append(t.errors, err)
 		log.Println(err.Error())
 	} else {
-		log.Printf("%s tests passed", name)
+		log.Printf("%s image built and tests passed", name)
 	}
 }
