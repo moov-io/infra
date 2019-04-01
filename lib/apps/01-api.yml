@@ -97,7 +97,7 @@ spec:
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: apitest
+  name: apitest-cookie
   namespace: apps
 spec:
   suspend: false
@@ -110,6 +110,22 @@ spec:
           containers:
           - name: cookie
             image: moov/apitest:v0.8.0
+          restartPolicy: OnFailure
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: apitest-oauth
+  namespace: apps
+spec:
+  suspend: false
+  concurrencyPolicy: Forbid
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
           - name: oauth
             image: moov/apitest:v0.8.0
             args:
