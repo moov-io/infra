@@ -1,4 +1,4 @@
-VERSION := v0.1.0-dev
+VERSION := v0.1.0
 
 .PHONY: docker release
 
