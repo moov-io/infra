@@ -61,7 +61,7 @@ func main() {
 	if len(t.errors) > 0 {
 		os.Exit(1)
 	} else {
-		log.Println("all docker tests passed")
+		log.Println("SUCCESS all docker tests passed")
 	}
 }
 
@@ -99,8 +99,8 @@ func (t *tester) run(name string, parent string) {
 	if err != nil {
 		err = fmt.Errorf("ERROR running %s tests: %v", name, err)
 		t.errors = append(t.errors, err)
-		log.Println(err.Error())
+		log.Printf("ERROR %v\n", err.Error())
 	} else {
-		log.Printf("%s image built and tests passed", name)
+		log.Printf("SUCCESS %s image built and tests passed", name)
 	}
 }
