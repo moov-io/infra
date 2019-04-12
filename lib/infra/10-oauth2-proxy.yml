@@ -71,7 +71,7 @@ spec:
       serviceAccountName: oauth2-proxy
       terminationGracePeriodSeconds: 30
       containers:
-      - image: quay.io/pusher/oauth2_proxy:v3.1.0
+      - image: quay.io/pusher/oauth2_proxy:v3.1.0 # TODO(adam): v3.2.0 might be broken? can't find _oauth2_proxy cookie
         imagePullPolicy: Always
         name: oauth2-proxy
         resources:
@@ -101,6 +101,7 @@ spec:
           - -cookie-domain=moov.io
           - -cookie-secure
           - -email-domain=*
+          # - -gcp-healthchecks # only in v3.2.0 and later
           - -github-org=moov-io
           # - -github-team=infra
           - -http-address=0.0.0.0:4180
@@ -112,6 +113,10 @@ spec:
           - containerPort: 4180
             name: http
             protocol: TCP
+        # securityContext:
+        #   readOnlyRootFilesystem: true
+        #   runAsNonRoot: true
+        #   runAsUser: 10001
       restartPolicy: Always
 
 ---
