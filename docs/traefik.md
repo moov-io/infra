@@ -35,7 +35,7 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/ach/customers
+          - path: /v1/ach/receivers
             backend:
               serviceName: paygate
               servicePort: 8080
