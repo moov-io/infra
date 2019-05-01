@@ -30,6 +30,12 @@ $ kubectl logs -n infra [--tail 10] [-f] kube-ingress-index-5cb86955ff-xdb5m
 
 See also: [Viewing logs in Kubernetes](https://medium.com/devopslinks/viewing-logs-in-kubernetes-e055f936e187)
 
+### Viewing Logs with Loki / Grafana
+
+[Loki](https://github.com/grafana/loki) is a new log aggretaion platform which attempts to transform logs into metric streams (with log information as labels). This project is new, but Grafana allows exploring, building dashboards, and alerts. Checkout the [explore page showing paygate logs](https://infra.moov.io/grafana/explore?left=%5B"now%2Fd","now%2Fd","Loki",%7B"expr":"%7Bapp%3D%5C"paygate%5C"%7D"%7D,%7B"ui":%5Btrue,true,true,"none"%5D%7D%5D) and the [basic usage guide](https://github.com/grafana/loki/blob/master/docs/usage.md#searching-with-labels-and-distributed-grep).
+
+- [Loki Troubleshooting Guide](https://github.com/grafana/loki/blob/master/docs/troubleshooting.md)
+
 ### Rolling Pods / Containers
 
 If you need to restart a Pod/Container simply list out the pods and issue `kubectl delete`:
