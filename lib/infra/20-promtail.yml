@@ -115,7 +115,7 @@ spec:
     spec:
       containers:
       - args:
-          - -client.url=http://loki.infra.svc.cluster.local:3100/api/prom/push # TOOD(adam): HTTPS
+          - -client.url=http://loki.infra.svc.cluster.local:3100/loki/api/prom/push # TOOD(adam): HTTPS
           - -config.file=/etc/promtail/promtail.yml
         env:
         - name: HOSTNAME
