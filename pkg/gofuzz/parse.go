@@ -63,7 +63,7 @@ func ParseLine(raw string) (*Line, error) {
 	raw = strings.TrimSpace(raw[timestampFormatLength:])
 	chunks := strings.Split(raw, ", ")
 	for i := range chunks {
-		parts := strings.Split(chunks[i], " ")
+		parts := strings.Fields(chunks[i])
 		if len(parts) < 2 {
 			continue
 		}
@@ -88,7 +88,7 @@ func ParseLine(raw string) (*Line, error) {
 }
 
 func convert(raw string) int64 {
-	parts := strings.Split(raw, " ")
+	parts := strings.Fields(raw)
 	if len(parts) < 1 {
 		return -1
 	}
