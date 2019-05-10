@@ -115,7 +115,7 @@ spec:
           persistentVolumeClaim:
             claimName: gl-data
       containers:
-      - image: moov/gl:v0.2.2
+      - image: moov/gl:v0.3.0-rc1
         imagePullPolicy: Always
         name: gl
         args:
