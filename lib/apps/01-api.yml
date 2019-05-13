@@ -133,3 +133,23 @@ spec:
           restartPolicy: OnFailure
 
 ---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: apitest-ach-iat
+  namespace: apps
+spec:
+  suspend: false
+  concurrencyPolicy: Forbid
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: iat
+            image: moov/apitest:v0.9.0-rc2
+            args:
+            - -ach.type=IAT
+          restartPolicy: OnFailure
+---
