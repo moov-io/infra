@@ -13,8 +13,21 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
-    # TODO(adam): 9090 with nginx_exporter
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-apps
+  namespace: apps
+spec:
+  type: ClusterIP
+  selector:
+    app: api-apps
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -39,6 +52,10 @@ spec:
           - path: /
             backend:
               serviceName: api
+              servicePort: 8080
+          - path: /apps
+            backend:
+              serviceName: api-apps
               servicePort: 8080
 
 ---
@@ -69,6 +86,58 @@ spec:
       - image: moov/api:v0.9.0-rc2
         imagePullPolicy: Always
         name: api
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 0.1
+            memory: 25Mi
+          requests:
+            cpu: 25m
+            memory: 10Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      restartPolicy: Always
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api-apps
+  namespace: apps
+  labels:
+    app: api-apps
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-apps
+  template:
+    metadata:
+      labels:
+        app: api-apps
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
+      containers:
+      - image: moov/api-apps:v0.9.0-rc2
+        imagePullPolicy: Always
+        name: api-apps
         ports:
           - containerPort: 8080
             name: http
