@@ -193,7 +193,7 @@ data:
             "message": "Cluster has overcommitted CPU resource requests for Pods and cannot tolerate node failure."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubecpuovercommit"
           "expr": |
-            sum(namespace_name:kube_pod_container_resource_requests_cpu_cores:sum)
+            sum(namespace:kube_pod_container_resource_requests_cpu_cores:sum)
               /
             sum(node:node_num_cpu:sum)
               >
@@ -206,7 +206,7 @@ data:
             "message": "Cluster has overcommitted memory resource requests for Pods and cannot tolerate node failure."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubememovercommit"
           "expr": |
-            sum(namespace_name:kube_pod_container_resource_requests_memory_bytes:sum)
+            sum(namespace:kube_pod_container_resource_requests_memory_bytes:sum)
               /
             sum(node_memory_MemTotal_bytes)
               >
@@ -254,12 +254,12 @@ data:
             "severity": "warning"
         - "alert": "CPUThrottlingHigh"
           "annotations": 
-            "message": "{{ printf \"%0.0f\" $value }}% throttling of CPU in namespace {{ $labels.namespace }} for container {{ $labels.container_name }} in pod {{ $labels.pod_name }}."
+            "message": "{{ printf \"%0.0f\" $value }}% throttling of CPU in namespace {{ $labels.namespace }} for container {{ $labels.container }} in pod {{ $labels.pod }}."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-cputhrottlinghigh"
           "expr": |
-            100 * sum(increase(container_cpu_cfs_throttled_periods_total{container_name!="", }[5m])) by (container_name, pod_name, namespace)
+            100 * sum(increase(container_cpu_cfs_throttled_periods_total{container!="", }[5m])) by (container, pod, namespace)
               /
-            sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container_name, pod_name, namespace)
+            sum(increase(container_cpu_cfs_periods_total{}[5m])) by (container, pod, namespace)
               > 25 
           "for": "15m"
           "labels": 
@@ -357,7 +357,7 @@ data:
             "message": "The API server has a 99th percentile latency of {{ $value }} seconds for {{ $labels.verb }} {{ $labels.resource }}."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapilatencyhigh"
           "expr": |
-            cluster_quantile:apiserver_request_latencies:histogram_quantile{job="kube-apiserver",quantile="0.99",subresource!="log",verb!~"^(?:LIST|WATCH|WATCHLIST|PROXY|CONNECT)$"} > 1
+            cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="kube-apiserver",quantile="0.99",subresource!="log",verb!~"^(?:LIST|WATCH|WATCHLIST|PROXY|CONNECT)$"} > 1
           "for": "10m"
           "labels": 
             "severity": "warning"
@@ -366,7 +366,7 @@ data:
             "message": "The API server has a 99th percentile latency of {{ $value }} seconds for {{ $labels.verb }} {{ $labels.resource }}."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapilatencyhigh"
           "expr": |
-            cluster_quantile:apiserver_request_latencies:histogram_quantile{job="kube-apiserver",quantile="0.99",subresource!="log",verb!~"^(?:LIST|WATCH|WATCHLIST|PROXY|CONNECT)$"} > 4
+            cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="kube-apiserver",quantile="0.99",subresource!="log",verb!~"^(?:LIST|WATCH|WATCHLIST|PROXY|CONNECT)$"} > 4
           "for": "10m"
           "labels": 
             "severity": "critical"
@@ -375,9 +375,9 @@ data:
             "message": "API server is returning errors for {{ $value }}% of requests."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
           "expr": |
-            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m]))
+            sum(rate(apiserver_request_total{job="kube-apiserver",code=~"^(?:5..)$"}[5m]))
               /
-            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) * 100 > 3
+            sum(rate(apiserver_request_total{job="kube-apiserver"}[5m])) * 100 > 3
           "for": "10m"
           "labels": 
             "severity": "critical"
@@ -386,9 +386,9 @@ data:
             "message": "API server is returning errors for {{ $value }}% of requests."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
           "expr": |
-            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m]))
+            sum(rate(apiserver_request_total{job="kube-apiserver",code=~"^(?:5..)$"}[5m]))
               /
-            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) * 100 > 1
+            sum(rate(apiserver_request_total{job="kube-apiserver"}[5m])) * 100 > 1
           "for": "10m"
           "labels": 
             "severity": "warning"
@@ -397,9 +397,9 @@ data:
             "message": "API server is returning errors for {{ $value }}% of requests for {{ $labels.verb }} {{ $labels.resource }} {{ $labels.subresource }}."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
           "expr": |
-            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) by (resource,subresource,verb)
+            sum(rate(apiserver_request_total{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) by (resource,subresource,verb)
               /
-            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) by (resource,subresource,verb) * 100 > 10
+            sum(rate(apiserver_request_total{job="kube-apiserver"}[5m])) by (resource,subresource,verb) * 100 > 10
           "for": "10m"
           "labels": 
             "severity": "critical"
@@ -408,9 +408,9 @@ data:
             "message": "API server is returning errors for {{ $value }}% of requests for {{ $labels.verb }} {{ $labels.resource }} {{ $labels.subresource }}."
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapierrorshigh"
           "expr": |
-            sum(rate(apiserver_request_count{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) by (resource,subresource,verb)
+            sum(rate(apiserver_request_total{job="kube-apiserver",code=~"^(?:5..)$"}[5m])) by (resource,subresource,verb)
               /
-            sum(rate(apiserver_request_count{job="kube-apiserver"}[5m])) by (resource,subresource,verb) * 100 > 5
+            sum(rate(apiserver_request_total{job="kube-apiserver"}[5m])) by (resource,subresource,verb) * 100 > 5
           "for": "10m"
           "labels": 
             "severity": "warning"
