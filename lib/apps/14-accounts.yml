@@ -1,0 +1,166 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts
+  namespace: apps
+spec:
+  type: ClusterIP
+  selector:
+    app: accounts
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: accounts
+  namespace: apps
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/rewrite-target: /accounts
+    ingress.kubernetes.io/auth-type: forward
+    ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
+    ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "api.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: api.moov.io
+      http:
+        paths:
+          - path: /v1/accounts
+            backend:
+              serviceName: accounts
+              servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: accounts-ping
+  namespace: apps
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/rewrite-target: /ping
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "api.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: api.moov.io
+      http:
+        paths:
+          - path: /v1/accounts/ping
+            backend:
+              serviceName: accounts
+              servicePort: 8080
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: accounts-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: accounts
+  namespace: apps
+  labels:
+    app: accounts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts
+  template:
+    metadata:
+      labels:
+        app: accounts
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
+      volumes:
+        - name: accounts-data
+          persistentVolumeClaim:
+            claimName: accounts-data
+      containers:
+      - image: moov/accounts:v0.3.0-rc3
+        imagePullPolicy: Always
+        name: accounts
+        args:
+          - -http.addr=:8080
+          - -admin.addr=:9090
+        env:
+          - name: DEFAULT_ROUTING_NUMBER
+            # Arbitrary (but real) routing nubmer for now. This would need to be changed per FI/deployment.
+            value: '121042882'
+          - name: QLEDGER_ENDPOINT
+            # TODO(adam): https caused panic on qleder-sdk-go/DoRequest (line 49) and in Ping (ledger.go:55)
+            value: http://qledger.apps.svc.cluster.local:7000
+          - name: QLEDGER_AUTH_TOKEN
+            # TODO(adam): mount with Secret once
+            value: moov
+          - name: SQLITE_DB_PATH
+            value: /opt/moov/accounts/accounts.db
+        volumeMounts:
+          - name: accounts-data
+            mountPath: /opt/moov/accounts/
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 0.1
+            memory: 50Mi
+          requests:
+            cpu: 25m
+            memory: 25Mi
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      restartPolicy: Always
+
+---
