@@ -17,7 +17,6 @@ spec:
       protocol: TCP
       port: 9090
       targetPort: 9090
-
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -26,7 +25,7 @@ metadata:
   namespace: apps
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/request-modifier: 'ReplacePathRegex: ^/v1/accounts/(.*) /accounts/$2'
+    traefik.ingress.kubernetes.io/rewrite-target: /accounts
     ingress.kubernetes.io/auth-type: forward
     ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
     ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
@@ -43,36 +42,6 @@ spec:
       http:
         paths:
           - path: /v1/accounts
-            backend:
-              serviceName: accounts
-              servicePort: 8080
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: accounts-customers
-  namespace: apps
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    # traefik.ingress.kubernetes.io/request-modifier: 'ReplacePathRegex: ^/v1/customers/(.*)/accounts /customers/$1/accounts'
-    traefik.ingress.kubernetes.io/request-modifier: 'ReplacePathRegex: ^/v1/(.*) /$1'
-    ingress.kubernetes.io/auth-type: forward
-    ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
-    ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
-    ingress.kubernetes.io/content-type-nosniff: "true"
-    ingress.kubernetes.io/force-hsts: "true"
-    ingress.kubernetes.io/hsts-max-age: "315360000"
-    ingress.kubernetes.io/hsts-include-subdomains: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "api.moov.io"
-    ingress.kubernetes.io/ssl-force-host: "true"
-    traefik.frontend.priority: "1"
-spec:
-  rules:
-    - host: api.moov.io
-      http:
-        paths:
-          - path: /v1/customers/(.*)/accounts
             backend:
               serviceName: accounts
               servicePort: 8080
@@ -144,7 +113,7 @@ spec:
           persistentVolumeClaim:
             claimName: accounts-data
       containers:
-      - image: moov/accounts:v0.3.0-rc5
+      - image: moov/accounts:v0.3.0
         imagePullPolicy: Always
         name: accounts
         args:
