@@ -14,9 +14,7 @@ This project aims to be the structure and runtime for a fully automated hosting 
 
 ### Getting started
 
-To get started working on this project, pull down (`git clone git@github.com:moov-io/infra`) the source code and setup some configs.
-
-You'll need to have the following tools setup as well:
+To get started working on this project, pull down (`git clone git@github.com:moov-io/infra`) the source code and setup some tools: Golang, Terraform, kubectl, etc. The following list consists of all tools used and expected by the infra repository.
 
 - [Golang](https://golang.org/dl)
 - Terraform | [Download](https://www.terraform.io/downloads.html) | [Intro](https://www.terraform.io/intro/index.html)
