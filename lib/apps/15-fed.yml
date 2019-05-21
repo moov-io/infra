@@ -120,15 +120,13 @@ spec:
           persistentVolumeClaim:
             claimName: fed-data
       containers:
-      - image: moov/fed:v0.1.4
+      - image: moov/fed:v0.2.0-rc1
         imagePullPolicy: Always
         name: fed
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
         env:
-          # Setup FED data files (newer files should be uploaded with a timestamp)
-          # TODO(adam): can fed just download these on startup?
           - name: FEDACH_DATA_PATH
             value: /data/fed/FedACHdir.txt
           - name: FEDWIRE_DATA_PATH
