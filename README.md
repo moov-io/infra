@@ -1,4 +1,4 @@
-## moov.io infra
+## moov-io/infra
 
 This repository holds the configurion for [moov.io](https://github.com/moov-io)'s infrastructure. If you find a problem (security or otherwise), please contact us at [`security@moov.io`](mailto:security@moov.io).
 
@@ -31,9 +31,11 @@ $ brew install gpg2 jq make terraform go
 
 The project has the following directories:
 
+- [`cmd/`](https://github.com/moov-io/infra/tree/master/cmd) - Various command line utilities used in this project and as tests
 - [`docs/`](https://github.com/moov-io/infra/tree/master/docs) - Human readable documentation.
 - `envs/`
-  - [`envs/sbx/`](https://github.com/moov-io/infra/tree/master/envs/sbx) - Our production (and only) environment currently.
+  - [`envs/dev`](https://github.com/moov-io/infra/tree/master/envs/dev) - Our local development environment (for running on a developer's laptop)
+  - [`envs/prod`](https://github.com/moov-io/infra/tree/master/envs/prod) - Our production environment
 - [`images/`](https://github.com/moov-io/infra/tree/master/images) - Docker images we create and manage
 - [`lib/`](https://github.com/moov-io/infra/tree/master/lib) - Shared (Kubernetes) resources across environments
 
