@@ -83,7 +83,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/api:v0.9.0-rc3
+      - image: moov/api:v0.9.0
         imagePullPolicy: Always
         name: api
         ports:
@@ -135,7 +135,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/api-apps:v0.9.0-rc3
+      - image: moov/api-apps:v0.9.0
         imagePullPolicy: Always
         name: api-apps
         ports:
@@ -178,7 +178,7 @@ spec:
         spec:
           containers:
           - name: cookie
-            image: moov/apitest:v0.9.0-rc3
+            image: moov/apitest:v0.9.0
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1beta1
@@ -196,7 +196,7 @@ spec:
         spec:
           containers:
           - name: oauth
-            image: moov/apitest:v0.9.0-rc3
+            image: moov/apitest:v0.9.0
             args:
             - -oauth
           restartPolicy: OnFailure
@@ -217,7 +217,7 @@ spec:
         spec:
           containers:
           - name: iat
-            image: moov/apitest:v0.9.0-rc3
+            image: moov/apitest:v0.9.0
             args:
             - -ach.type=IAT
           restartPolicy: OnFailure
