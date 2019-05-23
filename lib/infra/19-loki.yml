@@ -80,7 +80,7 @@ data:
       chunk_idle_period: 15m
     schema_config:
       configs:
-        - from: 0
+        - from: 2019-01-01
           store: boltdb
           object_store: filesystem
           schema: v9
