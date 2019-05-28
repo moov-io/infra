@@ -70,6 +70,10 @@ metadata:
     app: alertmanager
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: alertmanager
@@ -81,7 +85,7 @@ spec:
       serviceAccountName: alertmanager
       terminationGracePeriodSeconds: 30
       containers:
-      - image: prom/alertmanager:v0.16.2
+      - image: prom/alertmanager:v0.17.0
         imagePullPolicy: Always
         name: alertmanager
         args:
