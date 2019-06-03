@@ -11,7 +11,7 @@ data:
   traefik.toml: |
       defaultEntryPoints = ["http","https"]
       # logging
-      logLevel = "INFO"
+      logLevel = "INFO" # INFO, DEBUG
       [file]
       watch = true
       [traefikLog]
@@ -20,6 +20,10 @@ data:
       [accessLog]
       # filePath = "/path/to/access.log"
       # format   = "json
+      # TODO(adam): ...
+      # [Global]
+      # sendAnonymousUsage = false
+      # Setup entrypoint configs
       [entryPoints]
       [entryPoints.http]
       address = ":80"
@@ -45,6 +49,7 @@ data:
       email = "security@moov.io"
       storage = "/opt/traefik/letsencrypt.json"
       entryPoint = "https"
+      # onDemand is deprecated in v1.7.9 ?
       onDemand = true
       onHostRule = true
       # caServer = "https://acme-staging.api.letsencrypt.org/directory"
