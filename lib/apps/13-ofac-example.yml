@@ -17,7 +17,7 @@ spec:
         app: ofac-webhook-example
     spec:
       containers:
-      - image: moov/ofac-webhook-example:v0.5.2
+      - image: moov/ofac-webhook-example:v0.7.0-rc1
         imagePullPolicy: Always
         name: ofac-webhook-example
         args:
