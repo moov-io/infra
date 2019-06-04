@@ -12,8 +12,8 @@ resource "google_dns_managed_zone" "moov-io" {
 
 // moov.io
 resource "google_dns_record_set" "moov-A" {
-  name         = "${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  name         = google_dns_managed_zone.moov-io.dns_name
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "A"
   ttl          = 60
 
@@ -22,8 +22,8 @@ resource "google_dns_record_set" "moov-A" {
 }
 
 resource "google_dns_record_set" "moov-SPF" {
-  name         = "${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  name         = google_dns_managed_zone.moov-io.dns_name
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "TXT"
   ttl          = 60
 
@@ -31,8 +31,8 @@ resource "google_dns_record_set" "moov-SPF" {
 }
 
 resource "google_dns_record_set" "moov-MX" {
-  name         = "${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  name         = google_dns_managed_zone.moov-io.dns_name
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "MX"
   ttl          = 60
 
@@ -46,8 +46,8 @@ resource "google_dns_record_set" "moov-MX" {
 }
 
 resource "google_dns_record_set" "moov-CAA" {
-  name         = "${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  name         = google_dns_managed_zone.moov-io.dns_name
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "CAA"
   ttl          = 60
 
@@ -65,7 +65,7 @@ resource "google_dns_record_set" "moov-CAA" {
     "0 issue \"google.com\"",
     "0 issuewild \"google.com\"",
 
-    // ACME
+    // Let's Encrypt
     "0 issue \"letsencrypt.org\"",
     "0 issuewild \"letsencrypt.org\"",
 
@@ -76,23 +76,23 @@ resource "google_dns_record_set" "moov-CAA" {
 
 data "kubernetes_service" "traefik" {
   metadata {
-    name = "traefik"
+    name      = "traefik"
     namespace = "lb"
   }
 }
 
 resource "google_dns_record_set" "api" {
   name         = "api.${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "A"
   ttl          = 60
 
-  rrdatas = ["${data.kubernetes_service.traefik.load_balancer_ingress.0.ip}"]
+  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
 resource "google_dns_record_set" "docs" {
   name         = "docs.${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "CNAME"
   ttl          = 60
 
@@ -101,9 +101,9 @@ resource "google_dns_record_set" "docs" {
 
 resource "google_dns_record_set" "infra" {
   name         = "infra.${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = "${google_dns_managed_zone.moov-io.name}"
+  managed_zone = google_dns_managed_zone.moov-io.name
   type         = "A"
   ttl          = 60
 
-  rrdatas = ["${data.kubernetes_service.traefik.load_balancer_ingress.0.ip}"]
+  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }

@@ -1,21 +1,22 @@
 provider "kubernetes" {
-  host = "${google_container_cluster.primary.endpoint}"
+  host = google_container_cluster.primary.endpoint
 
-  username = "${var.username}"
-  password = "${var.password}"
-
+  username = var.username
+  password = var.password
   # client_certificate = "${base64decode(file("client.crt"))}"
   # client_key = "${base64decode(file("client.key"))}"
   # cluster_ca_certificate = "${base64decode(file("ca.crt"))}"
 }
 
-
 variable "cluster_name" {
   default = "sbx"
 }
 
-variable "username" {}
-variable "password" {}
+variable "username" {
+}
+
+variable "password" {
+}
 
 variable "permanent_pool_node_count" {
   default = 0
@@ -38,20 +39,20 @@ variable "node_machine_type" {
 }
 
 variable "min_master_version" {
-  default = "1.12.7-gke.10"
+  default = "1.13.6-gke.5"
 }
 
 # Setup for a GCP kubernetes cluster.
 resource "google_container_cluster" "primary" {
-  name               = "${var.cluster_name}"
-  zone               = "${local.primary_gcp_zone}"
+  name               = var.cluster_name
+  zone               = local.primary_gcp_zone
   initial_node_count = 1
 
-  min_master_version = "${var.min_master_version}"
+  min_master_version = var.min_master_version
 
   lifecycle {
     create_before_destroy = true
-    prevent_destroy = true
+    prevent_destroy       = true
   }
 
   maintenance_policy {
@@ -61,13 +62,13 @@ resource "google_container_cluster" "primary" {
   }
 
   master_auth {
-    username = "${var.username}"
-    password = "${var.password}"
+    username = var.username
+    password = var.password
   }
 
   node_config {
-    disk_size_gb = "${var.node_disk_size_gb}"
-    disk_type    = "${var.node_disk_type}"
+    disk_size_gb = var.node_disk_size_gb
+    disk_type    = var.node_disk_type
     machine_type = "g1-small"
     preemptible  = true
 
@@ -81,19 +82,19 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "permanent" {
-  name       = "${var.cluster_name}-permanent-nodes"
-  zone       = "${local.primary_gcp_zone}"
-  cluster    = "${google_container_cluster.primary.name}"
+  name    = "${var.cluster_name}-permanent-nodes"
+  zone    = local.primary_gcp_zone
+  cluster = google_container_cluster.primary.name
 
   lifecycle {
     prevent_destroy = true
   }
 
-  node_count = "${var.permanent_pool_node_count}"
+  node_count = var.permanent_pool_node_count
   node_config {
-    disk_size_gb = "${var.node_disk_size_gb}"
-    disk_type    = "${var.node_disk_type}"
-    machine_type = "${var.node_machine_type}"
+    disk_size_gb = var.node_disk_size_gb
+    disk_type    = var.node_disk_type
+    machine_type = var.node_machine_type
     preemptible  = false
 
     oauth_scopes = [
@@ -106,19 +107,19 @@ resource "google_container_node_pool" "permanent" {
 }
 
 resource "google_container_node_pool" "preemptible" {
-  name       = "${var.cluster_name}-preemptible-nodes"
-  zone       = "${local.primary_gcp_zone}"
-  cluster    = "${google_container_cluster.primary.name}"
+  name    = "${var.cluster_name}-preemptible-nodes"
+  zone    = local.primary_gcp_zone
+  cluster = google_container_cluster.primary.name
 
   lifecycle {
     prevent_destroy = true
   }
 
-  node_count = "${var.preemptible_pool_node_count}"
+  node_count = var.preemptible_pool_node_count
   node_config {
-    disk_size_gb = "${var.node_disk_size_gb}"
-    disk_type    = "${var.node_disk_type}"
-    machine_type = "${var.node_machine_type}"
+    disk_size_gb = var.node_disk_size_gb
+    disk_type    = var.node_disk_type
+    machine_type = var.node_machine_type
     preemptible  = true
 
     oauth_scopes = [
@@ -139,12 +140,12 @@ resource "null_resource" "kubectl_setup" {
 
 resource "null_resource" "kubernetes_config_save" {
   provisioner "local-exec" {
-    command = "echo '${google_container_cluster.primary.master_auth.0.client_certificate}' > client.crt"
+    command = "echo '${google_container_cluster.primary.master_auth[0].client_certificate}' > client.crt"
   }
   provisioner "local-exec" {
-    command = "echo '${google_container_cluster.primary.master_auth.0.client_key}' > client.key"
+    command = "echo '${google_container_cluster.primary.master_auth[0].client_key}' > client.key"
   }
   provisioner "local-exec" {
-    command = "echo '${google_container_cluster.primary.master_auth.0.cluster_ca_certificate}' > ca.crt"
+    command = "echo '${google_container_cluster.primary.master_auth[0].cluster_ca_certificate}' > ca.crt"
   }
 }

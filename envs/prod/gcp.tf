@@ -1,13 +1,13 @@
 // Configure the Google Cloud provider
 provider "google" {
-  credentials = "${file(var.gcp_creds_filepath)}"
-  project     = "${var.gcp_project}"
-  region      = "${var.gcp_region}"
+  credentials = file(var.gcp_creds_filepath)
+  project     = var.gcp_project
+  region      = var.gcp_region
 }
 
 resource "google_project" "ach" {
-  name = "automated clearing house"
-  project_id = "${var.gcp_project}"
+  name       = "automated clearing house"
+  project_id = var.gcp_project
   org_id     = "513355466794"
 
   lifecycle {
@@ -17,7 +17,7 @@ resource "google_project" "ach" {
 
 # Enable all our needed Google API's
 resource "google_project_services" "ach" {
-  project  = "${var.gcp_project}"
+  project = var.gcp_project
   services = [
     "bigquery-json.googleapis.com",
     "cloudkms.googleapis.com",
@@ -51,7 +51,7 @@ variable "gcp_region" {
 }
 
 variable "gcp_zones" {
-  type = "list"
+  type = list(string)
 
   default = [
     "us-central1-a",
@@ -62,15 +62,16 @@ variable "gcp_zones" {
 
 // All projects have this (default storage service account)
 // We need to add a policy to the bucket created.
-data "google_storage_project_service_account" "gcs_account" {}
+data "google_storage_project_service_account" "gcs_account" {
+}
 
 locals {
-  project_service_account_email = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
-  project_service_account_emails = "${list(local.project_service_account_email)}"
+  project_service_account_email  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
+  project_service_account_emails = [local.project_service_account_email]
 }
 
 resource "random_shuffle" "zones" {
-  input = ["${var.gcp_zones}"]
+  input = var.gcp_zones
 
   lifecycle {
     prevent_destroy = true
@@ -80,7 +81,7 @@ resource "random_shuffle" "zones" {
 locals {
   # random_shuffle.zones returns with one of the original zones removed,
   # which becomes our primary zone.
-  primary_gcp_zone = "${element(random_shuffle.zones.result, 0)}"
+  primary_gcp_zone = element(random_shuffle.zones.result, 0)
 }
 
 // ClusterRole on GKE/K8S 1.6+ (with RBAC) won't let you create roles right away.
@@ -94,8 +95,9 @@ locals {
 //
 // To work around this, let's just shell out and create the CRB's ourself.
 resource "null_resource" "rbac_setup" {
-  count = "${length(var.cluster_admins)}"
+  count = length(var.cluster_admins)
 
+  # kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user=myname@example.org
   # kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user=myname@example.org
   provisioner "local-exec" {
     command = "kubectl create clusterrolebinding ${var.cluster_name}-admin-binding --clusterrole=cluster-admin --user=${element(var.cluster_admins, count.index)}"
@@ -105,10 +107,11 @@ resource "null_resource" "rbac_setup" {
 variable "cluster_admins" {
   default = [
     "adam@moov.io",
-    # "wade@moov.io",
   ]
+  # "wade@moov.io",
 }
 
 locals {
-  gcp_cluster_admin_emails = "${formatlist("user:%s", var.cluster_admins)}",
+  gcp_cluster_admin_emails = formatlist("user:%s", var.cluster_admins)
 }
+
