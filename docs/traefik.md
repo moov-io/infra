@@ -57,3 +57,5 @@ The response headers are proxied from `auth` back to the original client accorin
 ### Certificates
 
 We use [Let's Encrypt](https://letsencrypt.org/) integration in Traefik to [dynamically generate certificates](https://docs.traefik.io/configuration/acme/) accoridng to hostnames specified in `Ingress` objects. Each certificate is stored in a `PersistentVolume` and rotated automatically by Traefik. For configuration parameters checkout the `ConfigMap` called `traefik-config` in the `lb` namespace.
+
+Also, we montior the [Certificate Transparency](https://www.certificate-transparency.org/) logs for `moov.io` (and any future domains) [with CertSpotter](https://sslmate.com/certspotter/).
