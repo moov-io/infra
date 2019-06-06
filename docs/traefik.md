@@ -53,3 +53,7 @@ We enable CORS via preflight checks by parsing out the `Origin` header in reques
 The response headers are proxied from `auth` back to the original client accoring to `ingress.kubernetes.io/auth-response-headers` on each `Ingress`.
 
 [Mozilla MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+
+### Certificates
+
+We use [Let's Encrypt](https://letsencrypt.org/) integration in Traefik to [dynamically generate certificates](https://docs.traefik.io/configuration/acme/) accoridng to hostnames specified in `Ingress` objects. Each certificate is stored in a `PersistentVolume` and rotated automatically by Traefik. For configuration parameters checkout the `ConfigMap` called `traefik-config` in the `lb` namespace.
