@@ -104,19 +104,18 @@ spec:
           - containerPort: 9090
             name: http
             protocol: TCP
-        # TODO(adam): What route to put for these endpoints?
-        # readinessProbe:
-        #   httpGet:
-        #     path: /alertmanager/status # TODO(adam): path?
-        #     port: 9090
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 30
-        # livenessProbe:
-        #   httpGet:
-        #     path: /alertmanager/status
-        #     port: 9090
-        #   initialDelaySeconds: 30
-        #   periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /alertmanager/api/v2/status
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /alertmanager/api/v2/status
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 30
         securityContext:
           # TODO(adam): shouldn't need root
           # https://github.com/kubernetes/kubernetes/issues/2630
