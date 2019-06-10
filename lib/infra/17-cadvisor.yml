@@ -22,7 +22,7 @@ spec:
         image: google/cadvisor:v0.33.0
         resources:
           limits:
-            cpu: 0.1
+            cpu: 100m
             memory: 250Mi
           requests:
             cpu: 50m

@@ -92,7 +92,7 @@ spec:
             protocol: TCP
         resources:
           limits:
-            cpu: 0.1
+            cpu: 100m
             memory: 25Mi
           requests:
             cpu: 25m
@@ -144,7 +144,7 @@ spec:
             protocol: TCP
         resources:
           limits:
-            cpu: 0.1
+            cpu: 100m
             memory: 25Mi
           requests:
             cpu: 25m
