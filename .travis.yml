@@ -19,6 +19,9 @@ before_install:
   - go get github.com/prometheus/prometheus/cmd/promtool
   - go get -u github.com/adamdecaf/promtool-configmap
   - go get github.com/zricethezav/gitleaks
+  # Setup kubeval
+  - wget https://github.com/instrumenta/kubeval/releases/download/0.10.0/kubeval-linux-amd64.tar.gz
+  - tar -xf kubeval-linux-amd64.tar.gz && chmod +x ./kubeval
 script:
   - gitleaks --repo-path=$(pwd)
   # Terraform
@@ -30,3 +33,5 @@ script:
   # Run infra tests
   - make test
   - CGO_ENABLED=0 go test ./...
+  # kubeval
+  - find lib/* -type f -name *.yml | grep -v blackbox | xargs -n1 -I {} ./kubeval $(pwd)/'{}' --strict
