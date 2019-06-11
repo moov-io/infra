@@ -1,7 +1,13 @@
+PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
+
 .PHONY: check
 check:
 	go fmt ./...
 	go vet ./...
+
+.PHONY: clean
+clean:
+	rm -f kubeval
 
 .PHONE: generate kubernetes-mixins
 generate: kubernetes-mixins
@@ -22,3 +28,11 @@ release: AUTHORS
 test: check
 # Test our docker images
 	@go run ./cmd/dockertest
+# Kubeval
+ifneq ($(TRAVIS_OS_NAME),osx)
+	wget -nc https://github.com/instrumenta/kubeval/releases/download/0.10.0/kubeval-$(PLATFORM)-amd64.tar.gz
+	tar -xf kubeval-$(PLATFORM)-amd64.tar.gz kubeval && chmod +x ./kubeval
+	find lib/* -type f -name *.yml | grep -v blackbox | xargs -n1 -I {} ./kubeval $(shell pwd)/'{}' --strict -v 1.13.6
+else
+	@echo "Skipping kubeval tests on TravisCI"
+endif

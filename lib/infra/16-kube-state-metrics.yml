@@ -57,7 +57,7 @@ spec:
           containerPort: 8081
         resources:
           limits:
-            cpu: 0.1
+            cpu: 100m
             memory: 250Mi
           requests:
             cpu: 25m
@@ -72,7 +72,7 @@ spec:
         image: k8s.gcr.io/addon-resizer:1.8.4
         resources:
           limits:
-            cpu: 0.1
+            cpu: 100m
             memory: 50Mi
           requests:
             cpu: 25m

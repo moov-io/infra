@@ -23,7 +23,6 @@ kind: Service
 metadata:
   name: traefik-dashboard
   namespace: lb
-  annotations:
 spec:
   type: ClusterIP
   selector:

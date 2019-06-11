@@ -39,7 +39,7 @@ variable "node_machine_type" {
 }
 
 variable "min_master_version" {
-  default = "1.13.6-gke.5"
+  default = "1.13.6-gke.5" # Note: Update the root makefile kubeval Kubernetes version when this changes
 }
 
 # Setup for a GCP kubernetes cluster.
