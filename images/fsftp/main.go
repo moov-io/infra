@@ -35,10 +35,10 @@ func main() {
 	}
 
 	opts := &server.ServerOpts{
-		Factory:  factory,
-		Port:     *flagPort,
-		Hostname: *flagHost,
-		Auth:     &server.SimpleAuth{Name: *flagUser, Password: *flagPass},
+		Factory:      factory,
+		Port:         *flagPort,
+		Hostname:     *flagHost,
+		Auth:         &server.SimpleAuth{Name: *flagUser, Password: *flagPass},
 		PassivePorts: *flagPassivePorts,
 	}
 
