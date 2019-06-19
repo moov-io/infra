@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: imagecashletterfuzz-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: imagecashletterfuzz
+  namespace: apps
+  labels:
+    app: imagecashletterfuzz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imagecashletterfuzz
+  template:
+    metadata:
+      labels:
+        app: imagecashletterfuzz
+    spec:
+      volumes:
+        - name: imagecashletterfuzz-data
+          persistentVolumeClaim:
+            claimName: imagecashletterfuzz-data
+      containers:
+      - image: moov/imagecashletterfuzz:v0.1.0
+        imagePullPolicy: Always
+        name: imagecashletterfuzz
+        volumeMounts:
+          - name: imagecashletterfuzz-data
+            mountPath: /go/src/github.com/moov-io/imagecashletter/test/fuzz-reader/crashers/
+        resources:
+          limits:
+            cpu: 500m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 50Mi
+      restartPolicy: Always
+
+---
