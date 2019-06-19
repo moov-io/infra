@@ -114,7 +114,7 @@ spec:
           persistentVolumeClaim:
             claimName: customers-data
       containers:
-      - image: moov/customers:v0.1.0
+      - image: moov/customers:v0.1.1
         imagePullPolicy: Always
         name: customers
         args:
