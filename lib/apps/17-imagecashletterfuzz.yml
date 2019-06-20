@@ -22,6 +22,10 @@ metadata:
     app: imagecashletterfuzz
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: imagecashletterfuzz
