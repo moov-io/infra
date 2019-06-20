@@ -18,3 +18,5 @@ terraform.tfstate.backup*
 
 /kubeval
 /kubeval-*.tar.gz
+
+/fuzz-*/

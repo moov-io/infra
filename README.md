@@ -79,6 +79,7 @@ Note: To run these tests you need Docker installed.
 - [In-repo Secrets (Blackbox)](docs/secrets.md)
 - [Kubernetes](docs/kubernetes.md)
 - [Load balancing / Routing (Traefik)](docs/traefik.md)
+- [Downloading fuzz data](docs/fuzzing.md)
 
 ### Getting Help
 
