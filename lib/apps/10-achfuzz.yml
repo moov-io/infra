@@ -34,6 +34,7 @@ spec:
         - name: achfuzz-data
           persistentVolumeClaim:
             claimName: achfuzz-data
+      priorityClassName: fuzz-low-priority
       containers:
       - image: moov/achfuzz:v1.0.0
         imagePullPolicy: Always
