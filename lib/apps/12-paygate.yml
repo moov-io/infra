@@ -140,7 +140,7 @@ spec:
           persistentVolumeClaim:
             claimName: paygate-data
       containers:
-      - image: moov/paygate:v0.4.1
+      - image: moov/paygate:v0.5.1
         imagePullPolicy: Always
         name: paygate
         args:
@@ -150,6 +150,8 @@ spec:
           - name: paygate-data
             mountPath: /opt/moov/paygate/
         env:
+          - name: DATABASE_TYPE
+            value: sqlite
           - name: SQLITE_DB_PATH
             value: /opt/moov/paygate/paygate.db
         ports:
