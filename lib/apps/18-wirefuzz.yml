@@ -44,7 +44,7 @@ spec:
             mountPath: /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/
         resources:
           limits:
-            cpu: 500m
+            cpu: 250m
             memory: 100Mi
           requests:
             cpu: 100m
