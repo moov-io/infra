@@ -6,9 +6,9 @@ metadata:
 data:
   # THIS FILE WAS GENERATED FROM https://github.com/kubernetes-monitoring/kubernetes-mixin
   prometheus_rules.yml: |
-    "groups": 
+    "groups":
       - "name": "k8s.rules"
-        "rules": 
+        "rules":
         - "expr": |
             sum(rate(container_cpu_usage_seconds_total{job="cadvisor", image!="", container!="POD"}[5m])) by (namespace)
           "record": "namespace:container_cpu_usage_seconds_total:sum_rate"
@@ -58,7 +58,7 @@ data:
                 "workload", "$1", "owner_name", "(.*)"
               )
             ) by (namespace, workload, pod)
-          "labels": 
+          "labels":
             "workload_type": "deployment"
           "record": "mixin_pod_workload"
         - "expr": |
@@ -68,7 +68,7 @@ data:
                 "workload", "$1", "owner_name", "(.*)"
               )
             ) by (namespace, workload, pod)
-          "labels": 
+          "labels":
             "workload_type": "daemonset"
           "record": "mixin_pod_workload"
         - "expr": |
@@ -78,79 +78,79 @@ data:
                 "workload", "$1", "owner_name", "(.*)"
               )
             ) by (namespace, workload, pod)
-          "labels": 
+          "labels":
             "workload_type": "statefulset"
           "record": "mixin_pod_workload"
       - "name": "kube-scheduler.rules"
-        "rules": 
+        "rules":
         - "expr": |
             histogram_quantile(0.99, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.99"
           "record": "cluster_quantile:scheduler_e2e_scheduling_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.99, sum(rate(scheduler_scheduling_algorithm_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.99"
           "record": "cluster_quantile:scheduler_scheduling_algorithm_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.99, sum(rate(scheduler_binding_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.99"
           "record": "cluster_quantile:scheduler_binding_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.9, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.9"
           "record": "cluster_quantile:scheduler_e2e_scheduling_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.9, sum(rate(scheduler_scheduling_algorithm_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.9"
           "record": "cluster_quantile:scheduler_scheduling_algorithm_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.9, sum(rate(scheduler_binding_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.9"
           "record": "cluster_quantile:scheduler_binding_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.5, sum(rate(scheduler_e2e_scheduling_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.5"
           "record": "cluster_quantile:scheduler_e2e_scheduling_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.5, sum(rate(scheduler_scheduling_algorithm_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.5"
           "record": "cluster_quantile:scheduler_scheduling_algorithm_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.5, sum(rate(scheduler_binding_duration_seconds_bucket{job="kube-scheduler"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.5"
           "record": "cluster_quantile:scheduler_binding_duration_seconds:histogram_quantile"
       - "name": "kube-apiserver.rules"
-        "rules": 
+        "rules":
         - "expr": |
             histogram_quantile(0.99, sum(rate(apiserver_request_duration_seconds_bucket{job="kube-apiserver"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.99"
           "record": "cluster_quantile:apiserver_request_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.9, sum(rate(apiserver_request_duration_seconds_bucket{job="kube-apiserver"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.9"
           "record": "cluster_quantile:apiserver_request_duration_seconds:histogram_quantile"
         - "expr": |
             histogram_quantile(0.5, sum(rate(apiserver_request_duration_seconds_bucket{job="kube-apiserver"}[5m])) without(instance, pod))
-          "labels": 
+          "labels":
             "quantile": "0.5"
           "record": "cluster_quantile:apiserver_request_duration_seconds:histogram_quantile"
       - "name": "node.rules"
-        "rules": 
+        "rules":
         - "expr": "sum(min(kube_pod_info) by (node))"
           "record": ":kube_pod_info_node_count:"
         - "expr": |
-            max(kube_pod_info{job="kube-state-metrics"}) by (node, namespace, pod)
+            max(label_replace(kube_pod_info{job="kube-state-metrics"}, "pod", "$1", "pod", "(.*)")) by (node, namespace, pod)
           "record": "node_namespace_pod:kube_pod_info:"
         - "expr": |
             count by (node) (sum by (node, cpu) (
@@ -330,4 +330,3 @@ data:
               )
             ) by (node)
           "record": "node:node_inodes_free:"
-      
