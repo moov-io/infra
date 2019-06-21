@@ -96,7 +96,7 @@ resource "google_dns_record_set" "docs" {
   type         = "CNAME"
   ttl          = 60
 
-  rrdatas = ["readthedocs.io."]
+  rrdatas = ["moov-io.github.io."]
 }
 
 resource "google_dns_record_set" "infra" {
