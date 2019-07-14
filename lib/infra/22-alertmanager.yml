@@ -85,7 +85,7 @@ spec:
       serviceAccountName: alertmanager
       terminationGracePeriodSeconds: 30
       containers:
-      - image: prom/alertmanager:v0.17.0
+      - image: prom/alertmanager:v0.18.0
         imagePullPolicy: Always
         name: alertmanager
         args:
