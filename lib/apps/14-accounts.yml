@@ -123,12 +123,8 @@ spec:
           - name: DEFAULT_ROUTING_NUMBER
             # Arbitrary (but real) routing nubmer for now. This would need to be changed per FI/deployment.
             value: '121042882'
-          - name: QLEDGER_ENDPOINT
-            # TODO(adam): https caused panic on qleder-sdk-go/DoRequest (line 49) and in Ping (ledger.go:55)
-            value: http://qledger.apps.svc.cluster.local:7000
-          - name: QLEDGER_AUTH_TOKEN
-            # TODO(adam): mount with Secret once
-            value: moov
+          - name: ACCOUNT_STORAGE_TYPE
+            value: sqlite
           - name: SQLITE_DB_PATH
             value: /opt/moov/accounts/accounts.db
         volumeMounts:
