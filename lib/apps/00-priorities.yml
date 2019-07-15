@@ -1,4 +1,12 @@
 ---
+apiVersion:
+apiVersion: scheduling.k8s.io/v1beta1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 100
+globalDefault: false
+---
 apiVersion: scheduling.k8s.io/v1beta1
 kind: PriorityClass
 metadata:
