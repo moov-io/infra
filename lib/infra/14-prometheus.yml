@@ -231,6 +231,11 @@ spec:
           - containerPort: 9090
             name: http
             protocol: TCP
+        resources:
+          limits:
+            memory: 1000Mi
+          requests:
+            memory: 500Mi
         readinessProbe:
           httpGet:
             path: /prometheus/status
