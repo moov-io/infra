@@ -3,3 +3,4 @@ github.com/goftp/file-driver v0.0.0-20180502053751-5d604a0fc0c9/go.mod h1:GpOj6z
 github.com/goftp/server v0.0.0-20190304020633-eabccc535b5a h1:XTJuuzIub3zu2FgPqdFM9XFYYisXWu2hN/rFwayAIcY=
 github.com/goftp/server v0.0.0-20190304020633-eabccc535b5a/go.mod h1:k/SS6VWkxY7dHPhoMQ8IdRu8L4lQtmGbhyXGg+vCnXE=
 github.com/goftp/server v0.0.0-20190711155002-87511133bf5b/go.mod h1:k/SS6VWkxY7dHPhoMQ8IdRu8L4lQtmGbhyXGg+vCnXE=
+github.com/goftp/server v0.0.0-20190712063907-1149070ae46b/go.mod h1:k/SS6VWkxY7dHPhoMQ8IdRu8L4lQtmGbhyXGg+vCnXE=
