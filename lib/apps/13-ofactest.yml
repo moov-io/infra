@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
           - name: ofactest
-            image: moov/ofactest:v0.8.0
+            image: moov/ofactest:v0.9.0-rc2
             args:
               # Stay internal to avoid auth requirement
               # There isn't a great way to create an OAuth token for this test binary right now.
