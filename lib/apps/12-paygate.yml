@@ -140,12 +140,9 @@ spec:
           persistentVolumeClaim:
             claimName: paygate-data
       containers:
-      - image: moov/paygate:v0.5.1
+      - image: moov/paygate:v0.6.0-rc4
         imagePullPolicy: Always
         name: paygate
-        args:
-          - -http.addr=:8080
-          - -admin.addr=:9090
         volumeMounts:
           - name: paygate-data
             mountPath: /opt/moov/paygate/
@@ -154,6 +151,12 @@ spec:
             value: sqlite
           - name: SQLITE_DB_PATH
             value: /opt/moov/paygate/paygate.db
+          - name: HTTP_ADMIN_BIND_ADDRESS
+            value: :9090
+          - name: HTTP_BIND_ADDRESS
+            value: :8080
+          - name: ACH_FILE_STORAGE_DIR
+            value: /opt/moov/paygate/storage/
         ports:
           - containerPort: 8080
             name: http
