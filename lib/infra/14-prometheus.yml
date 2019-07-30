@@ -201,6 +201,7 @@ spec:
         app: prometheus
     spec:
       serviceAccountName: prometheus
+      priorityClassName: high-priority
       terminationGracePeriodSeconds: 30
       # TODO(adam): enable this once we run non pre-emptible nodes
       # tolerations:
