@@ -87,6 +87,10 @@ data:
       - /opt/prometheus-kubernets-monitoring-rules/prometheus_rules.yml
       - /opt/prometheus-rules/*.yml
     scrape_configs:
+      - job_name: 'prometheus'
+        metrics_path: /prometheus/metrics
+        static_configs:
+          - targets: ['localhost:9090']
       # Scrape kubernetes apiservers
       - job_name: kube-apiserver
         kubernetes_sd_configs:
