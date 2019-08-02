@@ -40,7 +40,7 @@ spec:
             claimName: achfuzz-data
       priorityClassName: fuzz-low-priority
       containers:
-      - image: moov/achfuzz:v1.0.0
+      - image: moov/achfuzz:v1.1.0-rc2
         imagePullPolicy: Always
         name: achfuzz
         volumeMounts:
