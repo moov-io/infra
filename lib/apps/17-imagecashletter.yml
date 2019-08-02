@@ -98,7 +98,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/imagecashletter:v0.1.0
+      - image: moov/imagecashletter:v0.2.0-rc1
         imagePullPolicy: Always
         name: imagecashletter
         args:
