@@ -113,7 +113,7 @@ spec:
           persistentVolumeClaim:
             claimName: accounts-data
       containers:
-      - image: moov/accounts:v0.4.0-rc1
+      - image: moov/accounts:v0.4.0
         imagePullPolicy: Always
         name: accounts
         args:

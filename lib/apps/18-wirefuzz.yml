@@ -40,7 +40,7 @@ spec:
             claimName: wirefuzz-data
       priorityClassName: fuzz-low-priority
       containers:
-      - image: moov/wirefuzz:v0.3.0-rc1
+      - image: moov/wirefuzz:v0.3.0
         imagePullPolicy: Always
         name: wirefuzz
         volumeMounts:
