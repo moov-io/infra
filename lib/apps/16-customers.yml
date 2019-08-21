@@ -130,6 +130,8 @@ spec:
             value: ./storage/
           - name: FILEBLOB_HMAC_SECRET
             value: insecure-example-value
+          - name: LOG_FORMAT
+            value: plain # TODO(adam): json?
           - name: SQLITE_DB_PATH
             value: /opt/moov/customers/customers.db
         volumeMounts:

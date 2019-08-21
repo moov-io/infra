@@ -193,6 +193,8 @@ spec:
             value: 'file:/opt/moov/auth/oauth2_tokens.db'
           - name: SQLITE_DB_PATH
             value: /opt/moov/auth/auth.db
+          - name: LOG_FORMAT
+            value: plain # TODO(adam): json?
         resources:
           limits:
             cpu: 100m

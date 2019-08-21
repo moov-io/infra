@@ -104,9 +104,11 @@ spec:
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
-        # env:
-        #   - name: ICL_FILE_TTL
-        #     value: 30m # 30 minutes
+        env:
+          - name: LOG_FORMAT
+            value: plain # TODO(adam): json?
+          - name: ICL_FILE_TTL
+            value: 30m # 30 minutes
         ports:
           - containerPort: 8080
             name: http

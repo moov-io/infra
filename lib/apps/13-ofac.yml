@@ -127,6 +127,8 @@ spec:
         env:
           - name: SQLITE_DB_PATH
             value: /opt/moov/ofac/ofac.db
+          - name: LOG_FORMAT
+            value: plain # TODO(adam): loki doesn't seem to auto-parse 'json'
         ports:
           - containerPort: 8080
             name: http

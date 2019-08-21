@@ -127,6 +127,8 @@ spec:
             value: sqlite
           - name: SQLITE_DB_PATH
             value: /opt/moov/accounts/accounts.db
+          - name: LOG_FORMAT
+            value: plain # TODO(adam): json?
         volumeMounts:
           - name: accounts-data
             mountPath: /opt/moov/accounts/
