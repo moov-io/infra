@@ -20,6 +20,9 @@ spec:
       containers:
       - name: cadvisor
         image: google/cadvisor:v0.33.0
+        args:
+          # Options: https://github.com/google/cadvisor/blob/master/docs/runtime_options.md
+          - --application_metrics_count_limit=50
         resources:
           limits:
             cpu: 100m
