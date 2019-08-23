@@ -105,7 +105,7 @@ data:
             action: keep
             regex: default;kubernetes;https
           - action: drop
-            source_labels: [apiserver_request_latencies_bucket]
+            regex: '(apiserver_request_latencies_bucket)'
       # Scrape Kubernetes controller
       - job_name: 'kube-controller-manager'
         kubernetes_sd_configs:
@@ -142,7 +142,7 @@ data:
           - action: labelmap
             regex: __meta_kubernetes_node_label_(.+)
           - action: drop
-            source_labels: [container_tasks_state]
+            regex: '(container_tasks_state)'
           - target_label: __address__
             replacement: kubernetes.default.svc:443
           - source_labels: [__meta_kubernetes_node_name]
@@ -161,7 +161,9 @@ data:
             regex: '(.*):10250'
             replacement: '${1}:10255'
             target_label: __address__
-          - source_labels: [kube_pod_container_status_waiting_reason, storage_operation_duration_seconds_bucket]
+          - regex: '(kube_pod_container_status_waiting_reason)'
+            action: drop
+          - regex: '(storage_operation_duration_seconds_bucket)'
             action: drop
       # Scrape pods
       - job_name: 'kubernetes-pods'
@@ -181,7 +183,9 @@ data:
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
-          - source_labels: [container_tasks_state, kube_pod_container_status_waiting_reason]
+          - regex: '(container_tasks_state)'
+            action: drop
+          - regex: '(kube_pod_container_status_waiting_reason)'
             action: drop
           - action: labeldrop
             regex: '(pod_template_hash)'
