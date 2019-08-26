@@ -148,17 +148,30 @@ spec:
             mountPath: /opt/moov/paygate/
         env:
           - name: DATABASE_TYPE
-            value: sqlite
+            value: 'sqlite'
           - name: SQLITE_DB_PATH
-            value: /opt/moov/paygate/paygate.db
+            value: '/opt/moov/paygate/paygate.db'
           - name: HTTP_ADMIN_BIND_ADDRESS
-            value: :9090
+            value: ':9090'
           - name: HTTP_BIND_ADDRESS
-            value: :8080
+            value: ':8080'
           - name: ACH_FILE_STORAGE_DIR
-            value: /opt/moov/paygate/storage/
+            value: '/opt/moov/paygate/storage/'
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
+            value: 'plain' # TODO(adam): json?
+          # ODFI details
+          - name: ODFI_ACCOUNT_NUMBER
+            value: '123'
+          - name: ODFI_ROUTING_NUMBER
+            value: '121042882'
+          - name: ODFI_ACCOUNT_TYPE
+            value: 'savings'
+          - name: ODFI_IDENTIFICATION
+            value: '001'
+          - name: ODFI_BANK_NAME
+            value: 'Moov, Inc'
+          - name: ODFI_HOLDER
+            value: 'Moov, Inc'
         ports:
           - containerPort: 8080
             name: http
