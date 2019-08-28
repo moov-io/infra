@@ -18,4 +18,4 @@ do
     done
 done
 
-echo "Saves files in $dir"
+echo "Saved files in $dir"

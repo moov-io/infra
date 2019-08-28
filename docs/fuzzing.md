@@ -38,3 +38,12 @@ total 24
 ```
 
 After downloading each `*.output` file contains the panic's trace and the other two files contain the input. Each crash should be verified correct with a test that passes in the respective project.
+
+### Copying crasher files
+
+We have a script (`./cmd/cpfuzz/copy-crashers-to-projects.sh`) that grabs the latest downloaded fuzz crashers and copies them to locally cloned moov-io projects. This script assumes a lot: that it is ran from moov-io/infra's root and that moov-io projects are on the same filesystem level as infra.
+
+```
+$ ./cmd/cpfuzz/copy-crashers-to-projects.sh
+Using fuzz findings from fuzz-2019-08-28
+```
