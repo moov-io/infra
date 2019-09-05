@@ -1,4 +1,4 @@
-FROM debian:9
+FROM debian:10
 
 # Docs: https://www.tarsnap.com/pkg-deb.html
 
