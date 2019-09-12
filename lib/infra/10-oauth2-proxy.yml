@@ -108,7 +108,7 @@ spec:
           - -pass-host-header
           - -provider=github
           - -redirect-url=https://infra.moov.io/oauth2/callback
-          - -upstream=http://grafana.infra.svc.cluster.local:9090/grafana/,http://prometheus.infra.svc.cluster.local:9090/prometheus/,http://alertmanager.infra.svc.cluster.local:9090/alertmanager/,http://traefik-dashboard.lb.svc.cluster.local:8080/traefik/,http://loki.infra.svc.cluster.local:3100/loki/,http://kube-ingress-index.infra.svc.cluster.local:8080/
+          - -upstream=http://grafana.infra.svc.cluster.local:9090/grafana/,http://prometheus.infra.svc.cluster.local:9090/prometheus/,http://alertmanager.infra.svc.cluster.local:9090/alertmanager/,http://traefik-dashboard.lb.svc.cluster.local:8080/traefik/,http://loki.infra.svc.cluster.local:3100/loki/,http://polaris-dashboard.infra.svc.cluster.local:8080/polaris/,http://kube-ingress-index.infra.svc.cluster.local:8080/
         ports:
           - containerPort: 4180
             name: http

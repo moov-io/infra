@@ -1,0 +1,242 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: polaris
+  namespace: infra
+  labels:
+    app: polaris
+data:
+  config.yaml:  |
+    resources:
+      cpuRequestsMissing: warning
+      cpuLimitsMissing: warning
+      memoryRequestsMissing: warning
+      memoryLimitsMissing: warning
+    images:
+      tagNotSpecified: error
+    healthChecks:
+      readinessProbeMissing: warning
+      livenessProbeMissing: warning
+    networking:
+      hostNetworkSet: warning
+      hostPortSet: warning
+    security:
+      hostIPCSet: error
+      hostPIDSet: error
+      notReadOnlyRootFileSystem: warning
+      privilegeEscalationAllowed: error
+      runAsRootAllowed: warning
+      runAsPrivileged: error
+      capabilities:
+        error:
+          ifAnyAdded:
+            - SYS_ADMIN
+            - NET_ADMIN
+            - ALL
+        warning:
+          ifAnyAddedBeyond:
+            - CHOWN
+            - DAC_OVERRIDE
+            - FSETID
+            - FOWNER
+            - MKNOD
+            - NET_RAW
+            - SETGID
+            - SETUID
+            - SETFCAP
+            - SETPCAP
+            - NET_BIND_SERVICE
+            - SYS_CHROOT
+            - KILL
+            - AUDIT_WRITE
+    controllers_to_scan:
+      - Deployments
+      - StatefulSets
+      - DaemonSets
+      - Jobs
+      - CronJobs
+      - ReplicationControllers
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: polaris
+  namespace: infra
+  labels:
+    app: polaris
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: polaris
+  labels:
+    app: polaris
+rules:
+  - apiGroups:
+      - 'apps'
+      - 'extensions'
+    resources:
+      - 'deployments'
+      - 'statefulsets'
+      - 'daemonsets'
+    verbs:
+      - 'get'
+      - 'list'
+  - apiGroups:
+      - 'batch'
+    resources:
+      - 'jobs'
+      - 'cronjobs'
+    verbs:
+      - 'get'
+      - 'list'
+  - apiGroups:
+      - ''
+    resources:
+      - 'nodes'
+      - 'namespaces'
+      - 'pods'
+      - 'replicationcontrollers'
+    verbs:
+      - 'get'
+      - 'list'
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: polaris
+  labels:
+    app: polaris
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: polaris
+subjects:
+  - kind: ServiceAccount
+    name: polaris
+    namespace: infra
+---
+# Source: polaris/templates/dashboard.service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: polaris
+  namespace: infra
+  labels:
+    app: polaris
+spec:
+  ports:
+  - name: dashboard
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: polaris
+    component: dashboard
+  type: ClusterIP
+---
+# Source: polaris/templates/dashboard.deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    checksum/config: '8aa5a565fba7a2db98d46752087de8c1dcc83b70cd762c5829d5ba01270d54a2'
+  name: polaris
+  namespace: infra
+  labels:
+    app: polaris
+    component: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: polaris
+      component: dashboard
+  template:
+    metadata:
+      labels:
+        app: polaris
+        component: dashboard
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: polaris
+      containers:
+      - command:
+          - polaris
+          - --dashboard
+          - --dashboard-base-path=/polaris/
+          - --dashboard-port=8080
+          - --config=/opt/app/config.yaml
+          - --log-level=debug
+        image: quay.io/reactiveops/polaris:0.4
+        imagePullPolicy: Always
+        name: dashboard
+        ports:
+          - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 20
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - ALL
+        volumeMounts:
+        - name: config
+          mountPath: /opt/app/config.yaml
+          subPath: config.yaml
+          readOnly: true
+      serviceAccountName: polaris
+      nodeSelector: {}
+      tolerations: []
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: polaris
+  namespace: infra
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "infra.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: infra.moov.io
+      http:
+        paths:
+          - path: /polaris/
+            backend:
+              serviceName: oauth2-proxy
+              servicePort: 4180
+              # Uncommenting these would bypass auth and allow anonymous requests to loki.
+              # serviceName: loki
+              # servicePort: 3100
+---
