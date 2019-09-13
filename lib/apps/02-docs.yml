@@ -1,0 +1,94 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: docs
+  namespace: apps
+spec:
+  type: ClusterIP
+  selector:
+    app: docs
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: docs
+  namespace: apps
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/content-type-nosniff: "true"
+    ingress.kubernetes.io/force-hsts: "true"
+    ingress.kubernetes.io/hsts-max-age: "315360000"
+    ingress.kubernetes.io/hsts-include-subdomains: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-host: "docs.moov.io"
+    ingress.kubernetes.io/ssl-force-host: "true"
+spec:
+  rules:
+    - host: docs.moov.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: docs
+              servicePort: 8080
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: docs
+  namespace: apps
+  labels:
+    app: docs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: docs
+  template:
+    metadata:
+      labels:
+        app: docs
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
+      containers:
+      - image: moov/docs:v0.1.0
+        imagePullPolicy: Always
+        name: docs
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 25Mi
+          requests:
+            cpu: 25m
+            memory: 10Mi
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      restartPolicy: Always
+---
