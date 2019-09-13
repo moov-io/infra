@@ -93,10 +93,11 @@ resource "google_dns_record_set" "api" {
 resource "google_dns_record_set" "docs" {
   name         = "docs.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = google_dns_managed_zone.moov-io.name
-  type         = "CNAME"
+  type         = "A"
   ttl          = 60
 
-  rrdatas = ["moov-io.github.io."]
+  # rrdatas = ["moov-io.github.io."] # CNAME for GitHub pages
+  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
 resource "google_dns_record_set" "infra" {
