@@ -24,6 +24,10 @@ AUTHORS:
 
 release: AUTHORS
 
+.PHONY: docker
+docker:
+	go run ./cmd/dockertest
+
 .PHONY: test
 test: check
 # Test our docker images
