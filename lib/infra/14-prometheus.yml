@@ -250,9 +250,9 @@ spec:
             protocol: TCP
         resources:
           limits:
-            memory: 1500Mi
+            memory: 2000Mi
           requests:
-            memory: 1000Mi
+            memory: 1500Mi
         readinessProbe:
           httpGet:
             path: /prometheus/-/ready
