@@ -47,3 +47,7 @@ We have a script (`./cmd/cpfuzz/copy-crashers-to-projects.sh`) that grabs the la
 $ ./cmd/cpfuzz/copy-crashers-to-projects.sh
 Using fuzz findings from fuzz-2019-08-28
 ```
+
+### Resetting fuzz pods
+
+Often it's useful to reset the fuzz pods (delete any data) after copying down any crasher files. To do this run `./cmd/cpfuzz/roll-fuzz-pods.sh` which will delete the fuzz Kubernetes manifests and reapply them.
