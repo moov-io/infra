@@ -62,7 +62,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/docs:v2019.09.16.1
+      - image: moov/docs:v2019.10.01.1
         imagePullPolicy: Always
         name: docs
         ports:
