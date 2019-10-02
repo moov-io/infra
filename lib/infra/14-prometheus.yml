@@ -228,7 +228,7 @@ spec:
         args:
           - --config.file=/opt/prometheus/prometheus.yml
           - --storage.tsdb.path=/data/prometheus
-          - --storage.tsdb.retention.time=12h
+          - --storage.tsdb.retention.time=6h
           # - --web.enable-lifecycle # TODO(adam): kubectl port-forward doesn't work to curl -XPOST /-/reload
           - --web.console.libraries=/usr/share/prometheus/console_libraries
           - --web.console.templates=/usr/share/prometheus/consoles
