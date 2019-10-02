@@ -122,7 +122,7 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  name: polaris
+  name: polaris-dashboard
   namespace: infra
   labels:
     app: polaris
@@ -236,7 +236,4 @@ spec:
             backend:
               serviceName: oauth2-proxy
               servicePort: 4180
-              # Uncommenting these would bypass auth and allow anonymous requests to loki.
-              # serviceName: loki
-              # servicePort: 3100
 ---
