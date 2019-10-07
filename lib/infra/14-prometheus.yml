@@ -222,7 +222,7 @@ spec:
       #     value: "true"
       #     effect: NoSchedule
       containers:
-      - image: prom/prometheus:v2.12.0
+      - image: prom/prometheus:v2.13.0
         imagePullPolicy: Always
         name: prometheus
         args:
@@ -250,9 +250,9 @@ spec:
             protocol: TCP
         resources:
           limits:
-            memory: 2000Mi
+            memory: 4000Mi
           requests:
-            memory: 1500Mi
+            memory: 3000Mi
         readinessProbe:
           httpGet:
             path: /prometheus/-/ready
