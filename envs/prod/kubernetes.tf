@@ -19,28 +19,40 @@ variable "password" {
 }
 
 variable "permanent_pool_node_count" {
-  default = 0
+  default = 1
 }
 
-variable "preemptible_pool_node_count" {
-  default = 4
-}
-
-variable "node_disk_size_gb" {
+variable "permanent_node_disk_size_gb" {
   default = 25
 }
 
-variable "node_disk_type" {
+variable "permanent_node_disk_type" {
   default = "pd-standard"
 }
 
-variable "node_machine_type" {
+variable "permanent_node_machine_type" {
+  default = "n1-standard-2"
+}
+
+variable "preemptible_pool_node_count" {
+  default = 2
+}
+
+variable "preemptible_node_disk_size_gb" {
+  default = 25
+}
+
+variable "preemptible_node_disk_type" {
+  default = "pd-standard"
+}
+
+variable "preemptible_node_machine_type" {
   default = "n1-standard-1"
 }
 
 variable "min_master_version" {
   # Note: Update the root makefile kubeval Kubernetes version when this changes
-  default = "1.14.3-gke.11"
+  default = "1.14.6-gke.2"
 }
 
 # Setup for a GCP kubernetes cluster.
@@ -68,8 +80,8 @@ resource "google_container_cluster" "primary" {
   }
 
   node_config {
-    disk_size_gb = var.node_disk_size_gb
-    disk_type    = var.node_disk_type
+    disk_size_gb = 25
+    disk_type    = "pd-standard"
     machine_type = "g1-small"
     preemptible  = true
 
@@ -93,9 +105,9 @@ resource "google_container_node_pool" "permanent" {
 
   node_count = var.permanent_pool_node_count
   node_config {
-    disk_size_gb = var.node_disk_size_gb
-    disk_type    = var.node_disk_type
-    machine_type = var.node_machine_type
+    disk_size_gb = var.permanent_node_disk_size_gb
+    disk_type    = var.permanent_node_disk_type
+    machine_type = var.permanent_node_machine_type
     preemptible  = false
 
     oauth_scopes = [
@@ -118,9 +130,9 @@ resource "google_container_node_pool" "preemptible" {
 
   node_count = var.preemptible_pool_node_count
   node_config {
-    disk_size_gb = var.node_disk_size_gb
-    disk_type    = var.node_disk_type
-    machine_type = var.node_machine_type
+    disk_size_gb = var.preemptible_node_disk_size_gb
+    disk_type    = var.preemptible_node_disk_type
+    machine_type = var.preemptible_node_machine_type
     preemptible  = true
 
     oauth_scopes = [
