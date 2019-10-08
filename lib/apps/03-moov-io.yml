@@ -62,7 +62,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/moov-io:v2019.10.08.1
+      - image: moov/moov-io:v2019.10.08.2
         imagePullPolicy: Always
         name: moovio
         ports:
