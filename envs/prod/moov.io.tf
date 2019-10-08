@@ -18,7 +18,10 @@ resource "google_dns_record_set" "moov-A" {
   ttl          = 60
 
   # github pages
-  rrdatas = ["185.199.108.153", "185.199.111.153", "185.199.109.153", "185.199.110.153"]
+  # rrdatas = ["185.199.108.153", "185.199.111.153", "185.199.109.153", "185.199.110.153"]
+
+  # our Kubernetes cluster
+  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
 resource "google_dns_record_set" "moov-SPF" {
