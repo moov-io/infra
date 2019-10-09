@@ -140,7 +140,7 @@ spec:
           persistentVolumeClaim:
             claimName: paygate-data
       containers:
-      - image: moov/paygate:v0.6.0
+      - image: moov/paygate:v0.7.0-rc2
         imagePullPolicy: Always
         name: paygate
         volumeMounts:
