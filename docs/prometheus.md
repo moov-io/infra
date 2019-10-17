@@ -15,3 +15,15 @@ kube_pod_container_status_last_terminated_reason{job="kubernetes-pods"}	425
 ![](images/popular-metrics.png)
 
 Source: https://www.robustperception.io/which-are-my-biggest-metrics
+
+### Response Durations
+
+We recommend showing the [Apdex Score](https://prometheus.io/docs/practices/histograms/#apdex-score) for any HTTP server to show the service's performance relative to your SLA. For a Moov application this Grafana query gives a graph broken down by HTTP route:
+
+```
+  sum(rate(http_response_duration_seconds_bucket{app="ofac", le="0.25"}[5m])) by (route)
+/
+  sum(rate(http_response_duration_seconds_count{app="ofac"}[5m])) by (route)
+```
+
+![](images/ofac-routes.png)
