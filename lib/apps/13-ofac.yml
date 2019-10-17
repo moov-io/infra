@@ -115,7 +115,7 @@ spec:
           persistentVolumeClaim:
             claimName: ofac-data
       containers:
-      - image: moov/ofac:v0.11.0
+      - image: moov/ofac:v0.12.0-rc1
         imagePullPolicy: Always
         name: ofac
         args:
