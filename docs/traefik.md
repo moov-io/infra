@@ -13,7 +13,7 @@ Note: We deploy traefik as two deploymens, "alpha" and "beta" (along with their 
 
 #### Infra auth proxy
 
-We run the [pusher/oauth2_proxy](https://github.com/pusher/oauth2_proxy) to handle auth infront of our infra resources. You just need to authorize our Github OAuth2 application (oauth creds are in `11-secrets.yml`) to be granted access.
+We run the [pusher/oauth2_proxy](https://github.com/pusher/oauth2_proxy) to handle auth infront of our infra resources. You just need to authorize our Github OAuth2 application (oauth creds are in `11-secrets.yml`) to be granted access. This [blog post](https://www.digitalocean.com/community/tutorials/how-to-protect-private-kubernetes-services-behind-a-github-login-with-oauth2_proxy) from DigitalOcean covers a similar setup to how we've deployed oauth2_proxy.
 
 #### API authentication
 
