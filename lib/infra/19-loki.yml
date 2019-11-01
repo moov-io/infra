@@ -121,7 +121,7 @@ spec:
       serviceAccountName: loki
       terminationGracePeriodSeconds: 30
       containers:
-        - image: grafana/loki:v0.3.0
+        - image: grafana/loki:v0.4.0
           imagePullPolicy: Always
           name: loki
           args:
