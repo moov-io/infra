@@ -114,7 +114,7 @@ spec:
           persistentVolumeClaim:
             claimName: customers-data
       containers:
-      - image: moov/customers:v0.2.0
+      - image: moov/customers:v0.3.0-rc2
         imagePullPolicy: Always
         name: customers
         args:
@@ -125,11 +125,11 @@ spec:
             # Arbitrary (but real) routing nubmer for now. This would need to be changed per FI/deployment.
             value: '121042882'
           - name: CLOUD_PROVIDER
-            value: file
-          - name: FILEBLOB_BASE_URL
-            value: ./storage/
-          - name: FILEBLOB_HMAC_SECRET
-            value: insecure-example-value
+            value: local
+          # - name: FILEBLOB_BASE_URL
+          #   value: ./storage/
+          # - name: FILEBLOB_HMAC_SECRET
+          #   value: insecure-example-value
           - name: LOG_FORMAT
             value: plain # TODO(adam): json?
           - name: SQLITE_DB_PATH
