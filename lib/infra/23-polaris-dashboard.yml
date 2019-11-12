@@ -167,25 +167,25 @@ spec:
       containers:
       - command:
           - polaris
-          - --dashboard
-          - --dashboard-base-path=/polaris/
-          - --dashboard-port=8080
-          - --config=/opt/app/config.yaml
-          - --log-level=debug
-        image: quay.io/reactiveops/polaris:0.4
+          - -dashboard
+          - -dashboard-base-path=/polaris/
+          - -dashboard-port=8080
+          - -config=/opt/app/config.yaml
+          - -log-level=debug
+        image: quay.io/reactiveops/polaris:0.5.1
         imagePullPolicy: Always
         name: dashboard
         ports:
           - containerPort: 8080
         livenessProbe:
           httpGet:
-            path: /health
+            path: /polaris/health
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /health
+            path: /polaris/health
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 20
