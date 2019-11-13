@@ -172,7 +172,7 @@ spec:
           - -dashboard-port=8080
           - -config=/opt/app/config.yaml
           - -log-level=debug
-        image: quay.io/reactiveops/polaris:0.5.1
+        image: quay.io/reactiveops/polaris:0.5.2
         imagePullPolicy: Always
         name: dashboard
         ports:
