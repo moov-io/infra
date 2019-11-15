@@ -1,0 +1,10 @@
+---
+apiVersion: etcd.database.coreos.com/v1beta2
+kind: EtcdCluster
+metadata:
+  name: vault-etcd
+  namespace: apps
+spec:
+  size: 0
+  version: 3.2.28
+---

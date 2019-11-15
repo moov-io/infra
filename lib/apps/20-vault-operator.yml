@@ -1,0 +1,94 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: vaultservices.vault.security.coreos.com
+  namespace: apps
+spec:
+  group: vault.security.coreos.com
+  names:
+    kind: VaultService
+    listKind: VaultServiceList
+    plural: vaultservices
+    shortNames:
+      - vault
+    singular: vaultservice
+  scope: Namespaced
+  version: v1alpha1
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: vault-operator
+  namespace: apps
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: vault-operator
+    spec:
+      serviceAccountName: vault-operator
+      containers:
+      - name: vault-operator
+        image: quay.io/coreos/vault-operator:latest
+        env:
+        - name: MY_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: MY_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-operator
+  namespace: apps
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: vault-operator
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "create"]
+  - apiGroups: [""]
+    resources: ["configmaps", "services", "events"]
+    verbs: ["create"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["create", "get", "update"]
+  - apiGroups: ["apps"]
+    resources: ["pods"]
+    verbs: ["list", "get"]
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "update"]
+  - apiGroups: ["vault.security.coreos.com"]
+    resources: ["vaultservices"]
+    verbs: ["get", "list", "update", "watch"]
+  - apiGroups: ["etcd.database.coreos.com"]
+    resources: ["etcdclusters"]
+    verbs: ["create", "get"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: vault-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vault-operator
+subjects:
+  - kind: ServiceAccount
+    name: vault-operator
+    namespace: apps
+---
