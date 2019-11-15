@@ -21,7 +21,7 @@ before_install:
   - go get github.com/zricethezav/gitleaks
   - go get ./...
 script:
-  - gitleaks --repo-path=$(pwd) --redact -v --depth=10
+  - gitleaks --repo-path=$(pwd) --redact -v
   # Terraform
   # cd envs/sbx && terraform init && terraform validate
   # Prometheus
