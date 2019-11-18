@@ -1,3 +1,4 @@
+envs/prod/apps/13-ofac-secrets.yml
 envs/prod/ca.crt
 envs/prod/client.crt
 envs/prod/client.key

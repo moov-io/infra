@@ -19,4 +19,4 @@ terraform.tfstate.backup*
 /kubeval
 /kubeval-*.tar.gz
 
-/fuzz-*/
+/fuzz-*//envs/prod/apps/13-ofac-secrets.yml
