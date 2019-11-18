@@ -84,7 +84,18 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: customers-mysql-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 10Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -113,8 +124,31 @@ spec:
         - name: customers-data
           persistentVolumeClaim:
             claimName: customers-data
+        - name: customers-mysql-data
+          persistentVolumeClaim:
+            claimName: customers-mysql-data
       containers:
-      - image: moov/customers:v0.3.0-rc2
+      - image: mysql:8.0
+        name: mysql
+        env:
+          - name: MYSQL_DATABASE
+            value: customers
+          - name: MYSQL_USER
+            value: customers
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: "yes"
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: customers-mysql-password
+                key: password
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
+          - name: customers-mysql-data
+            mountPath: /var/lib/mysql
+      - image: moov/customers:v0.3.0
         imagePullPolicy: Always
         name: customers
         args:
@@ -131,9 +165,22 @@ spec:
           # - name: FILEBLOB_HMAC_SECRET
           #   value: insecure-example-value
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
-          - name: SQLITE_DB_PATH
-            value: /opt/moov/customers/customers.db
+            value: plain
+          # - name: SQLITE_DB_PATH
+          #   value: /opt/moov/customers/customers.db
+          - name: DATABASE_TYPE
+            value: mysql
+          - name: MYSQL_ADDRESS
+            value: 'tcp(localhost:3306)'
+          - name: MYSQL_DATABASE
+            value: customers
+          - name: MYSQL_USER
+            value: customers
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: customers-mysql-password
+                key: password
         volumeMounts:
           - name: customers-data
             mountPath: /opt/moov/customers/
