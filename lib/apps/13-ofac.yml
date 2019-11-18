@@ -85,7 +85,18 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ofac-mysql-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 10Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -114,8 +125,31 @@ spec:
         - name: ofac-data
           persistentVolumeClaim:
             claimName: ofac-data
+        - name: ofac-mysql-data
+          persistentVolumeClaim:
+            claimName: ofac-mysql-data
       containers:
-      - image: moov/ofac:v0.12.0-rc1
+      - image: mysql:8.0
+        name: mysql
+        env:
+          - name: MYSQL_DATABASE
+            value: ofac
+          - name: MYSQL_USER
+            value: ofac
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: "yes"
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ofac-mysql-password
+                key: password
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
+          - name: ofac-mysql-data
+            mountPath: /var/lib/mysql
+      - image: moov/ofac:v0.12.0
         imagePullPolicy: Always
         name: ofac
         args:
@@ -125,10 +159,21 @@ spec:
           - name: ofac-data
             mountPath: /opt/moov/ofac/
         env:
-          - name: SQLITE_DB_PATH
-            value: /opt/moov/ofac/ofac.db
           - name: LOG_FORMAT
-            value: plain # TODO(adam): loki doesn't seem to auto-parse 'json'
+            value: plain
+          - name: DATABASE_TYPE
+            value: mysql
+          - name: MYSQL_ADDRESS
+            value: 'tcp(localhost:3306)'
+          - name: MYSQL_DATABASE
+            value: ofac
+          - name: MYSQL_USER
+            value: ofac
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ofac-mysql-password
+                key: password
         ports:
           - containerPort: 8080
             name: http

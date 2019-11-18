@@ -16,7 +16,9 @@ terraform.tfstate.backup*
 /envs/prod/client.key
 /envs/prod/infra/22-alertmanager-config.yml
 
+/fuzz-*/
+
 /kubeval
 /kubeval-*.tar.gz
 
-/fuzz-*//envs/prod/apps/13-ofac-secrets.yml
+/envs/prod/apps/13-ofac-secrets.yml
