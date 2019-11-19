@@ -62,6 +62,19 @@ spec:
           - containerPort: 8080
             name: http
             protocol: TCP
+      - image: nginx/nginx-prometheus-exporter:0.4.2
+        imagePullPolicy: Always
+        name: nginx-exporter
+        args:
+          - -nginx.scrape-uri=http://localhost:8080/stub_status
+        ports:
+          - containerPort: 9113
+            name: metrics
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
       - image: traefik:v1.7
         imagePullPolicy: Always
         name: traefik

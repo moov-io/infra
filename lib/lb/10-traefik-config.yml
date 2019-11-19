@@ -96,6 +96,7 @@ data:
       listen 8080;
       root /usr/share/nginx/www;
       index index.html index.htm;
+      stub_status;
       location /traefik/ {
         rewrite    /traefik/(.*) /$1 break;
         proxy_pass http://localhost:8081/;
