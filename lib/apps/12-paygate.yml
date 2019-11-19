@@ -106,7 +106,18 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paygate-mysql-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 10Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -139,7 +150,30 @@ spec:
         - name: paygate-data
           persistentVolumeClaim:
             claimName: paygate-data
+        - name: paygate-mysql-data
+          persistentVolumeClaim:
+            claimName: paygate-mysql-data
       containers:
+      - image: mysql:8.0
+        name: mysql
+        env:
+          - name: MYSQL_DATABASE
+            value: paygate
+          - name: MYSQL_USER
+            value: paygate
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: "yes"
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-password
+                key: password
+        ports:
+          - containerPort: 3306
+            name: mysql
+        volumeMounts:
+          - name: paygate-mysql-data
+            mountPath: /var/lib/mysql
       - image: moov/paygate:v0.7.0-rc4
         imagePullPolicy: Always
         name: paygate
@@ -147,10 +181,6 @@ spec:
           - name: paygate-data
             mountPath: /opt/moov/paygate/
         env:
-          - name: DATABASE_TYPE
-            value: 'sqlite'
-          - name: SQLITE_DB_PATH
-            value: '/opt/moov/paygate/paygate.db'
           - name: HTTP_ADMIN_BIND_ADDRESS
             value: ':9090'
           - name: HTTP_BIND_ADDRESS
@@ -174,6 +204,22 @@ spec:
             value: 'Moov, Inc'
           - name: ODFI_HOLDER
             value: 'Moov, Inc'
+          # MySQL configs
+          - name: DATABASE_TYPE
+            value: mysql
+          # - name: SQLITE_DB_PATH
+          #   value: '/opt/moov/paygate/paygate.db'
+          - name: MYSQL_ADDRESS
+            value: 'tcp(localhost:3306)'
+          - name: MYSQL_DATABASE
+            value: paygate
+          - name: MYSQL_USER
+            value: paygate
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-password
+                key: password
         ports:
           - containerPort: 8080
             name: http
