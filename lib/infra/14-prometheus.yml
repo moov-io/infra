@@ -189,6 +189,16 @@ data:
             action: drop
           - action: labeldrop
             regex: '(pod_template_hash)'
+      - job_name: loki
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: ["infra"]
+        metrics_path: /loki/metrics
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_container_name]
+            action: keep
+            regex: '(loki)'
 
 ---
 apiVersion: apps/v1

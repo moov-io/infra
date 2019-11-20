@@ -36,6 +36,7 @@ See also: [Viewing logs in Kubernetes](https://medium.com/devopslinks/viewing-lo
 
 - [Loki Troubleshooting Guide](https://github.com/grafana/loki/blob/master/docs/troubleshooting.md)
 - [An early preview of Loki](https://itnext.io/grafana-logging-using-loki-45665916aec9)
+- [Loki Metrics](https://github.com/grafana/loki/blob/master/docs/operations/observability.md#observing-loki)
 
 ### Rolling Pods / Containers
 
