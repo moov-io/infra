@@ -119,6 +119,29 @@ spec:
     requests:
       storage: 10Gi
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: paygate-routing-config
+  namespace: apps
+data:
+  routing.yaml: |
+    fileTransfer:
+      cutoffTimes:
+        - routingNumber: "121042882"
+          cutoff: 1500
+          location: "America/New_York"
+      configs:
+        - routingNumber: "121042882"
+          inboundPath: "/upload/inbound/"
+          outboundPath: "/upload/outbound/"
+          returnPath: "/upload/returned/"
+      sftpConfigs:
+        - routingNumber: "121042882"
+          hostname: "localhost:22"
+          username: "demo"
+          password: "password"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -153,7 +176,20 @@ spec:
         - name: paygate-mysql-data
           persistentVolumeClaim:
             claimName: paygate-mysql-data
+        - name: paygate-routing-config
+          configMap:
+            name: paygate-routing-config
+            items:
+              - key: routing.yaml
+                path: routing.yaml
       containers:
+      - image: atmoz/sftp:latest
+        name: sftp
+        args:
+          - 'demo:password:::upload'
+        ports:
+          - containerPort: 22
+            name: sftp
       - image: mysql:8.0
         name: mysql
         env:
@@ -180,7 +216,11 @@ spec:
         volumeMounts:
           - name: paygate-data
             mountPath: /opt/moov/paygate/
+          - name: paygate-routing-config
+            mountPath: /opt/moov/paygate/routing-config/
         env:
+          - name: CONFIG_FILE
+            value: /opt/moov/paygate/routing-config/routing.yaml
           - name: HTTP_ADMIN_BIND_ADDRESS
             value: ':9090'
           - name: HTTP_BIND_ADDRESS
