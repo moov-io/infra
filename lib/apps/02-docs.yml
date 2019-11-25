@@ -75,7 +75,7 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/docs:v2019.11.20.2
+      - image: moov/docs:v2019.11.25.1
         imagePullPolicy: Always
         name: docs
         ports:
