@@ -34,15 +34,15 @@ data:
               severity: critical
             annotations:
               message: "Unable to find or parse expiry for {{ $labels.domain }}"
-  prometheus-ofac-rules.yml: |
+  prometheus-watchman-rules.yml: |
     groups:
-      - name: ./ofac.rules
+      - name: ./watchman.rules
         rules:
-          - alert: StaleOFACData
-            expr: (time() - last_ofac_data_refresh_success) > 60*60*24
+          - alert: StaleData
+            expr: (time() - last_watchman_data_refresh_success) > 60*60*24
             for: 1h
             labels:
               severity: warning
             annotations:
-              message: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
+              message: "Data was last refreshed {{ humanizeTimestamp $value }} ago"
 ---

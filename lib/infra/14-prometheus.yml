@@ -312,8 +312,8 @@ spec:
                 path: prometheus-app-rules.yml
               - key: prometheus-domain-rules.yml
                 path: prometheus-domain-rules.yml
-              - key: prometheus-ofac-rules.yml
-                path: prometheus-ofac-rules.yml
+              - key: prometheus-watchman-rules.yml
+                path: prometheus-watchman-rules.yml
         - name: prometheus-data
           persistentVolumeClaim:
             claimName: prometheus-data

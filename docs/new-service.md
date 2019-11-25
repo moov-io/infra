@@ -1,7 +1,7 @@
 ## Creating a new Moov HTTP service
 
 1. Create a new repository on the [moov-io Github Organization](https://github.com/moov-io).
-   - The repository should have a basic ["hello world" approach](https://github.com/moov-io/ofac/blob/v0.0.0/cmd/server/main.go) to get deploying right away.
+   - The repository should have a basic ["hello world" approach](https://github.com/moov-io/watchman/blob/v0.0.0/cmd/server/main.go) to get deploying right away.
 1. To deploy a service needs a Docker image, build commands, and a binary to run. Since all of our applications are in Go we include a `Dockerfile` in each repository.
    1. [non cgo example](https://github.com/moov-io/ach/blob/master/Dockerfile)
    1. [cgo example](https://github.com/moov-io/auth/blob/master/Dockerfile) (needed for SQLite integration - via libc requirement)

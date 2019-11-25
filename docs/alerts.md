@@ -5,15 +5,15 @@ Prometheus support declaring conditions which, when met trigger "Alerts". These 
 ```yaml
 # Example alert
 groups:
-  - name: ./ofac.rules
+  - name: ./watchman.rules
     rules:
-      - alert: StaleOFACData
-        expr: (time() - last_ofac_data_refresh_success) > 60*60*24
+      - alert: StaleData
+        expr: (time() - last_watchman_data_refresh_success) > 60*60*24
         for: 1h
         labels:
           severity: warning
         annotations:
-          description: "OFAC data was last refreshed {{ humanizeTimestamp $value }} ago"
+          description: "Data was last refreshed {{ humanizeTimestamp $value }} ago"
 ```
 
 Right now the production alerts Moov has created are defined in [14-prometheus-rules.yml](../envs/prod/infra/14-prometheus-rules.yml) and we include [kubernetes-monitoring/kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin) alerts as well - these cover a base Kubernetes setup.

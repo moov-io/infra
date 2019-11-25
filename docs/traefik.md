@@ -17,7 +17,7 @@ We run the [pusher/oauth2_proxy](https://github.com/pusher/oauth2_proxy) to hand
 
 #### API authentication
 
-An HTTP call like `GET /v1/depositories/:id` with a cookie or OAuth token will hit our LB (traefik)  at `api.moov.io` and a "forward auth" call gets made from traefik to our auth service. The cookie or OAuth token is checked, and if valid '200 OK' is returned to traefik. Only on that '200 OK' is the actual request proxied to paygate (or in this case ofac).
+An HTTP call like `GET /v1/depositories/:id` with a cookie or OAuth token will hit our LB (traefik)  at `api.moov.io` and a "forward auth" call gets made from traefik to our auth service. The cookie or OAuth token is checked, and if valid '200 OK' is returned to traefik. Only on that '200 OK' is the actual request proxied to paygate (or in this case watchman).
 
 The `Ingress` annotations to setup this forward-auth looks something like this:
 
