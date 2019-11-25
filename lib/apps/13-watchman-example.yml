@@ -2,24 +2,24 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ofac-webhook-example
+  name: watchman-webhook-example
   namespace: apps
   labels:
-    app: ofac-webhook-example
+    app: watchman-webhook-example
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ofac-webhook-example
+      app: watchman-webhook-example
   template:
     metadata:
       labels:
-        app: ofac-webhook-example
+        app: watchman-webhook-example
     spec:
       containers:
-      - image: moov/ofac-webhook-example:v0.12.0-rc1
+      - image: moov/watchman-webhook-example:v0.13.0-rc3
         imagePullPolicy: Always
-        name: ofac-webhook-example
+        name: watchman-webhook-example
         args:
           - -http.addr=:8080
         ports:

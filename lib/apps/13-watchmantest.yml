@@ -2,7 +2,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: ofactest
+  name: watchmantest
   namespace: apps
 spec:
   suspend: false
@@ -13,12 +13,12 @@ spec:
       template:
         spec:
           containers:
-          - name: ofactest
-            image: moov/ofactest:v0.12.0-rc1
+          - name: watchmantest
+            image: moov/watchmantest:v0.13.0-rc3
             args:
               # Stay internal to avoid auth requirement
               # There isn't a great way to create an OAuth token for this test binary right now.
-              - -address=http://ofac.apps.svc.cluster.local:8080
+              - -address=http://watchman.apps.svc.cluster.local:8080
             env:
               - name: OAUTH_TOKEN
                 value: moov # dummy value since we're hitting an internal k8s address without auth

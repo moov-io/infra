@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ofac
+  name: watchman
   namespace: apps
 spec:
   type: ClusterIP
   selector:
-    app: ofac
+    app: watchman
   ports:
     - name: http
       protocol: TCP
@@ -22,7 +22,7 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ofac
+  name: watchman
   namespace: apps
   annotations:
     kubernetes.io/ingress.class: traefik
@@ -42,16 +42,16 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/ofac
+          - path: /v1/watchman
             backend:
-              serviceName: ofac
+              serviceName: watchman
               servicePort: 8080
 
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ofac-ping
+  name: watchman-ping
   namespace: apps
   annotations:
     kubernetes.io/ingress.class: traefik
@@ -68,16 +68,16 @@ spec:
     - host: api.moov.io
       http:
         paths:
-          - path: /v1/ofac/ping
+          - path: /v1/watchman/ping
             backend:
-              serviceName: ofac
+              serviceName: watchman
               servicePort: 8080
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ofac-data
+  name: watchman-data
   namespace: apps
 spec:
   accessModes:
@@ -89,7 +89,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ofac-mysql-data
+  name: watchman-mysql-data
   namespace: apps
 spec:
   accessModes:
@@ -101,19 +101,19 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ofac
+  name: watchman
   namespace: apps
   labels:
-    app: ofac
+    app: watchman
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ofac
+      app: watchman
   template:
     metadata:
       labels:
-        app: ofac
+        app: watchman
     spec:
       affinity:
         podAntiAffinity:
@@ -122,42 +122,42 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       volumes:
-        - name: ofac-data
+        - name: watchman-data
           persistentVolumeClaim:
-            claimName: ofac-data
-        - name: ofac-mysql-data
+            claimName: watchman-data
+        - name: watchman-mysql-data
           persistentVolumeClaim:
-            claimName: ofac-mysql-data
+            claimName: watchman-mysql-data
       containers:
       - image: mysql:8.0
         name: mysql
         env:
           - name: MYSQL_DATABASE
-            value: ofac
+            value: watchman
           - name: MYSQL_USER
-            value: ofac
+            value: watchman
           - name: MYSQL_RANDOM_ROOT_PASSWORD
             value: "yes"
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ofac-mysql-password
+                name: watchman-mysql-password
                 key: password
         ports:
           - containerPort: 3306
             name: mysql
         volumeMounts:
-          - name: ofac-mysql-data
+          - name: watchman-mysql-data
             mountPath: /var/lib/mysql
-      - image: moov/ofac:v0.12.0
+      - image: moov/watchman:v0.13.0-rc3
         imagePullPolicy: Always
-        name: ofac
+        name: watchman
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
         volumeMounts:
-          - name: ofac-data
-            mountPath: /opt/moov/ofac/
+          - name: watchman-data
+            mountPath: /opt/moov/watchman/
         env:
           - name: LOG_FORMAT
             value: plain
@@ -166,13 +166,13 @@ spec:
           - name: MYSQL_ADDRESS
             value: 'tcp(localhost:3306)'
           - name: MYSQL_DATABASE
-            value: ofac
+            value: watchman
           - name: MYSQL_USER
-            value: ofac
+            value: watchman
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: ofac-mysql-password
+                name: watchman-mysql-password
                 key: password
         ports:
           - containerPort: 8080
