@@ -13,8 +13,12 @@ Once the application is setup we will deploy (manually, as all deploys are) the 
 
 As always, talk with Adam for any questions. This process will be automated further as demand grows.
 
+### Secure Coding
+
+Please read over the [Web Application Secure Coding Practices](https://github.com/OWASP/Go-SCP) for Go.
+
 ### Persistence
 
 Right now our default database is [SQLite](https://sqlite.org/index.html). We chose this because it's SQL-like and fairly dependency free. "SQL-like" means we should be able to translate the SQL queries over to another database such as Postgres, MySQL, or Oracle in the future. "fairly dependency free" refers to only requiring libc and a filesystem. The SQLite code is extremely well tested and performant for our initial usecases. This means backups consist of saving/encrypting two files and deployment requires C/CGO and a filesystem.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/RqubKSF3wig" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![SQLite and Go](https://img.youtube.com/vi/RqubKSF3wig/0.jpg)](https://www.youtube.com/watch?v=RqubKSF3wig)
