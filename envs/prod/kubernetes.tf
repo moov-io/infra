@@ -35,7 +35,7 @@ variable "permanent_node_machine_type" {
 }
 
 variable "preemptible_pool_node_count" {
-  default = 2
+  default = 3
 }
 
 variable "preemptible_node_disk_size_gb" {
