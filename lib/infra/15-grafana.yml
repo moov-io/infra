@@ -172,10 +172,10 @@ spec:
         name: grafana
         resources:
           limits:
-            cpu: 100m
+            cpu: 50m
             memory: 50Mi
           requests:
-            cpu: 50m
+            cpu: 25m
             memory: 50Mi
         env:
           - name: GF_PATHS_DATA

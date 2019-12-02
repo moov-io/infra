@@ -79,7 +79,7 @@ spec:
           - -namespaces=apps,infra,lb
         resources:
           limits:
-            cpu: 100m
+            cpu: 50m
             memory: 25Mi
           requests:
             cpu: 25m
