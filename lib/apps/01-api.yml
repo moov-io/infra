@@ -95,7 +95,7 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/api:v2019.11.25.1
+      - image: moov/api:v2019.12.05.1
         imagePullPolicy: Always
         name: api
         env:
@@ -163,7 +163,7 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/api-apps:v2019.11.25.1
+      - image: moov/api-apps:v2019.12.05.1
         imagePullPolicy: Always
         name: api-apps
         ports:
@@ -206,7 +206,7 @@ spec:
         spec:
           containers:
           - name: cookie
-            image: moov/apitest:v2019.11.25.1
+            image: moov/apitest:v2019.12.05.1
             args: ["-cleanup"]
           restartPolicy: OnFailure
 ---
@@ -225,7 +225,7 @@ spec:
         spec:
           containers:
           - name: oauth
-            image: moov/apitest:v2019.11.25.1
+            image: moov/apitest:v2019.12.05.1
             args: ["-cleanup", "-oauth"]
           restartPolicy: OnFailure
 
@@ -245,7 +245,7 @@ spec:
         spec:
           containers:
           - name: iat
-            image: moov/apitest:v2019.11.25.1
+            image: moov/apitest:v2019.12.05.1
             args: ["-ach.type=IAT", "-cleanup"]
           restartPolicy: OnFailure
 ---
