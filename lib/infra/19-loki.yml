@@ -93,6 +93,9 @@ data:
         directory: /data/loki/index
       filesystem:
         directory: /data/loki/chunks
+    table_manager:
+      retention_deletes_enabled: true
+      retention_period: 30d
     limits_config:
       enforce_metric_name: false
 
@@ -121,7 +124,7 @@ spec:
       serviceAccountName: loki
       terminationGracePeriodSeconds: 30
       containers:
-        - image: grafana/loki:v1.1.0
+        - image: grafana/loki:v1.2.0
           imagePullPolicy: Always
           name: loki
           args:
