@@ -75,7 +75,7 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/moov-io:v2019.11.25.1
+      - image: moov/moov-io:v2019.12.07.1
         imagePullPolicy: Always
         name: moovio
         ports:
