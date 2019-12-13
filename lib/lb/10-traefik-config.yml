@@ -387,7 +387,7 @@ data:
     ping:
       entryPoint: https
     log:
-      level: DEBUG
+      level: INFO
     accessLog: {}
     certificatesResolvers:
       default:
