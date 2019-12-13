@@ -230,8 +230,7 @@ data:
           service: auth
           rule: "Host(`api.moov.io`) && PathPrefix(`/v1/users`, `/v1/oauth2`)"
           middlewares:
-            - auth-users
-            - auth-oauth2
+            - auth
           tls:
             certResolver: default
         "auth-ping":
@@ -309,7 +308,7 @@ data:
         "accounts":
           entryPoints: [https]
           service: accounts
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts/`)"
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts`)"
           middlewares:
             - accounts
           tls:
