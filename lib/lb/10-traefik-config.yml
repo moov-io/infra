@@ -8,65 +8,344 @@ metadata:
   name: traefik-config
   namespace: lb
 data:
-  traefik.toml: |
-      defaultEntryPoints = ["http","https"]
-      # logging
-      logLevel = "INFO" # INFO, DEBUG
-      [file]
-      watch = true
-      [traefikLog]
-      # filePath = "/path/to/traefik.log"
-      # format   = "json"
-      [accessLog]
-      # filePath = "/path/to/access.log"
-      # format   = "json
-      # TODO(adam): ...
-      # [Global]
-      # sendAnonymousUsage = false
-      # Setup entrypoint configs
-      [entryPoints]
-      [entryPoints.http]
-      address = ":80"
-      compress = true
-      [entryPoints.http.redirect]
-      entryPoint = "https"
-      [entryPoints.https]
-      address = ":443"
-      compress = true
-      [entryPoints.https.tls]
-      minVersion = "VersionTLS12"
-      snistrict = true
-      [entryPoints.traefik]
-      address = ":8081"
-      # Enable /ping
-      [ping]
-      entryPoint = "https"
-      # Enable api / dashboard
-      [api]
-      dashboard = true
-      # Let's Encrypt setup
-      [acme]
-      email = "security@moov.io"
-      storage = "/opt/traefik/letsencrypt.json"
-      entryPoint = "https"
-      # onDemand is deprecated in v1.7.9 ?
-      onDemand = true
-      onHostRule = true
-      # caServer = "https://acme-staging.api.letsencrypt.org/directory"
-      caServer = "https://acme-v02.api.letsencrypt.org/directory"
-      KeyType = "EC384"
-      acmeLogging = true
-      [acme.tlsChallenge]
-      entryPoint = "http"
-      # TODO(adam): why does disabling this fix acme error
-      # (I think traefik/LE are mis-matched on domains per-challenge.)
-      # [[acme.domains]]
-      # main = "api.moov.io"
-      # sans = ["infra.moov.io"]
-      [kubernetes]
-      namespaces = ["apps", "infra", "lb"]
-      [metrics]
-      [metrics.prometheus]
+  traefik.yaml: |
+    global:
+      checkNewVersion: true
+      sendAnonymousUsage: true
+    entryPoints:
+      http:
+        address: ":80"
+      https:
+        address: ":443"
+      traefik:
+        address: ":8081"
+    providers:
+      providersThrottleDuration: 2s
+      file:
+        filename: "/etc/traefik/traefik.yaml"
+        watch: true
+      # kubernetesIngress:
+      #   namespaces: [apps, infra, lb]
+    http:
+      services:
+        api:
+          loadBalancer:
+            servers:
+              - url: 'http://api.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
+        # api-apps:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://api-apps.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # docs:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://docs.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # moovio:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://moovio.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        ach:
+          loadBalancer:
+            servers:
+              - url: 'http://ach.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/ping"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
+        # auth:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://auth.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/ping"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # paygate:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://paygate.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/ping"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # watchman:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://watchman.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/ping"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # accounts:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://accounts.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/ping"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # fed:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://fed.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/ping"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+        # customers:
+        #   loadBalancer:
+        #     servers:
+        #       - url: 'http://customers.apps.svc.cluster.local:8080/'
+        #     healthCheck:
+        #       path: "/ping"
+        #       interval: "30s"
+        #       timeout: "5s"
+        #       scheme: http
+      middlewares:
+        ach:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/"
+        auth-users:
+          stripPrefix:
+            prefixes:
+              - "/v1/users"
+        auth-oauth2:
+          stripPrefix:
+            prefixes:
+              - "/v1/oauth2"
+        auth-ping:
+          stripPrefix:
+            prefixes:
+              - "/v1/auth"
+        paygate-depositories:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/depositories"
+        paygate-events:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/events"
+        paygate-gateways:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/gateways"
+        paygate-originators:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/originators"
+        paygate-receivers:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/receivers"
+        paygate-transfers:
+          stripPrefix:
+            prefixes:
+              - "/v1/ach/transfers"
+        paygate-ping:
+          stripPrefix:
+            prefixes:
+              - "/v1/paygate"
+        watchman:
+          stripPrefix:
+            prefixes:
+              - "/v1/watchman"
+        accounts:
+          stripPrefix:
+            prefixes:
+              - "/v1/"
+        fed:
+          stripPrefix:
+            prefixes:
+              - "/v1/"
+        customers:
+          stripPrefix:
+            prefixes:
+              - "/v1/"
+      routers:
+        "api-moov-io":
+          entryPoints: [https]
+          service: api
+          rule: "Host(`api.moov.io`)"
+          tls:
+            certResolver: default
+        "api-moov-io-api-apps":
+          entryPoints: [https]
+          service: api-apps
+          rule: "Host(`api.moov.io`) && PathPrefix(`/apps/`)"
+          tls:
+            certResolver: default
+        "docs-moov-io":
+          entryPoints: [https]
+          service: docs
+          rule: "Host(`docs.moov.io`)"
+          tls:
+            certResolver: default
+        "moov-io":
+          entryPoints: [https]
+          service: moovio
+          rule: "Host(`moov.io`)"
+          tls:
+            certResolver: default
+        ach:
+          entryPoints: [https]
+          service: ach
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/`)"
+          middlewares:
+            - ach
+          tls:
+            certResolver: default
+        auth:
+          entryPoints: [https]
+          service: auth
+          rule: "Host(`api.moov.io`) && (PathPrefix(`/v1/users/`) || PathPrefix(`/v1/oauth2/`))"
+          middlewares:
+            - auth-users
+            - auth-oauth2
+          tls:
+            certResolver: default
+        "auth-ping":
+          entryPoints: [https]
+          service: auth
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/auth/ping`)"
+          middlewares:
+            - auth-ping
+          tls:
+            certResolver: default
+        "paygate-depositories":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/depositories/`)"
+          middlewares:
+            - paygate-depositories
+          tls:
+            certResolver: default
+        "paygate-events":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/events/`)"
+          middlewares:
+            - paygate-events
+          tls:
+            certResolver: default
+        "paygate-gateways":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/gateways/`)"
+          middlewares:
+            - paygate-gateways
+          tls:
+            certResolver: default
+        "paygate-originators":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/originators/`)"
+          middlewares:
+            - paygate-originators
+          tls:
+            certResolver: default
+        "paygate-receivers":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/receivers/`)"
+          middlewares:
+            - paygate-receivers
+          tls:
+            certResolver: default
+        "paygate-transfers":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/transfers/`)"
+          middlewares:
+            - paygate-transfers
+          tls:
+            certResolver: default
+        "paygate-ping":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/ping`)"
+          middlewares:
+            - paygate-ping
+          tls:
+            certResolver: default
+        "watchman":
+          entryPoints: [https]
+          service: watchman
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/watchman/`)"
+          middlewares:
+            - watchman
+          tls:
+            certResolver: default
+        "accounts":
+          entryPoints: [https]
+          service: accounts
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts/`)"
+          middlewares:
+            - accounts
+          tls:
+            certResolver: default
+        "fed":
+          entryPoints: [https]
+          service: fed
+          rule: "Host(`api.moov.io`) && (PathPrefix(`/v1/fed/ach`) || PathPrefix(`/v1/fed/wire`))"
+          middlewares:
+            - fed
+          tls:
+            certResolver: default
+        "customers":
+          entryPoints: [https]
+          service: customers
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/`)"
+          middlewares:
+            - customers
+          tls:
+            certResolver: default
+    api:
+      insecure: true
+      dashboard: true
+    metrics:
+      prometheus: {}
+    ping:
+      entryPoint: https
+    log:
+      level: DEBUG
+    accessLog: {}
+    certificatesResolvers:
+      default:
+        acme:
+          email: security@moov.io
+          caServer: "https://acme-v02.api.letsencrypt.org/directory"
+          storage: /opt/traefik/letsencrypt.json
+          keyType: EC384
+          # tlsChallenge: {}
+          httpChallenge:
+            entryPoint: http
   nginx.conf: |
     daemon off;
     worker_processes  1;

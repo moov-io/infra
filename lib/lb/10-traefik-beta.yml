@@ -75,11 +75,11 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: traefik:v1.7
+      - image: traefik:v2.1
         imagePullPolicy: Always
         name: traefik
         args:
-          - --configFile=/etc/traefik/traefik.toml
+          - --configfile=/etc/traefik/traefik.yaml
         volumeMounts:
           - name: traefik-config
             mountPath: /etc/traefik/
@@ -97,8 +97,8 @@ spec:
           configMap:
             name: traefik-config
             items:
-              - key: traefik.toml
-                path: traefik.toml
+              - key: traefik.yaml
+                path: traefik.yaml
         - name: traefik-acme-beta
           persistentVolumeClaim:
             claimName: traefik-acme-beta
