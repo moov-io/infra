@@ -75,13 +75,18 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/docs:v2019.11.25.1
+      - image: moov/docs:v2019.12.16.1
         imagePullPolicy: Always
         name: docs
         ports:
           - containerPort: 8080
             name: http
             protocol: TCP
+        volumeMounts:
+          - name: nginx-temp
+            mountPath: /var/cache/nginx/
+          - name: nginx-run
+            mountPath: /var/run/
         resources:
           limits:
             cpu: 100m
@@ -101,5 +106,14 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+      volumes:
+        - name: nginx-temp
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
       restartPolicy: Always
 ---
