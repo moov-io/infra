@@ -147,27 +147,27 @@ data:
         paygate-depositories:
           stripPrefix:
             prefixes:
-              - "/v1/ach/depositories"
+              - "/v1/ach/"
         paygate-events:
           stripPrefix:
             prefixes:
-              - "/v1/ach/events"
+              - "/v1/ach/"
         paygate-gateways:
           stripPrefix:
             prefixes:
-              - "/v1/ach/gateways"
+              - "/v1/ach/"
         paygate-originators:
           stripPrefix:
             prefixes:
-              - "/v1/ach/originators"
+              - "/v1/ach/"
         paygate-receivers:
           stripPrefix:
             prefixes:
-              - "/v1/ach/receivers"
+              - "/v1/ach/"
         paygate-transfers:
           stripPrefix:
             prefixes:
-              - "/v1/ach/transfers"
+              - "/v1/ach/"
         paygate-ping:
           stripPrefix:
             prefixes:
