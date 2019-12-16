@@ -189,21 +189,25 @@ spec:
         resources:
           limits:
             cpu: 200m
-            memory: 250Mi
+            memory: 400Mi
           requests:
-            cpu: 25m
-            memory: 100Mi
+            cpu: 100m
+            memory: 200Mi
         readinessProbe:
           httpGet:
             path: /ping
             port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 5
         livenessProbe:
           httpGet:
             path: /ping
             port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          timeoutSeconds: 5
+          failureThreshold: 5
       restartPolicy: Always
 ---
