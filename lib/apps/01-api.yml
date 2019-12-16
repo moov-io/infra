@@ -95,7 +95,7 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/api:v2019.12.05.1
+      - image: moov/api:v2019.12.16.1
         imagePullPolicy: Always
         name: api
         env:
@@ -105,6 +105,11 @@ spec:
           - containerPort: 8080
             name: http
             protocol: TCP
+        volumeMounts:
+          - name: nginx-temp
+            mountPath: /var/cache/nginx/
+          - name: nginx-run
+            mountPath: /var/run/
         resources:
           limits:
             cpu: 100m
@@ -124,6 +129,15 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+      volumes:
+        - name: nginx-temp
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
       restartPolicy: Always
 ---
 apiVersion: extensions/v1beta1
@@ -163,13 +177,18 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
-      - image: moov/api-apps:v2019.12.05.1
+      - image: moov/api-apps:v2019.12.16.1
         imagePullPolicy: Always
         name: api-apps
         ports:
           - containerPort: 8080
             name: http
             protocol: TCP
+        volumeMounts:
+          - name: nginx-temp
+            mountPath: /var/cache/nginx/
+          - name: nginx-run
+            mountPath: /var/run/
         resources:
           limits:
             cpu: 100m
@@ -189,6 +208,15 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 101
+      volumes:
+        - name: nginx-temp
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
       restartPolicy: Always
 ---
 apiVersion: batch/v1beta1
@@ -206,7 +234,7 @@ spec:
         spec:
           containers:
           - name: cookie
-            image: moov/apitest:v2019.12.05.1
+            image: moov/apitest:v2019.12.16.1
             args: ["-cleanup"]
           restartPolicy: OnFailure
 ---
@@ -225,7 +253,7 @@ spec:
         spec:
           containers:
           - name: oauth
-            image: moov/apitest:v2019.12.05.1
+            image: moov/apitest:v2019.12.16.1
             args: ["-cleanup", "-oauth"]
           restartPolicy: OnFailure
 
@@ -245,7 +273,7 @@ spec:
         spec:
           containers:
           - name: iat
-            image: moov/apitest:v2019.12.05.1
+            image: moov/apitest:v2019.12.16.1
             args: ["-ach.type=IAT", "-cleanup"]
           restartPolicy: OnFailure
 ---
