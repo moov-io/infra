@@ -75,6 +75,25 @@ spec:
           limits:
             cpu: 100m
             memory: 50Mi
+          requests:
+            cpu: 50m
+            memory: 25Mi
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9113
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9113
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
       - image: traefik:v2.1
         imagePullPolicy: Always
         name: traefik
