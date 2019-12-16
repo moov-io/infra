@@ -119,10 +119,22 @@ spec:
           - containerPort: 4180
             name: http
             protocol: TCP
-        # securityContext:
-        #   readOnlyRootFilesystem: true
-        #   runAsNonRoot: true
-        #   runAsUser: 10001
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 4180
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 4180
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 2000
       restartPolicy: Always
 
 ---
