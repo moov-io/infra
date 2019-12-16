@@ -71,7 +71,7 @@ spec:
       serviceAccountName: oauth2-proxy
       terminationGracePeriodSeconds: 30
       containers:
-      - image: quay.io/pusher/oauth2_proxy:v3.1.0 # TODO(adam): v3.2.0 might be broken? can't find _oauth2_proxy cookie
+      - image: quay.io/pusher/oauth2_proxy:v4.1.0
         imagePullPolicy: Always
         name: oauth2-proxy
         resources:
@@ -108,7 +108,13 @@ spec:
           - -pass-host-header
           - -provider=github
           - -redirect-url=https://infra.moov.io/oauth2/callback
-          - -upstream=http://grafana.infra.svc.cluster.local:9090/grafana/,http://prometheus.infra.svc.cluster.local:9090/prometheus/,http://alertmanager.infra.svc.cluster.local:9090/alertmanager/,http://traefik-dashboard.lb.svc.cluster.local:8081/traefik/,http://loki.infra.svc.cluster.local:3100/loki/,http://polaris-dashboard.infra.svc.cluster.local:8080/polaris/,http://kube-ingress-index.infra.svc.cluster.local:8080/
+          - -upstream=http://grafana.infra.svc.cluster.local:9090/grafana/
+          - -upstream=http://prometheus.infra.svc.cluster.local:9090/prometheus/
+          - -upstream=http://alertmanager.infra.svc.cluster.local:9090/alertmanager/
+          - -upstream=http://traefik-dashboard.lb.svc.cluster.local:8081/traefik/
+          - -upstream=http://loki.infra.svc.cluster.local:3100/loki/
+          - -upstream=http://polaris-dashboard.infra.svc.cluster.local:8080/polaris/
+          - -upstream=http://kube-ingress-index.infra.svc.cluster.local:8080/
         ports:
           - containerPort: 4180
             name: http
