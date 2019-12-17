@@ -53,6 +53,11 @@ spec:
           requests:
             cpu: 100m
             memory: 50Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          # readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
       restartPolicy: Always
 
 ---
