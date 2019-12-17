@@ -349,6 +349,12 @@ data:
           rule: "Host(`infra.moov.io`) && Path(`/`)"
           tls:
             certResolver: default
+        alertmanager:
+          entryPoints: [https]
+          service: oauth2-proxy
+          rule: "Host(`infra.moov.io`) && PathPrefix(`/alertmanager/`)"
+          tls:
+            certResolver: default
         traefik:
           entryPoints: [https]
           service: oauth2-proxy
@@ -365,12 +371,6 @@ data:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/grafana/`)"
-          tls:
-            certResolver: default
-        loki:
-          entryPoints: [https]
-          service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/loki/`)"
           tls:
             certResolver: default
         polaris:
