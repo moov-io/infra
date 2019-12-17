@@ -120,7 +120,7 @@ spec:
           persistentVolumeClaim:
             claimName: fed-data
       containers:
-      - image: moov/fed:v0.4.0
+      - image: moov/fed:v0.4.1
         imagePullPolicy: Always
         name: fed
         args:
