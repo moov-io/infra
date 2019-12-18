@@ -75,7 +75,7 @@ spec:
       volumes:
       - name: domain-exporter
         configMap:
-          defaultMode: 0600
+          defaultMode: 0644
           name: domain-exporter
 
 ---
