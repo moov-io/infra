@@ -77,7 +77,7 @@ spec:
           - -admin.addr=:9090
         env:
           - name: ACH_FILE_TTL
-            value: 30m # 30 minutes
+            value: 300m
           - name: LOG_FORMAT
             value: plain
         ports:

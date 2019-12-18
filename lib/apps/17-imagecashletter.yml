@@ -53,7 +53,7 @@ spec:
           - name: LOG_FORMAT
             value: plain
           - name: ICL_FILE_TTL
-            value: 30m # 30 minutes
+            value: 300m
         ports:
           - containerPort: 8080
             name: http
