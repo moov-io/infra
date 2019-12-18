@@ -17,59 +17,6 @@ spec:
       protocol: TCP
       port: 9090
       targetPort: 9090
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: accounts
-  namespace: apps
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/rewrite-target: /accounts
-    ingress.kubernetes.io/auth-type: forward
-    ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
-    ingress.kubernetes.io/auth-response-headers: X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
-    ingress.kubernetes.io/content-type-nosniff: "true"
-    ingress.kubernetes.io/force-hsts: "true"
-    ingress.kubernetes.io/hsts-max-age: "315360000"
-    ingress.kubernetes.io/hsts-include-subdomains: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "api.moov.io"
-    ingress.kubernetes.io/ssl-force-host: "true"
-spec:
-  rules:
-    - host: api.moov.io
-      http:
-        paths:
-          - path: /v1/accounts
-            backend:
-              serviceName: accounts
-              servicePort: 8080
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: accounts-ping
-  namespace: apps
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/rewrite-target: /ping
-    ingress.kubernetes.io/content-type-nosniff: "true"
-    ingress.kubernetes.io/force-hsts: "true"
-    ingress.kubernetes.io/hsts-max-age: "315360000"
-    ingress.kubernetes.io/hsts-include-subdomains: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "api.moov.io"
-    ingress.kubernetes.io/ssl-force-host: "true"
-spec:
-  rules:
-    - host: api.moov.io
-      http:
-        paths:
-          - path: /v1/accounts/ping
-            backend:
-              serviceName: accounts
-              servicePort: 8080
 
 ---
 apiVersion: v1
@@ -83,6 +30,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -95,6 +43,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
+
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

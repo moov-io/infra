@@ -23,31 +23,6 @@ metadata:
 
 ---
 apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: oauth2-proxy
-  namespace: infra
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    ingress.kubernetes.io/content-type-nosniff: "true"
-    ingress.kubernetes.io/force-hsts: "true"
-    ingress.kubernetes.io/hsts-max-age: "315360000"
-    ingress.kubernetes.io/hsts-include-subdomains: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "infra.moov.io"
-    ingress.kubernetes.io/ssl-force-host: "true"
-spec:
-  rules:
-    - host: infra.moov.io
-      http:
-        paths:
-          - path: /oauth2
-            backend:
-              serviceName: oauth2-proxy
-              servicePort: 4180
-
----
-apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: oauth2-proxy

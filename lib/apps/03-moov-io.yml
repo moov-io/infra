@@ -13,29 +13,6 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: moovio
-  namespace: apps
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    ingress.kubernetes.io/force-hsts: "true"
-    ingress.kubernetes.io/hsts-max-age: "315360000"
-    ingress.kubernetes.io/hsts-include-subdomains: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-host: "moov.io"
-    ingress.kubernetes.io/ssl-force-host: "true"
-spec:
-  rules:
-    - host: moov.io
-      http:
-        paths:
-          - path: /
-            backend:
-              serviceName: moovio
-              servicePort: 8080
 
 ---
 apiVersion: extensions/v1beta1
