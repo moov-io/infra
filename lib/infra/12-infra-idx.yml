@@ -46,6 +46,38 @@ spec:
       serviceAccountName: infra-idx
       terminationGracePeriodSeconds: 30
       containers:
+      - image: nginx/nginx-prometheus-exporter:0.4.2
+        imagePullPolicy: Always
+        name: nginx-exporter
+        args:
+          - -nginx.scrape-uri=http://localhost:8080/stub_status
+        ports:
+          - containerPort: 9113
+            name: metrics
+            protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 50m
+            memory: 25Mi
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9113
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9113
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 65534
       - image: moov/infra-idx:v0.0.0
         imagePullPolicy: Always
         name: infra-idx
