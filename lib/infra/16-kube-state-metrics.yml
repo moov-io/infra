@@ -68,6 +68,17 @@ spec:
             port: 8080
           initialDelaySeconds: 5
           timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          # runAsNonRoot: true
+          # runAsUser: 1000
       - name: addon-resizer
         image: k8s.gcr.io/addon-resizer:1.8.4
         resources:
