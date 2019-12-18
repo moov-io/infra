@@ -91,7 +91,7 @@ spec:
         name: api
         env:
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
+            value: plain
         ports:
           - containerPort: 8080
             name: http

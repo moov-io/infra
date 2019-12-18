@@ -72,7 +72,7 @@ spec:
           - name: FEDWIRE_DATA_PATH
             value: /data/fed/fpddir.txt
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
+            value: plain
         volumeMounts:
           - name: fed-data
             mountPath: /data/fed/

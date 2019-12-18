@@ -51,7 +51,7 @@ spec:
           - -admin.addr=:9090
         env:
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
+            value: plain
           - name: ICL_FILE_TTL
             value: 30m # 30 minutes
         ports:

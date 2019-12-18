@@ -168,7 +168,7 @@ spec:
           - name: SQLITE_DB_PATH
             value: /opt/moov/auth/auth.db
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
+            value: plain
         resources:
           limits:
             cpu: 100m

@@ -79,7 +79,7 @@ spec:
           - name: ACH_FILE_TTL
             value: 30m # 30 minutes
           - name: LOG_FORMAT
-            value: plain # TODO(adam): json?
+            value: plain
         ports:
           - containerPort: 8080
             name: http

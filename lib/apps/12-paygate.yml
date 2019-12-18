@@ -152,7 +152,7 @@ spec:
           - name: ACH_FILE_STORAGE_DIR
             value: '/opt/moov/paygate/storage/'
           - name: LOG_FORMAT
-            value: 'plain' # TODO(adam): json?
+            value: 'plain'
           - name: CUSTOMERS_CALLS_DISABLED
             value: 'true'
           # ODFI details
