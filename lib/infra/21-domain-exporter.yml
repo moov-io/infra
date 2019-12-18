@@ -51,6 +51,23 @@ spec:
           requests:
             cpu: 25m
             memory: 25Mi
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9203
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 9203
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
         volumeMounts:
         - name: domain-exporter
           mountPath: /etc/domain-exporter
