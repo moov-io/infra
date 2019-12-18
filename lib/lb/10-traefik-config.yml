@@ -127,6 +127,15 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        imagecashletter:
+          loadBalancer:
+            servers:
+              - url: 'http://imagecashletter.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/ping"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
         oauth2-proxy:
           loadBalancer:
             servers:
@@ -196,6 +205,10 @@ data:
           stripPrefix:
             prefixes:
               - "/v1/"
+        imagecashletter:
+          stripPrefix:
+            prefixes:
+              - "/v1/imagecashletter"
       routers:
         "api-moov-io":
           entryPoints: [https]
@@ -347,6 +360,14 @@ data:
           rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/`)"
           middlewares:
             - customers
+          tls:
+            certResolver: default
+        "imagecashletter":
+          entryPoints: [https]
+          service: imagecashletter
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/imagecashletter/`)"
+          middlewares:
+            - imagecashletter
           tls:
             certResolver: default
         "infra-oauth2":
