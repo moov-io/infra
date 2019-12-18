@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: infra-idx
+  namespace: infra
+spec:
+  type: ClusterIP
+  selector:
+    app: infra-idx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: infra-idx
+  namespace: infra
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: infra-idx
+  namespace: infra
+  labels:
+    app: infra-idx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: infra-idx
+  template:
+    metadata:
+      labels:
+        app: infra-idx
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+      serviceAccountName: infra-idx
+      terminationGracePeriodSeconds: 30
+      containers:
+      - image: moov/infra-idx:v0.0.0
+        imagePullPolicy: Always
+        name: infra-idx
+        resources:
+          limits:
+            cpu: 50m
+            memory: 25Mi
+          requests:
+            cpu: 25m
+            memory: 10Mi
+        ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+        volumeMounts:
+          - name: nginx-temp
+            mountPath: /var/cache/nginx/
+          - name: nginx-run
+            mountPath: /var/run/
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+      volumes:
+        - name: nginx-temp
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
+      restartPolicy: Always
+---
