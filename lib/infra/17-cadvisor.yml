@@ -50,6 +50,23 @@ spec:
           - name: http
             containerPort: 8080
             protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          # runAsNonRoot: true
+          # runAsUser: 1000
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 30
       volumes:
