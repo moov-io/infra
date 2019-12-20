@@ -94,7 +94,7 @@ spec:
         volumeMounts:
           - name: watchman-mysql-data
             mountPath: /var/lib/mysql
-      - image: moov/watchman:v0.13.0-rc5
+      - image: moov/watchman:v0.13.0
         imagePullPolicy: Always
         name: watchman
         args:
