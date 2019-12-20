@@ -107,13 +107,23 @@ spec:
               - key: routing.yaml
                 path: routing.yaml
       containers:
-      - image: atmoz/sftp:latest
+      - image: atmoz/sftp:alpine
         name: sftp
         args:
           - 'demo:password:::upload'
         ports:
           - containerPort: 22
             name: sftp
+        readinessProbe:
+          tcpSocket:
+            port: 22
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 22
+          initialDelaySeconds: 5
+          periodSeconds: 10
       - image: mysql:8.0
         name: mysql
         env:
@@ -131,6 +141,16 @@ spec:
         ports:
           - containerPort: 3306
             name: mysql
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
         volumeMounts:
           - name: paygate-mysql-data
             mountPath: /var/lib/mysql
