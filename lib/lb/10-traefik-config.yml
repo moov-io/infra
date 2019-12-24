@@ -140,6 +140,33 @@ data:
           loadBalancer:
             servers:
               - url: 'http://oauth2-proxy.infra.svc.cluster.local:4180/'
+        about:
+          loadBalancer:
+            servers:
+              - url: 'http://about.about.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
+        corteza-crm:
+          loadBalancer:
+            servers:
+              - url: 'http://corteza-crm.about.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/ping"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
+        soc2:
+          loadBalancer:
+            servers:
+              - url: 'http://soc2.about.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
       middlewares:
         ach:
           stripPrefix:
@@ -209,6 +236,10 @@ data:
           stripPrefix:
             prefixes:
               - "/v1/imagecashletter"
+        soc2:
+          stripPrefix:
+            prefixes:
+              - "/soc2"
       routers:
         "api-moov-io":
           entryPoints: [https]
@@ -410,6 +441,26 @@ data:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/polaris/`)"
+          tls:
+            certResolver: default
+        about-corteza-crm:
+          entryPoints: [https]
+          service: corteza-crm
+          rule: "Host(`about.moov.io`) && PathPrefix(`/corteza/`)"
+          tls:
+            certResolver: default
+        about-soc2:
+          entryPoints: [https]
+          service: soc2
+          rule: "Host(`about.moov.io`) && PathPrefix(`/soc2`)"
+          middlewares:
+            - soc2
+          tls:
+            certResolver: default
+        about:
+          entryPoints: [https]
+          service: about
+          rule: "Host(`about.moov.io`)"
           tls:
             certResolver: default
     api:
