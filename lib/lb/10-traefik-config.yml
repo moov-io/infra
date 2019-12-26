@@ -261,6 +261,12 @@ data:
             certResolver: default
         "moov-io":
           entryPoints: [https]
+          service: watchman
+          rule: "Host(`moov.io`) && PathPrefix(`/watchman/`)"
+          tls:
+            certResolver: default
+        "moov-io":
+          entryPoints: [https]
           service: moovio
           rule: "Host(`moov.io`)"
           tls:
