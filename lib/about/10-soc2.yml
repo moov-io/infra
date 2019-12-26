@@ -70,7 +70,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/soc2:v2019.12.24.1
+      - image: moov/soc2:v2019.12.26.1
         imagePullPolicy: Always
         name: soc2
         ports:
