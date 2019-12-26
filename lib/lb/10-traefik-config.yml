@@ -208,6 +208,10 @@ data:
           stripPrefix:
             prefixes:
               - "/v1/paygate"
+        moovio-watchman:
+          stripPrefix:
+            prefixes:
+              - "/watchman"
         watchman:
           stripPrefix:
             prefixes:
@@ -259,10 +263,12 @@ data:
           rule: "Host(`docs.moov.io`)"
           tls:
             certResolver: default
-        "moov-io":
+        "moovio-watchman":
           entryPoints: [https]
           service: watchman
-          rule: "Host(`moov.io`) && PathPrefix(`/watchman/`)"
+          rule: "Host(`moov.io`) && PathPrefix(`/watchman`)"
+          middlewares:
+            - moovio-watchman
           tls:
             certResolver: default
         "moov-io":
