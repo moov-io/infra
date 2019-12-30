@@ -140,15 +140,6 @@ data:
           loadBalancer:
             servers:
               - url: 'http://oauth2-proxy.infra.svc.cluster.local:4180/'
-        about:
-          loadBalancer:
-            servers:
-              - url: 'http://about.about.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         corteza-crm:
           loadBalancer:
             servers:
@@ -161,7 +152,7 @@ data:
         soc2:
           loadBalancer:
             servers:
-              - url: 'http://soc2.about.svc.cluster.local:8080/'
+              - url: 'http://soc2.apps.svc.cluster.local:8080/'
             healthCheck:
               path: "/"
               interval: "30s"
@@ -461,18 +452,12 @@ data:
           rule: "Host(`about.moov.io`) && PathPrefix(`/corteza/`)"
           tls:
             certResolver: default
-        about-soc2:
+        soc2:
           entryPoints: [https]
           service: soc2
-          rule: "Host(`about.moov.io`) && PathPrefix(`/soc2`)"
+          rule: "Host(`moov.io`) && PathPrefix(`/soc2`)"
           middlewares:
             - soc2
-          tls:
-            certResolver: default
-        about:
-          entryPoints: [https]
-          service: about
-          rule: "Host(`about.moov.io`)"
           tls:
             certResolver: default
     api:
