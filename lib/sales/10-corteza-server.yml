@@ -86,25 +86,25 @@ spec:
           - containerPort: 80
             name: api
             protocol: TCP
-        # resources:
-        #   limits:
-        #     cpu: 250m
-        #     memory: 100Mi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 50Mi
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 8081
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 10
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 8081
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 10
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+          requests:
+            cpu: 50m
+            memory: 10Mi
+        readinessProbe:
+          httpGet:
+            path: /version
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /version
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
         # securityContext:
         #   readOnlyRootFilesystem: true
         #   runAsNonRoot: true

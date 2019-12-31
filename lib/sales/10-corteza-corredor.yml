@@ -9,10 +9,6 @@ spec:
   selector:
     app: corteza-corredor
   ports:
-    # - name: data
-    #   protocol: TCP
-    #   port: 8080
-    #   targetPort: 8080
     - name: grpc
       protocol: TCP
       port: 50051
@@ -65,31 +61,26 @@ spec:
           - name: CORREDOR_LOG_LEVEL
             value: "debug"
         ports:
-          # - containerPort: 8080
-          #   name: data
-          #   protocol: TCP
           - containerPort: 50051
             name: grpc
             protocol: TCP
-        # resources:
-        #   limits:
-        #     cpu: 250m
-        #     memory: 100Mi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 50Mi
-        # readinessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 8081
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 10
-        # livenessProbe:
-        #   httpGet:
-        #     path: /
-        #     port: 8081
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 10
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
+        readinessProbe:
+          tcpSocket:
+            port: 50051
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 50051
+          initialDelaySeconds: 5
+          periodSeconds: 10
         # securityContext:
         #   readOnlyRootFilesystem: true
         #   runAsNonRoot: true
