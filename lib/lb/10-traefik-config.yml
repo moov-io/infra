@@ -140,15 +140,6 @@ data:
           loadBalancer:
             servers:
               - url: 'http://oauth2-proxy.infra.svc.cluster.local:4180/'
-        corteza-crm:
-          loadBalancer:
-            servers:
-              - url: 'http://corteza-crm.about.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         soc2:
           loadBalancer:
             servers:
@@ -156,6 +147,24 @@ data:
             healthCheck:
               path: "/"
               interval: "30s"
+              timeout: "5s"
+              scheme: http
+        corteza:
+          loadBalancer:
+            servers:
+              - url: "http://corteza-webapp.sales.svc.cluster.local/"
+            healthCheck:
+              path: "/"
+              interval: "10s"
+              timeout: "5s"
+              scheme: http
+        corteza-api:
+          loadBalancer:
+            servers:
+              - url: "http://corteza-server.sales.svc.cluster.local/"
+            healthCheck:
+              path: "/version"
+              interval: "10s"
               timeout: "5s"
               scheme: http
       middlewares:
@@ -446,10 +455,16 @@ data:
           rule: "Host(`infra.moov.io`) && PathPrefix(`/polaris/`)"
           tls:
             certResolver: default
-        about-corteza-crm:
+        corteza:
           entryPoints: [https]
-          service: corteza-crm
-          rule: "Host(`about.moov.io`) && PathPrefix(`/corteza/`)"
+          service: corteza
+          rule: "Host(`crm.moov.io`)"
+          tls:
+            certResolver: default
+        corteza-api:
+          entryPoints: [https]
+          service: corteza-api
+          rule: "Host(`api.crm.moov.io`)"
           tls:
             certResolver: default
         soc2:
