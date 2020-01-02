@@ -30,3 +30,4 @@ terraform.tfstate.backup*
 /envs/prod/apps/13-watchman-secrets.yml
 /envs/prod/sales/10-corteza-secrets.yml
 /envs/prod/sales/10-mysql-secrets.yml
+/envs/prod/sales/20-stargazers-secrets.yml
