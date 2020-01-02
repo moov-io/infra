@@ -149,6 +149,15 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        stargazers:
+          loadBalancer:
+            servers:
+              - url: "http://stargazers.sales.svc.cluster.local:8080/"
+            healthCheck:
+              path: "/ping"
+              interval: "10s"
+              timeout: "5s"
+              scheme: http
         corteza:
           loadBalancer:
             servers:
@@ -244,6 +253,10 @@ data:
           stripPrefix:
             prefixes:
               - "/soc2"
+        stargazers:
+          stripPrefix:
+            prefixes:
+              - "/stargazers"
       routers:
         "api-moov-io":
           entryPoints: [https]
@@ -453,6 +466,14 @@ data:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/polaris/`)"
+          tls:
+            certResolver: default
+        stargazers:
+          entryPoints: [https]
+          service: stargazers
+          rule: "Host(`crm.moov.io`) && PathPrefix(`/stargazers`)"
+          middlewares:
+            - stargazers
           tls:
             certResolver: default
         corteza:
