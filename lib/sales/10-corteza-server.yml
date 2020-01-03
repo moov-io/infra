@@ -70,6 +70,10 @@ spec:
                 key: jwt_secret
           - name: VIRTUAL_HOST
             value: "api.crm.moov.io"
+          - name: HTTP_METRICS_USERNAME
+            value: "metrics"
+          - name: HTTP_METRICS_PASSWORD
+            value: "metrics"
           - name: CORREDOR_ADDR
             value: "corteza-corredor.sales.svc.cluster.local:50051"
           - name: CORREDOR_ENABLED

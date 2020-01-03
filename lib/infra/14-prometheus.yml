@@ -163,6 +163,13 @@ data:
             action: drop
           - action: labeldrop
             regex: '(pod_template_hash)'
+      - job_name: corteza
+        static_configs:
+          - targets: ["corteza-server.sales.svc.cluster.local"]
+        basic_auth:
+          username: metrics
+          password: metrics
+        metrics_path: /metrics
       - job_name: loki
         kubernetes_sd_configs:
           - role: pod
