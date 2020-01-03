@@ -78,6 +78,19 @@ spec:
           - containerPort: 9090
             name: http
             protocol: TCP
+        resources:
+          limits:
+            cpu: 25m
+            memory: 50Mi
+          requests:
+            cpu: 10m
+            memory: 25Mi
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 9203
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
         readinessProbe:
           httpGet:
             path: /alertmanager/api/v2/status

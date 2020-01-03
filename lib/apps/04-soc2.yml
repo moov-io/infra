@@ -50,10 +50,10 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 50Mi
+            memory: 25Mi
           requests:
             cpu: 50m
-            memory: 25Mi
+            memory: 10Mi
         readinessProbe:
           httpGet:
             path: /metrics
@@ -91,10 +91,10 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 100Mi
+            memory: 25Mi
           requests:
             cpu: 25m
-            memory: 50Mi
+            memory: 10Mi
         readinessProbe:
           httpGet:
             path: /

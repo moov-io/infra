@@ -124,10 +124,10 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 50Mi
+            memory: 25Mi
           requests:
             cpu: 25m
-            memory: 25Mi
+            memory: 10Mi
       - image: nginx/nginx-prometheus-exporter:0.4.2
         imagePullPolicy: Always
         name: nginx-exporter
@@ -140,10 +140,10 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 50Mi
+            memory: 25Mi
           requests:
             cpu: 50m
-            memory: 25Mi
+            memory: 10Mi
         readinessProbe:
           httpGet:
             path: /metrics
