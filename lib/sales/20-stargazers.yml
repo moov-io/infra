@@ -58,11 +58,12 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: adamdecaf/stargazers:v0.1.2
+      - image: adamdecaf/stargazers:v0.2.0
         imagePullPolicy: Always
         name: stargazers
         args:
           - "-http.addr=:8080"
+          - "-http.base-path=/stargazers/"
           - "-repositories=/config/repos.txt"
         env:
           - name: STARGAZERS_ACCESS_TOKEN
@@ -86,13 +87,13 @@ spec:
             memory: 10Mi
         readinessProbe:
           httpGet:
-            path: /ping
+            path: /stargazers/ping
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
         livenessProbe:
           httpGet:
-            path: /ping
+            path: /stargazers/ping
             port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10

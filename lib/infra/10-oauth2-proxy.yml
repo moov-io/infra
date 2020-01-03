@@ -89,6 +89,7 @@ spec:
           - -upstream=http://traefik-dashboard.lb.svc.cluster.local:8081/traefik/
           - -upstream=http://loki.infra.svc.cluster.local:3100/loki/
           - -upstream=http://polaris-dashboard.infra.svc.cluster.local:8080/polaris/
+          - -upstream=http://stargazers.sales.svc.cluster.local:8080/stargazers/
           - -upstream=http://infra-idx.infra.svc.cluster.local:8080/
         ports:
           - containerPort: 4180
