@@ -19,7 +19,8 @@ resource "google_project" "ach" {
 resource "google_project_services" "ach" {
   project = var.gcp_project
   services = [
-    "bigquery-json.googleapis.com",
+    "bigquery.googleapis.com",
+    "bigquerystorage.googleapis.com",
     "cloudkms.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
@@ -114,4 +115,3 @@ variable "cluster_admins" {
 locals {
   gcp_cluster_admin_emails = formatlist("user:%s", var.cluster_admins)
 }
-
