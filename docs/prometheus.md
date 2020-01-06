@@ -27,3 +27,7 @@ We recommend showing the [Apdex Score](https://prometheus.io/docs/practices/hist
 ```
 
 ![](images/watchman-routes.png)
+
+### Links
+
+- [Prometheus for Beginners](https://itnext.io/prometheus-for-beginners-5f20c2e89b6c)
