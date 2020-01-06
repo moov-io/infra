@@ -1,5 +1,6 @@
 PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 
+.PHONY: all
 .PHONY: check
 check:
 	go fmt ./...
@@ -9,7 +10,7 @@ check:
 clean:
 	rm -f kubeval
 
-.PHONE: generate kubernetes-mixins
+.PHONY: generate kubernetes-mixins
 generate: kubernetes-mixins
 
 kubernetes-mixins:
@@ -22,6 +23,7 @@ AUTHORS:
 	@$(file >>$@,# For how it is generated, see `make AUTHORS`.)
 	@echo "$(shell git log --format='\n%aN <%aE>' | LC_ALL=C.UTF-8 sort -uf)" >> $@
 
+.PHONY: release
 release: AUTHORS
 
 .PHONY: docker
