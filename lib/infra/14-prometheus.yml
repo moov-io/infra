@@ -60,6 +60,7 @@ data:
       - /opt/prometheus-kubernets-monitoring-alerts/prometheus_alerts.yml
       - /opt/prometheus-kubernets-monitoring-rules/prometheus_rules.yml
       - /opt/prometheus-rules/*.yml
+      - /opt/prometheus-mysql-rules/*.yml
     scrape_configs:
       - job_name: 'prometheus'
         metrics_path: /prometheus/metrics
@@ -233,6 +234,8 @@ spec:
             mountPath: /opt/prometheus-kubernets-monitoring-rules/
           - name: prometheus-rules
             mountPath: /opt/prometheus-rules/
+          - name: prometheus-mysql-rules
+            mountPath: /opt/prometheus-mysql-rules/
           - name: prometheus-data
             mountPath: /data/prometheus
         ports:
@@ -295,6 +298,12 @@ spec:
                 path: prometheus-domain-rules.yml
               - key: prometheus-watchman-rules.yml
                 path: prometheus-watchman-rules.yml
+        - name: prometheus-mysql-rules
+          configMap:
+            name: prometheus-mysql-rules
+            items:
+              - key: prometheus-mysql-rules.yml
+                path: prometheus-mysql-rules.yml
         - name: prometheus-data
           persistentVolumeClaim:
             claimName: prometheus-data
