@@ -176,6 +176,10 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
+        infra-moov-io-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
         moov-io-http:
           redirectScheme:
             scheme: https
@@ -449,6 +453,12 @@ data:
           rule: "Host(`infra.moov.io`) && PathPrefix(`/oauth2`)"
           tls:
             certResolver: default
+        "infra-moov-io-http":
+          entryPoints: [http]
+          service: oauth2-proxy
+          rule: "Host(`infra.moov.io`)"
+          middlewares:
+            - infra-moov-io-http
         "infra-idx":
           entryPoints: [https]
           service: oauth2-proxy
