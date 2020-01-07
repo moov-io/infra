@@ -39,7 +39,7 @@ data:
       - name: ./watchman.rules
         rules:
           - alert: StaleData
-            expr: (time() - last_watchman_data_refresh_success) > 60*60*24
+            expr: (time() - last_data_refresh_success) > 60*60*24
             for: 1h
             labels:
               severity: warning
