@@ -168,6 +168,18 @@ data:
               timeout: "5s"
               scheme: http
       middlewares:
+        api-moov-io-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
+        docs-moov-io-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
+        moov-io-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
         ach:
           stripPrefix:
             prefixes:
@@ -245,6 +257,12 @@ data:
             prefixes:
               - "/soc2"
       routers:
+        "api-moov-io-http":
+          entryPoints: [http]
+          service: api
+          rule: "Host(`api.moov.io`)"
+          middlewares:
+            - api-moov-io-http
         "api-moov-io":
           entryPoints: [https]
           service: api
@@ -257,6 +275,12 @@ data:
           rule: "Host(`api.moov.io`) && PathPrefix(`/apps/`)"
           tls:
             certResolver: default
+        "docs-moov-io-http":
+          entryPoints: [http]
+          service: docs
+          rule: "Host(`docs.moov.io`)"
+          middlewares:
+            - docs-moov-io-http
         "docs-moov-io":
           entryPoints: [https]
           service: docs
@@ -271,6 +295,12 @@ data:
             - moovio-watchman
           tls:
             certResolver: default
+        "moov-io-http":
+          entryPoints: [http]
+          service: moovio
+          rule: "Host(`moov.io`)"
+          middlewares:
+            - moov-io-http
         "moov-io":
           entryPoints: [https]
           service: moovio
