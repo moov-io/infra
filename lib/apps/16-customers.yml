@@ -17,31 +17,6 @@ spec:
       protocol: TCP
       port: 9090
       targetPort: 9090
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: customers-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: customers-mysql-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 10Gi
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -66,34 +41,7 @@ spec:
             - podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
-      volumes:
-        - name: customers-data
-          persistentVolumeClaim:
-            claimName: customers-data
-        - name: customers-mysql-data
-          persistentVolumeClaim:
-            claimName: customers-mysql-data
       containers:
-      - image: mysql:8.0
-        name: mysql
-        env:
-          - name: MYSQL_DATABASE
-            value: customers
-          - name: MYSQL_USER
-            value: customers
-          - name: MYSQL_RANDOM_ROOT_PASSWORD
-            value: "yes"
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: customers-mysql-password
-                key: password
-        ports:
-          - containerPort: 3306
-            name: mysql
-        volumeMounts:
-          - name: customers-mysql-data
-            mountPath: /var/lib/mysql
       - image: moov/customers:v0.3.0
         imagePullPolicy: Always
         name: customers
@@ -112,24 +60,25 @@ spec:
           #   value: insecure-example-value
           - name: LOG_FORMAT
             value: plain
-          # - name: SQLITE_DB_PATH
-          #   value: /opt/moov/customers/customers.db
           - name: DATABASE_TYPE
             value: mysql
           - name: MYSQL_ADDRESS
-            value: 'tcp(localhost:3306)'
+            value: 'tcp(customers-mysql.apps.svc.cluster.local:3306)'
           - name: MYSQL_DATABASE
-            value: customers
+            valueFrom:
+              secretKeyRef:
+                name: customers-mysql-secrets
+                key: database
           - name: MYSQL_USER
-            value: customers
+            valueFrom:
+              secretKeyRef:
+                name: customers-mysql-secrets
+                key: username
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: customers-mysql-password
+                name: customers-mysql-secrets
                 key: password
-        volumeMounts:
-          - name: customers-data
-            mountPath: /opt/moov/customers/
         ports:
           - containerPort: 8080
             name: http
