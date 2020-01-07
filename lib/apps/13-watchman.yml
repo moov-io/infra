@@ -31,18 +31,6 @@ spec:
     requests:
       storage: 1Gi
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: watchman-mysql-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 10Gi
----
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -70,30 +58,7 @@ spec:
         - name: watchman-data
           persistentVolumeClaim:
             claimName: watchman-data
-        - name: watchman-mysql-data
-          persistentVolumeClaim:
-            claimName: watchman-mysql-data
       containers:
-      - image: mysql:8.0
-        name: mysql
-        env:
-          - name: MYSQL_DATABASE
-            value: watchman
-          - name: MYSQL_USER
-            value: watchman
-          - name: MYSQL_RANDOM_ROOT_PASSWORD
-            value: "yes"
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: watchman-mysql-password
-                key: password
-        ports:
-          - containerPort: 3306
-            name: mysql
-        volumeMounts:
-          - name: watchman-mysql-data
-            mountPath: /var/lib/mysql
       - image: moov/watchman:v0.14.0-dev
         imagePullPolicy: Always
         name: watchman
@@ -114,15 +79,21 @@ spec:
           - name: DATABASE_TYPE
             value: mysql
           - name: MYSQL_ADDRESS
-            value: 'tcp(localhost:3306)'
+            value: 'tcp(watchman-mysql.apps.svc.cluster.local:3306)'
           - name: MYSQL_DATABASE
-            value: watchman
+            valueFrom:
+              secretKeyRef:
+                name: watchman-mysql-secrets
+                key: database
           - name: MYSQL_USER
-            value: watchman
+            valueFrom:
+              secretKeyRef:
+                name: watchman-mysql-secrets
+                key: username
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: watchman-mysql-password
+                name: watchman-mysql-secrets
                 key: password
         ports:
           - containerPort: 8080
