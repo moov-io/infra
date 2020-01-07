@@ -30,20 +30,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: accounts-mysql-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 10Gi
-
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -72,30 +58,7 @@ spec:
         - name: accounts-data
           persistentVolumeClaim:
             claimName: accounts-data
-        - name: accounts-mysql-data
-          persistentVolumeClaim:
-            claimName: accounts-mysql-data
       containers:
-      - image: mysql:8.0
-        name: mysql
-        env:
-          - name: MYSQL_DATABASE
-            value: accounts
-          - name: MYSQL_USER
-            value: accounts
-          - name: MYSQL_RANDOM_ROOT_PASSWORD
-            value: "yes"
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: accounts-mysql-password
-                key: password
-        ports:
-          - containerPort: 3306
-            name: mysql
-        volumeMounts:
-          - name: accounts-mysql-data
-            mountPath: /var/lib/mysql
       - image: moov/accounts:v0.4.1
         imagePullPolicy: Always
         name: accounts
