@@ -106,10 +106,10 @@ spec:
                 name: watchman-mysql-secrets
                 key: exporter_dsn
         args:
-          # - --collect.auto_increment.columns
-          # - --collect.binlog_size
+          - --collect.auto_increment.columns
+          - --collect.binlog_size
           - --collect.engine_innodb_status
-          # - --collect.engine_tokudb_status
+          - --collect.engine_tokudb_status
           - --collect.global_status
           # - --collect.global_variables
           # - --collect.heartbeat
@@ -130,7 +130,7 @@ spec:
           - --collect.info_schema.tables.databases=*
           - --collect.info_schema.tablestats
           - --collect.info_schema.userstats
-          # - --collect.mysql.user
+          - --collect.mysql.user
           # - --collect.mysql.user.privileges
           # - --collect.perf_schema.eventsstatements
           # - --collect.perf_schema.eventsstatements.digest_text_limit=120
