@@ -1,0 +1,161 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paygate-mysql
+  namespace: apps
+spec:
+  type: ClusterIP
+  selector:
+    app: paygate-mysql
+  ports:
+    - name: mysql
+      protocol: TCP
+      port: 3306
+      targetPort: 3306
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paygate-mysql-data
+  namespace: apps
+spec:
+  accessModes:
+    - ReadWriteOnce # mountable only to a single node
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: paygate-mysql
+  namespace: apps
+  labels:
+    app: paygate-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paygate-mysql
+  template:
+    metadata:
+      labels:
+        app: paygate-mysql
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
+      volumes:
+        - name: paygate-mysql-secrets
+          secret:
+            secretName: paygate-mysql-secrets
+        - name: paygate-mysql-data
+          persistentVolumeClaim:
+            claimName: paygate-mysql-data
+      containers:
+      - image: mysql:8.0
+        name: mysql
+        env:
+          - name: MYSQL_DATABASE
+            value: paygate
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-secrets
+                key: username
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-secrets
+                key: password
+          - name: MYSQL_RANDOM_ROOT_PASSWORD
+            value: "yes"
+        ports:
+          - containerPort: 3306
+            name: mysql
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        volumeMounts:
+          - name: paygate-mysql-data
+            mountPath: /var/lib/mysql
+      - image: prom/mysqld-exporter:v0.12.1
+        name: exporter
+        env:
+          - name: DATA_SOURCE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-secrets
+                key: exporter_dsn
+        args:
+          # - --collect.auto_increment.columns
+          # - --collect.binlog_size
+          - --collect.engine_innodb_status
+          # - --collect.engine_tokudb_status
+          - --collect.global_status
+          # - --collect.global_variables
+          # - --collect.heartbeat
+          # - --collect.heartbeat.database="heartbeat"
+          # - --collect.heartbeat.table="heartbeat"
+          - --collect.info_schema.clientstats
+          # - --collect.info_schema.innodb_cmp
+          # - --collect.info_schema.innodb_cmpmem
+          # - --collect.info_schema.innodb_metrics
+          # - --collect.info_schema.innodb_tablespaces
+          # - --collect.info_schema.processlist
+          # - --collect.info_schema.processlist.min_time=0
+          # - --collect.info_schema.processlist.processes_by_host
+          # - --collect.info_schema.processlist.processes_by_user
+          - --collect.info_schema.query_response_time
+          # - --collect.info_schema.schemastats
+          - --collect.info_schema.tables
+          - --collect.info_schema.tables.databases=*
+          - --collect.info_schema.tablestats
+          - --collect.info_schema.userstats
+          # - --collect.mysql.user
+          # - --collect.mysql.user.privileges
+          # - --collect.perf_schema.eventsstatements
+          # - --collect.perf_schema.eventsstatements.digest_text_limit=120
+          # - --collect.perf_schema.eventsstatements.limit=250
+          # - --collect.perf_schema.eventsstatements.timelimit=86400
+          # - --collect.perf_schema.eventsstatementssum
+          # - --collect.perf_schema.eventswaits
+          # - --collect.perf_schema.file_events
+          # - --collect.perf_schema.file_instances
+          # - --collect.perf_schema.file_instances.filter=".*"
+          # - --collect.perf_schema.file_instances.remove_prefix="/var/lib/mysql/"
+          # - --collect.perf_schema.indexiowaits
+          # - --collect.perf_schema.replication_applier_status_by_worker
+          # - --collect.perf_schema.replication_group_member_stats
+          # - --collect.perf_schema.tableiowaits
+          # - --collect.perf_schema.tablelocks
+          # - --collect.slave_hosts
+          # - --collect.slave_status
+          - --config.my-cnf=/dev/null
+          - --exporter.lock_wait_timeout=2
+          # - --exporter.log_slow_filter
+          - --log.format=logger:stderr
+          - --log.level=debug
+          - --timeout-offset=0.25
+          - --web.listen-address=:9090
+          - --web.telemetry-path=/metrics
+        ports:
+          - containerPort: 9090
+            name: metrics
+      restartPolicy: Always
+---

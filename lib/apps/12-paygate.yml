@@ -17,31 +17,6 @@ spec:
       protocol: TCP
       port: 9090
       targetPort: 9090
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: paygate-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: paygate-mysql-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 10Gi
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -94,12 +69,6 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       volumes:
-        - name: paygate-data
-          persistentVolumeClaim:
-            claimName: paygate-data
-        - name: paygate-mysql-data
-          persistentVolumeClaim:
-            claimName: paygate-mysql-data
         - name: paygate-routing-config
           configMap:
             name: paygate-routing-config
@@ -107,59 +76,10 @@ spec:
               - key: routing.yaml
                 path: routing.yaml
       containers:
-      - image: atmoz/sftp:alpine
-        name: sftp
-        args:
-          - 'demo:password:::upload'
-        ports:
-          - containerPort: 22
-            name: sftp
-        readinessProbe:
-          tcpSocket:
-            port: 22
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 22
-          initialDelaySeconds: 5
-          periodSeconds: 10
-      - image: mysql:8.0
-        name: mysql
-        env:
-          - name: MYSQL_DATABASE
-            value: paygate
-          - name: MYSQL_USER
-            value: paygate
-          - name: MYSQL_RANDOM_ROOT_PASSWORD
-            value: "yes"
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: paygate-mysql-password
-                key: password
-        ports:
-          - containerPort: 3306
-            name: mysql
-        readinessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 3306
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        volumeMounts:
-          - name: paygate-mysql-data
-            mountPath: /var/lib/mysql
       - image: moov/paygate:v0.7.0-rc4
         imagePullPolicy: Always
         name: paygate
         volumeMounts:
-          - name: paygate-data
-            mountPath: /opt/moov/paygate/
           - name: paygate-routing-config
             mountPath: /opt/moov/paygate/routing-config/
         env:
@@ -191,18 +111,22 @@ spec:
           # MySQL configs
           - name: DATABASE_TYPE
             value: mysql
-          # - name: SQLITE_DB_PATH
-          #   value: '/opt/moov/paygate/paygate.db'
           - name: MYSQL_ADDRESS
-            value: 'tcp(localhost:3306)'
+            value: 'tcp(paygate-mysql.apps.svc.cluster.local:3306)'
           - name: MYSQL_DATABASE
-            value: paygate
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-secrets
+                key: database
           - name: MYSQL_USER
-            value: paygate
+            valueFrom:
+              secretKeyRef:
+                name: paygate-mysql-secrets
+                key: username
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: paygate-mysql-password
+                name: paygate-mysql-secrets
                 key: password
         ports:
           - containerPort: 8080
@@ -228,6 +152,23 @@ spec:
           httpGet:
             path: /ping
             port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      - image: atmoz/sftp:alpine
+        name: sftp
+        args:
+          - 'demo:password:::upload'
+        ports:
+          - containerPort: 22
+            name: sftp
+        readinessProbe:
+          tcpSocket:
+            port: 22
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 22
           initialDelaySeconds: 5
           periodSeconds: 10
       restartPolicy: Always
