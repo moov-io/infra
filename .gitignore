@@ -31,3 +31,4 @@ terraform.tfstate.backup*
 /envs/prod/sales/10-corteza-secrets.yml
 /envs/prod/sales/10-mysql-secrets.yml
 /envs/prod/sales/20-stargazers-secrets.yml
+/envs/prod/apps/12-paygate-mysql-secrets.yml
