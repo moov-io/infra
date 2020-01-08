@@ -1,88 +1,158 @@
 # From: https://github.com/google/cadvisor/blob/master/deploy/kubernetes/base
 
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: cadvisor
+  name: cadvisor
+  namespace: infra
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  labels:
+    app: cadvisor
+  name: cadvisor
+spec:
+  allowedHostPaths:
+  - pathPrefix: /
+  - pathPrefix: /var/run
+  - pathPrefix: /sys
+  - pathPrefix: /var/lib/docker
+  - pathPrefix: /dev/disk
+  fsGroup:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  volumes:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app: cadvisor
+  name: cadvisor
+rules:
+- apiGroups:
+  - policy
+  resourceNames:
+  - cadvisor
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: cadvisor
+  name: cadvisor
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cadvisor
+subjects:
+- kind: ServiceAccount
+  name: cadvisor
+  namespace: infra
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  annotations:
+    seccomp.security.alpha.kubernetes.io/pod: docker/default
+  labels:
+    app: cadvisor
   name: cadvisor
   namespace: infra
-  annotations:
-    seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
 spec:
   selector:
     matchLabels:
-      cadvisor: cadvisor
+      app: cadvisor
+      name: cadvisor
   template:
     metadata:
       labels:
-        cadvisor: cadvisor
+        app: cadvisor
+        name: cadvisor
     spec:
+      automountServiceAccountToken: false
       containers:
-      - name: cadvisor
-        image: google/cadvisor:v0.33.0
+      - image: k8s.gcr.io/cadvisor:v0.30.2
+        name: cadvisor
         args:
-          # Options: https://github.com/google/cadvisor/blob/master/docs/runtime_options.md
-          - --application_metrics_count_limit=50
+          - -listen_ip=0.0.0.0
+          - -port=8080
+          - -logtostderr
+          # - -disable_metrics=disk,network,tcp,udp,percpu,sched
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
         resources:
           limits:
-            cpu: 50m
-            memory: 250Mi
+            cpu: 300m
+            memory: 2000Mi
           requests:
-            cpu: 25m
-            memory: 50Mi
+            cpu: 150m
+            memory: 200Mi
+        # readinessProbe:
+        #   httpGet:
+        #     path: /metrics
+        #     port: 8080
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        # livenessProbe:
+        #   httpGet:
+        #     path: /metrics
+        #     port: 8080
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        # securityContext:
+        #   allowPrivilegeEscalation: false
+        #   readOnlyRootFilesystem: true
+        #   runAsNonRoot: true
+        #   runAsUser: 1000
         volumeMounts:
-        - name: rootfs
-          mountPath: /rootfs
+        - mountPath: /rootfs
+          name: rootfs
           readOnly: true
-        - name: var-run
-          mountPath: /var/run
+        - mountPath: /var/run
+          name: var-run
           readOnly: true
-        - name: sys
-          mountPath: /sys
+        - mountPath: /sys
+          name: sys
           readOnly: true
-        - name: docker
-          mountPath: /var/lib/docker
+        - mountPath: /var/lib/docker
+          name: docker
           readOnly: true
-        - name: disk
-          mountPath: /dev/disk
+        - mountPath: /dev/disk
+          name: disk
           readOnly: true
-        ports:
-          - name: http
-            containerPort: 8080
-            protocol: TCP
-        readinessProbe:
-          httpGet:
-            path: /metrics
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /metrics
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          # runAsNonRoot: true
-          # runAsUser: 1000
-      automountServiceAccountToken: false
+      serviceAccountName: cadvisor
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: rootfs
-        hostPath:
+      - hostPath:
           path: /
-      - name: var-run
-        hostPath:
+        name: rootfs
+      - hostPath:
           path: /var/run
-      - name: sys
-        hostPath:
+        name: var-run
+      - hostPath:
           path: /sys
-      - name: docker
-        hostPath:
+        name: sys
+      - hostPath:
           path: /var/lib/docker
-      - name: disk
-        hostPath:
+        name: docker
+      - hostPath:
           path: /dev/disk
+        name: disk
 ---
