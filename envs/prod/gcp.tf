@@ -30,10 +30,17 @@ resource "google_project_services" "ach" {
     "iam.googleapis.com",
     "iamcredentials.googleapis.com",
     "iap.googleapis.com",
+    "maps-android-backend.googleapis.com",
+    "maps-backend.googleapis.com",
+    "maps-embed-backend.googleapis.com",
+    "maps-ios-backend.googleapis.com",
     "oslogin.googleapis.com",
     "pubsub.googleapis.com",
     "serviceusage.googleapis.com",
+    "static-maps-backend.googleapis.com",
     "storage-api.googleapis.com",
+    "street-view-image-backend.googleapis.com",
+    "streetviewpublish.googleapis.com",
   ]
 }
 
