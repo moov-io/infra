@@ -19,7 +19,7 @@ variable "password" {
 }
 
 variable "permanent_pool_node_count" {
-  default = 1
+  default = 2
 }
 
 variable "permanent_node_disk_size_gb" {
@@ -35,7 +35,7 @@ variable "permanent_node_machine_type" {
 }
 
 variable "preemptible_pool_node_count" {
-  default = 3
+  default = 0
 }
 
 variable "preemptible_node_disk_size_gb" {
