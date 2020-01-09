@@ -54,15 +54,14 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       volumes:
-        - name: customers-mysql-secrets
-          secret:
-            secretName: customers-mysql-secrets
         - name: customers-mysql-data
           persistentVolumeClaim:
             claimName: customers-mysql-data
       containers:
       - image: mysql:8.0
         name: mysql
+        args:
+          - --default-authentication-plugin=mysql_native_password
         env:
           - name: MYSQL_DATABASE
             valueFrom:
@@ -161,4 +160,65 @@ spec:
           - containerPort: 9090
             name: metrics
       restartPolicy: Always
+
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: customers-mysql-backup
+  namespace: apps
+  labels:
+    app: customers-mysql-backup
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.2.0
+              name: backup
+              env:
+                - name: GCP_GCLOUD_AUTH
+                  valueFrom:
+                    secretKeyRef:
+                      name: database-backups
+                      key: gcp_auth_string
+                - name: BACKUP_PROVIDER
+                  value: "gcp"
+                - name: GCP_BUCKET_NAME
+                  value: "moov-production-mysql-backups"
+                - name: GCP_BUCKET_BACKUP_PATH
+                  value: "/apps/customers/"
+                - name: TARGET_DATABASE_HOST
+                  value: "customers-mysql.apps.svc.cluster.local"
+                - name: TARGET_DATABASE_PORT
+                  value: "3306"
+                - name: TARGET_DATABASE_NAMES
+                  valueFrom:
+                    secretKeyRef:
+                      name: customers-mysql-secrets
+                      key: database
+                - name: TARGET_DATABASE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: customers-mysql-secrets
+                      key: username
+                - name: TARGET_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: customers-mysql-secrets
+                      key: password
+                - name: BACKUP_TIMESTAMP
+                  value: "_%Y_%m_%d"
+                - name: SLACK_ENABLED
+                  value: "true"
+                - name: SLACK_CHANNEL
+                  value: "#alerts"
+                - name: SLACK_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: slack-secrets
+                      key: webhook_url
+          restartPolicy: OnFailure
 ---
