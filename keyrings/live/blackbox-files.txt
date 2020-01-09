@@ -11,3 +11,4 @@ envs/prod/infra/22-alertmanager-config.yml
 envs/prod/sales/10-corteza-secrets.yml
 envs/prod/sales/10-mysql-secrets.yml
 envs/prod/sales/20-stargazers-secrets.yml
+envs/prod/sales/30-slackin-secrets.yml
