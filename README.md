@@ -47,20 +47,6 @@ We support a local development environment to allow anyone the ability to run Mo
   - [Docker for Mac](https://docs.docker.com/docker-for-mac/) - [Install Guide](https://docs.docker.com/docker-for-mac/install/)
   - [Docker on Linux](https://docs.docker.com/install/)
   - [Docker for Windows](https://docs.docker.com/docker-for-windows/) - [Install Guide](https://docs.docker.com/docker-for-windows/install/)
-- [Tilt](https://tilt.dev/) - [Install Guide](https://docs.tilt.dev/install.html)
-
-Once these tools are setup run the following commands from the root of this repository.
-
-```
-$ cd envs/dev
-$ tilt up
-```
-
-This brings up a prompt that looks like the following image. Use the arrow keys to move between containers and `<enter>` to pull up a specific container's log.
-
-![](docs/images/tilt.png)
-
-You should also be able to ping services (ACH ping: http://localhost:9000/v1/ach/ping) or even run [`apitest -dev`](https://github.com/moov-io/api/tree/master/cmd/apitest). `apitest` can be installed with `go get github.com/moov-io/api/cmd/apitest`.
 
 ### Testing
 
