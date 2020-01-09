@@ -38,7 +38,10 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: emedvedev/slackin-extended:latest
+      # This image was built from the following PR: https://github.com/emedvedev/slackin-extended/pull/141
+      # after first running 'npm install' and 'npm run-script build'
+      - image: adamdecaf/slackin-extended:latest
+        # image: emedvedev/slackin-extended:latest
         name: slackin
         env:
           - name: SLACK_SUBDOMAIN
