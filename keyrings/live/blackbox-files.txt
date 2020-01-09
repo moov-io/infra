@@ -2,6 +2,7 @@ envs/prod/apps/12-paygate-mysql-secrets.yml
 envs/prod/apps/12-paygate-secrets.yml
 envs/prod/apps/13-watchman-secrets.yml
 envs/prod/apps/16-customers-secrets.yml
+envs/prod/apps/database-backups.yml
 envs/prod/apps/slack-secrets.yml
 envs/prod/ca.crt
 envs/prod/client.crt

@@ -34,3 +34,4 @@ terraform.tfstate.backup*
 /envs/prod/apps/12-paygate-mysql-secrets.yml
 /envs/prod/apps/slack-secrets.yml
 /envs/prod/sales/30-slackin-secrets.yml
+/envs/prod/apps/database-backups.yml
