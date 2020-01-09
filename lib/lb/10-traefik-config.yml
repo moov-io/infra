@@ -91,6 +91,15 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        slackin:
+          loadBalancer:
+            servers:
+              - url: 'http://slackin.sales.svc.cluster.local:3000/'
+            healthCheck:
+              path: "/"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
         watchman:
           loadBalancer:
             servers:
@@ -289,6 +298,12 @@ data:
           entryPoints: [https]
           service: docs
           rule: "Host(`docs.moov.io`)"
+          tls:
+            certResolver: default
+        "moovio-slackin":
+          entryPoints: [https]
+          service: slackin
+          rule: "Host(`slack.moov.io`)"
           tls:
             certResolver: default
         "moovio-watchman":

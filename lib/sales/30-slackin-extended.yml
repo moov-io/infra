@@ -42,16 +42,20 @@ spec:
         name: slackin
         env:
           - name: SLACK_SUBDOMAIN
-            value: "moov-io.slack.io"
+            value: "moov-io"
           - name: SLACK_API_TOKEN
             valueFrom:
               secretKeyRef:
                 name: slackin-secrets
                 key: slack_api_token
           - name: SLACKIN_PORT
-            value: ":3000"
+            value: "3000"
           - name: SLACKIN_HOSTNAME
             value: "0.0.0.0"
+          - name: SLACKIN_PROXY
+            value: "true"
+          - name: SLACKIN_CORS
+            value: "true"
           # - name: SLACKIN_CHANNELS
           #   value: "#ach,#general,#paygate,#watchman"
           - name: SLACKIN_PATH
@@ -67,6 +71,8 @@ spec:
               secretKeyRef:
                 name: slackin-secrets
                 key: recaptcha_sitekey
+          - name: RECAPTCHA_INVISIBLE
+            value: "true"
           - name: SLACKIN_THEME
             value: "dark"
           - name: SLACKIN_COC
