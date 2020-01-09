@@ -54,9 +54,6 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       volumes:
-        - name: paygate-mysql-secrets
-          secret:
-            secretName: paygate-mysql-secrets
         - name: paygate-mysql-data
           persistentVolumeClaim:
             claimName: paygate-mysql-data
