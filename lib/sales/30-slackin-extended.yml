@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: slackin
+  namespace: sales
+spec:
+  type: ClusterIP
+  selector:
+    app: slackin
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: slackin
+  namespace: sales
+  labels:
+    app: slackin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slackin
+  template:
+    metadata:
+      labels:
+        app: slackin
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+              weight: 1
+      containers:
+      - image: emedvedev/slackin-extended:latest
+        name: slackin
+        env:
+          - name: SLACK_SUBDOMAIN
+            value: "moov-io.slack.io"
+          - name: SLACK_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: slackin-secrets
+                key: slack_api_token
+          - name: SLACKIN_PORT
+            value: ":3000"
+          - name: SLACKIN_HOSTNAME
+            value: "0.0.0.0"
+          # - name: SLACKIN_CHANNELS
+          #   value: "#ach,#general,#paygate,#watchman"
+          - name: SLACKIN_PATH
+            value: "/"
+          - name: RECAPTCHA_SECRET
+            valueFrom:
+              secretKeyRef:
+                # API keys from https://www.google.com/u/1/recaptcha/admin/site/349018097
+                name: slackin-secrets
+                key: recaptcha_secret
+          - name: RECAPTCHA_SITEKEY
+            valueFrom:
+              secretKeyRef:
+                name: slackin-secrets
+                key: recaptcha_sitekey
+          - name: SLACKIN_THEME
+            value: "dark"
+          - name: SLACKIN_COC
+            value: "https://github.com/moov-io/ach/blob/master/CODE_OF_CONDUCT.md"
+        ports:
+          - containerPort: 3000
+            name: http
+        readinessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      restartPolicy: Always
+---
