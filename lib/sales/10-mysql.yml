@@ -13,6 +13,10 @@ spec:
       protocol: TCP
       port: 3306
       targetPort: 3306
+    - name: metrics
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -49,9 +53,15 @@ spec:
             - podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
+      volumes:
+      - name: mysql-data
+        persistentVolumeClaim:
+          claimName: mysql-data
       containers:
       - image: mysql:8.0
         name: mysql
+        args:
+          - --default-authentication-plugin=mysql_native_password
         env:
           - name: MYSQL_DATABASE
             valueFrom:
@@ -86,9 +96,68 @@ spec:
         volumeMounts:
           - name: mysql-data
             mountPath: /var/lib/mysql
-      volumes:
-        - name: mysql-data
-          persistentVolumeClaim:
-            claimName: mysql-data
+      - image: prom/mysqld-exporter:v0.12.1
+        name: exporter
+        env:
+          - name: DATA_SOURCE_NAME
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secrets
+                key: exporter_dsn
+        args:
+          - --collect.auto_increment.columns
+          - --collect.binlog_size
+          - --collect.engine_innodb_status
+          # - --collect.engine_tokudb_status
+          - --collect.global_status
+          # - --collect.global_variables
+          # - --collect.heartbeat
+          # - --collect.heartbeat.database="heartbeat"
+          # - --collect.heartbeat.table="heartbeat"
+          - --collect.info_schema.clientstats
+          # - --collect.info_schema.innodb_cmp
+          # - --collect.info_schema.innodb_cmpmem
+          # - --collect.info_schema.innodb_metrics
+          # - --collect.info_schema.innodb_tablespaces
+          # - --collect.info_schema.processlist
+          # - --collect.info_schema.processlist.min_time=0
+          # - --collect.info_schema.processlist.processes_by_host
+          # - --collect.info_schema.processlist.processes_by_user
+          - --collect.info_schema.query_response_time
+          # - --collect.info_schema.schemastats
+          - --collect.info_schema.tables
+          - --collect.info_schema.tables.databases=*
+          - --collect.info_schema.tablestats
+          - --collect.info_schema.userstats
+          # - --collect.mysql.user
+          # - --collect.mysql.user.privileges
+          # - --collect.perf_schema.eventsstatements
+          # - --collect.perf_schema.eventsstatements.digest_text_limit=120
+          # - --collect.perf_schema.eventsstatements.limit=250
+          # - --collect.perf_schema.eventsstatements.timelimit=86400
+          # - --collect.perf_schema.eventsstatementssum
+          # - --collect.perf_schema.eventswaits
+          # - --collect.perf_schema.file_events
+          # - --collect.perf_schema.file_instances
+          # - --collect.perf_schema.file_instances.filter=".*"
+          # - --collect.perf_schema.file_instances.remove_prefix="/var/lib/mysql/"
+          # - --collect.perf_schema.indexiowaits
+          # - --collect.perf_schema.replication_applier_status_by_worker
+          # - --collect.perf_schema.replication_group_member_stats
+          # - --collect.perf_schema.tableiowaits
+          # - --collect.perf_schema.tablelocks
+          # - --collect.slave_hosts
+          # - --collect.slave_status
+          - --config.my-cnf=/dev/null
+          - --exporter.lock_wait_timeout=2
+          # - --exporter.log_slow_filter
+          - --log.format=logger:stderr
+          - --log.level=debug
+          - --timeout-offset=0.25
+          - --web.listen-address=:9090
+          - --web.telemetry-path=/metrics
+        ports:
+          - containerPort: 9090
+            name: metrics
       restartPolicy: Always
 ---
