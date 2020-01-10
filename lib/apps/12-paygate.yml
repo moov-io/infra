@@ -113,6 +113,8 @@ spec:
             value: mysql
           - name: MYSQL_ADDRESS
             value: 'tcp(paygate-mysql.apps.svc.cluster.local:3306)'
+          - name: MYSQL_MAX_CONNECTIONS
+            value: "16"
           - name: MYSQL_DATABASE
             valueFrom:
               secretKeyRef:
