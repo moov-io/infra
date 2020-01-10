@@ -189,6 +189,10 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
+        slack-moovio-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
         moov-io-http:
           redirectScheme:
             scheme: https
@@ -300,12 +304,18 @@ data:
           rule: "Host(`docs.moov.io`)"
           tls:
             certResolver: default
-        "moovio-slackin":
+        "slack-moovio":
           entryPoints: [https]
           service: slackin
           rule: "Host(`slack.moov.io`)"
           tls:
             certResolver: default
+        "slack-moovio-http":
+          entryPoints: [http]
+          service: slackin
+          rule: "Host(`slack.moov.io`)"
+          middlewares:
+            - slack-moovio-http
         "moovio-watchman":
           entryPoints: [https]
           service: watchman
