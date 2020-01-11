@@ -25,12 +25,19 @@ data:
     moov-io/SOC2
     moov-io/accounts
     moov-io/ach
+    moov-io/api
+    moov-io/auth
+    moov-io/banktime
+    moov-io/base
     moov-io/customers
+    moov-io/docs
     moov-io/fed
+    moov-io/go-client
     moov-io/imagecashletter
     moov-io/infra
     moov-io/moov-io
     moov-io/paygate
+    moov-io/ruby-ach-demo
     moov-io/watchman
     moov-io/wire
     # Community Repositories
@@ -61,7 +68,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: adamdecaf/stargazers:v0.2.3
+      - image: adamdecaf/stargazers:v0.3.1
         imagePullPolicy: Always
         name: stargazers
         args:
