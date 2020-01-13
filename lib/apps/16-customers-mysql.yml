@@ -189,7 +189,7 @@ spec:
                 - name: GCP_BUCKET_NAME
                   value: "moov-production-mysql-backups"
                 - name: GCP_BUCKET_BACKUP_PATH
-                  value: "/apps/customers/"
+                  value: "/apps/customers"
                 - name: TARGET_DATABASE_HOST
                   value: "customers-mysql.apps.svc.cluster.local"
                 - name: TARGET_DATABASE_PORT

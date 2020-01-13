@@ -188,7 +188,7 @@ spec:
                 - name: GCP_BUCKET_NAME
                   value: "moov-production-mysql-backups"
                 - name: GCP_BUCKET_BACKUP_PATH
-                  value: "/apps/watchman/"
+                  value: "/apps/watchman"
                 - name: TARGET_DATABASE_HOST
                   value: "watchman-mysql.apps.svc.cluster.local"
                 - name: TARGET_DATABASE_PORT

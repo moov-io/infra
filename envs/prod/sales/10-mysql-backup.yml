@@ -5,15 +5,14 @@ metadata:
   name: mysql-backup
   namespace: sales
 spec:
-  suspend: true # Disabled for now
-  schedule: "0 06 * * *" # 6am UTC, so 1am Eastern/NYC
+  schedule: "@daily"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-          - name: mysql-backup
-            image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.2.0
+          - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.2.0
+            name: mysql-backup
             imagePullPolicy: Always
             env:
               - name: GCP_GCLOUD_AUTH
@@ -26,7 +25,7 @@ spec:
               - name: GCP_BUCKET_NAME
                 value: "moov-production-mysql-backups"
               - name: GCP_BUCKET_BACKUP_PATH
-                value: "sales/mysql/"
+                value: "/sales/mysql"
               - name: TARGET_DATABASE_HOST
                 value: "mysql.sales.svc.cluster.local"
               - name: TARGET_DATABASE_PORT
@@ -57,5 +56,5 @@ spec:
                    secretKeyRef:
                      name: mysql-secrets
                      key: slack_webhook_url
-          restartPolicy: Never
+          restartPolicy: OnFailure
 ---

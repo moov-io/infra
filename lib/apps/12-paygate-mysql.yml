@@ -177,6 +177,7 @@ spec:
           containers:
             - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.2.0
               name: backup
+              imagePullPolicy: Always
               env:
                 - name: GCP_GCLOUD_AUTH
                   valueFrom:
@@ -188,7 +189,7 @@ spec:
                 - name: GCP_BUCKET_NAME
                   value: "moov-production-mysql-backups"
                 - name: GCP_BUCKET_BACKUP_PATH
-                  value: "/apps/paygate/"
+                  value: "/apps/paygate"
                 - name: TARGET_DATABASE_HOST
                   value: "paygate-mysql.apps.svc.cluster.local"
                 - name: TARGET_DATABASE_PORT
