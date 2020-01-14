@@ -181,6 +181,10 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
+        crm-moov-io-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
         docs-moov-io-http:
           redirectScheme:
             scheme: https
@@ -532,6 +536,12 @@ data:
           rule: "Host(`crm.moov.io`)"
           tls:
             certResolver: default
+        "crm-moov-io-http":
+          entryPoints: [http]
+          service: oauth2-proxy
+          rule: "Host(`crm.moov.io`)"
+          middlewares:
+            - crm-moov-io-http
         corteza-api:
           entryPoints: [https]
           service: corteza-api
