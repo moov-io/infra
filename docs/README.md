@@ -14,7 +14,9 @@
 - [Metrics with Prometheus](prometheus.md)
 - [Load Balancing with Traefik](traefik.md)
 - [Input Fuzzing](fuzzing.md)
+- [MySQL](mysql.md)
 
 ### Other Resources
 
 - [Creating a New Moov Service](new-service.md)
+- [Legal Tasks](legal.md)
