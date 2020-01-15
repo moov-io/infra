@@ -41,8 +41,12 @@ data:
     moov-io/watchman
     moov-io/wire
     # Community Repositories
+    afrunt/jach
+    glenselle/nACH2
     jm81/ach
     mosscode/ach
+    openach/openach
+    travishathaway/python-ach
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
