@@ -24,3 +24,11 @@ Right now our default database is [SQLite](https://sqlite.org/index.html). We ch
 <p align="center">
   <a href="https://www.youtube.com/watch?v=RqubKSF3wig" target="_blank"><img src="https://img.youtube.com/vi/RqubKSF3wig/0.jpg" alt="SQLite and Go" /></a>
 </p>
+
+### Metrics
+
+When a new repository is launched we want to start tracking public GitHub Stargazers for it. This helps us with sales leads and our community grow.
+
+**Stargazers**
+
+To watch a new project add it into [stargazers `ConfigMap`](https://github.com/moov-io/infra/blob/master/lib/sales/20-stargazers.yml) which is in the `sales` namespace on Kubernetes.
