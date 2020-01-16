@@ -177,6 +177,11 @@ data:
               timeout: "5s"
               scheme: http
       middlewares:
+        cors:
+          headers:
+            accessControlAllowMethods: [GET, OPTIONS, PUT, POST, DELETE]
+            accessControlAllowOrigin: "*"
+            accessControlMaxAge: 600
         api-moov-io-http:
           redirectScheme:
             scheme: https
@@ -284,16 +289,21 @@ data:
           rule: "Host(`api.moov.io`)"
           middlewares:
             - api-moov-io-http
+            - cors
         "api-moov-io":
           entryPoints: [https]
           service: api
           rule: "Host(`api.moov.io`)"
+          middlewares:
+            - cors
           tls:
             certResolver: default
         "api-moov-io-api-apps":
           entryPoints: [https]
           service: api-apps
           rule: "Host(`api.moov.io`) && PathPrefix(`/apps/`)"
+          middlewares:
+            - cors
           tls:
             certResolver: default
         "docs-moov-io-http":
