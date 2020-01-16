@@ -71,7 +71,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/moov-io:v2020.01.15.1
+      - image: moov/moov-io:v2020.01.16.2
         imagePullPolicy: Always
         name: moovio
         ports:
