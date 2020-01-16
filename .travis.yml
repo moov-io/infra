@@ -21,7 +21,8 @@ before_install:
   - wget -O prometheus.tar.gz https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.darwin-amd64.tar.gz
   - tar xf prometheus.tar.gz && cp -r ./prometheus-*/promtool ~/bin/promtool
   # promtool-configmap
-  - wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-linux
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-linux; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-macos; fi
   - chmod +x ~/bin/promtool-configmap
   # gitleaks
   - go get github.com/zricethezav/gitleaks
