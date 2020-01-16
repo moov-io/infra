@@ -1,25 +1,33 @@
 sudo: required
+
 services:
   - docker
+
 language: go
+
 os:
   - linux
   - osx
 go:
-  - 1.12.x
-
-osx_image: xcode9.1
+  - 1.13.x
 
 before_install:
+  - mkdir -p ~/bin/
   # Terraform
   # - wget -O terraform.zip https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
-  # - mkdir -p ~/bin/ && unzip -d ~/bin/ terraform.zip
+  # - unzip -d ~/bin/ terraform.zip
   # - mkdir -p ~/.google/ && touch ~/.google/credentials.json
   # adamdecaf/promtool-configmap
-  - go get github.com/prometheus/prometheus/cmd/promtool
-  - go get -u github.com/adamdecaf/promtool-configmap
+  - wget -O prometheus.tar.gz https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.darwin-amd64.tar.gz
+  - tar xf prometheus.tar.gz && cp -r ./prometheus-*/promtool ~/bin/promtool
+  # promtool-configmap
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-linux; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-macos; fi
+  - chmod +x ~/bin/promtool-configmap
+  # gitleaks
   - go get github.com/zricethezav/gitleaks
   - go get ./...
+
 script:
   - gitleaks --repo-path=$(pwd) --redact -v
   # Terraform
