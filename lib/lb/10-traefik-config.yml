@@ -298,6 +298,8 @@ data:
             - cors
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "api-moov-io-api-apps":
           entryPoints: [https]
           service: api-apps
@@ -306,6 +308,8 @@ data:
             - cors
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "docs-moov-io-http":
           entryPoints: [http]
           service: docs
@@ -318,12 +322,16 @@ data:
           rule: "Host(`docs.moov.io`)"
           tls:
             certResolver: default
+            domains:
+              - main: "docs.moov.io"
         "slack-moovio":
           entryPoints: [https]
           service: slackin
           rule: "Host(`slack.moov.io`)"
           tls:
             certResolver: default
+            domains:
+              - main: "slack.moov.io"
         "slack-moovio-http":
           entryPoints: [http]
           service: slackin
@@ -338,6 +346,8 @@ data:
             - moovio-watchman
           tls:
             certResolver: default
+            domains:
+              - main: "moov.io"
         "moov-io-http":
           entryPoints: [http]
           service: moovio
@@ -350,6 +360,8 @@ data:
           rule: "Host(`moov.io`)"
           tls:
             certResolver: default
+            domains:
+              - main: "moov.io"
         ach:
           entryPoints: [https]
           service: ach
@@ -358,6 +370,8 @@ data:
             - ach
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         auth:
           entryPoints: [https]
           service: auth
@@ -366,6 +380,8 @@ data:
             - auth
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "auth-ping":
           entryPoints: [https]
           service: auth
@@ -374,6 +390,8 @@ data:
             - auth-ping
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-depositories":
           entryPoints: [https]
           service: paygate
@@ -382,6 +400,8 @@ data:
             - paygate-depositories
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-events":
           entryPoints: [https]
           service: paygate
@@ -390,6 +410,8 @@ data:
             - paygate-events
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-gateways":
           entryPoints: [https]
           service: paygate
@@ -398,6 +420,8 @@ data:
             - paygate-gateways
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-originators":
           entryPoints: [https]
           service: paygate
@@ -406,6 +430,8 @@ data:
             - paygate-originators
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-receivers":
           entryPoints: [https]
           service: paygate
@@ -414,6 +440,8 @@ data:
             - paygate-receivers
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-transfers":
           entryPoints: [https]
           service: paygate
@@ -422,6 +450,8 @@ data:
             - paygate-transfers
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "paygate-ping":
           entryPoints: [https]
           service: paygate
@@ -430,6 +460,8 @@ data:
             - paygate-ping
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "watchman":
           entryPoints: [https]
           service: watchman
@@ -438,6 +470,8 @@ data:
             - watchman
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "accounts":
           entryPoints: [https]
           service: accounts
@@ -446,6 +480,8 @@ data:
             - accounts
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "accounts-ping":
           entryPoints: [https]
           service: accounts
@@ -454,6 +490,8 @@ data:
             - accounts-ping
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "fed":
           entryPoints: [https]
           service: fed
@@ -462,6 +500,8 @@ data:
             - fed
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "fed-ping":
           entryPoints: [https]
           service: fed
@@ -470,6 +510,8 @@ data:
             - fed-ping
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "customers":
           entryPoints: [https]
           service: customers
@@ -478,6 +520,8 @@ data:
             - customers
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "imagecashletter":
           entryPoints: [https]
           service: imagecashletter
@@ -486,12 +530,16 @@ data:
             - imagecashletter
           tls:
             certResolver: default
+            domains:
+              - main: "api.moov.io"
         "infra-oauth2":
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/oauth2`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         "infra-moov-io-http":
           entryPoints: [http]
           service: oauth2-proxy
@@ -504,48 +552,64 @@ data:
           rule: "Host(`infra.moov.io`) && Path(`/`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         alertmanager:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/alertmanager/`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         traefik:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/traefik/`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         prometheus:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/prometheus/`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         grafana:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/grafana/`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         polaris:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`infra.moov.io`) && PathPrefix(`/polaris/`)"
           tls:
             certResolver: default
+            domains:
+              - main: "infra.moov.io"
         stargazers:
           entryPoints: [https]
           service: oauth2-proxy
           rule: "Host(`crm.moov.io`) && PathPrefix(`/stargazers`)"
           tls:
             certResolver: default
+            domains:
+              - main: "crm.moov.io"
         corteza:
           entryPoints: [https]
           service: corteza
           rule: "Host(`crm.moov.io`)"
           tls:
             certResolver: default
+            domains:
+              - main: "crm.moov.io"
         "crm-moov-io-http":
           entryPoints: [http]
           service: oauth2-proxy
@@ -558,6 +622,8 @@ data:
           rule: "Host(`api.crm.moov.io`)"
           tls:
             certResolver: default
+            domains:
+              - main: "api.crm.moov.io"
         soc2:
           entryPoints: [https]
           service: soc2
@@ -566,6 +632,8 @@ data:
             - soc2
           tls:
             certResolver: default
+            domains:
+              - main: "moov.io"
     api:
       insecure: true
       dashboard: true
@@ -583,7 +651,6 @@ data:
           caServer: "https://acme-v02.api.letsencrypt.org/directory"
           storage: /opt/traefik/letsencrypt.json
           keyType: EC384
-          # tlsChallenge: {}
           httpChallenge:
             entryPoint: http
   nginx.conf: |
