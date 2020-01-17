@@ -39,3 +39,7 @@ script:
   # Run infra tests
   - make test
   - CGO_ENABLED=0 go test ./...
+
+notifications:
+  slack:
+    secure: MYljviqsTwifTAy8gEfEYhu37RaYWPTfS3LYXa0gz1tylVszy7D5XgSEjlZfZaDhWOTMl2paEhcM+Y+1WPHT+jlPjNu1K2k4GyEwSSFWaSA4O+G9msHP9P6xPStQHQUzJxH3YwaFWZCvq6TXcTiWiU0BFbj8wFXCD2ELrQwWcdRDFOY6hPijecnwdsXxEEF/fknsOO6/YMIIP7wNPpm+vFWxwPXsl3lyXOTwOyffz2SDkpFEoKw+qnP4xPj4GhufqfI5Zmf6IDWs17srVlZ9DHsUAjJAdSfr9SpwsA+RVYZnzlkB/YGT5PDksHZmMFZuSQSuPRKPCGfYX4ps1/tQR/Kko2fpnPUfT+yyCPkVbcvEw26R+KfKTOAwf6q4rr0a9kSdLxg42baOgS6/XUkkZR86RJ1tCmsN/zkAZllX8ydxTZC4aTFBcLlsbSXd+61btmQoI1KR8DexAFWg8fXHS/UgT47uk1K5+SssOAu8Tu39by/Yk8kxoye9oaka1p78tGmGyMrxp2QgNUyZfWsodUxol74Uzwskery9FrdxjxgIMjUIIfDcGytismKsFvpikXTJJ8x1sxnC53bhsRVFg0zCggpt5hjKnlXKF/TokA6Be8SZ8C+c7UtTZg9/HH7AhRgAiP1+V8hr+cVFcP1gG2++R79mC0Q1WFHbdgbmGqs=
