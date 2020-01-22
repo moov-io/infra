@@ -67,19 +67,19 @@ spec:
         resources:
           limits:
             cpu: 100m
-            memory: 128Mi
+            memory: 384Mi
           requests:
             cpu: 50m
-            memory: 50Mi
+            memory: 128Mi
         readinessProbe:
           tcpSocket:
             port: 50051
-          initialDelaySeconds: 5
+          initialDelaySeconds: 20
           periodSeconds: 10
         livenessProbe:
           tcpSocket:
             port: 50051
-          initialDelaySeconds: 5
+          initialDelaySeconds: 20
           periodSeconds: 10
         # securityContext:
         #   readOnlyRootFilesystem: true
