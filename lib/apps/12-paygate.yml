@@ -158,8 +158,8 @@ spec:
           periodSeconds: 10
       - image: atmoz/sftp:alpine
         name: sftp
-        args:
-          - 'demo:password:::upload'
+        command: ['/bin/sh']
+        args: ['-c', 'set -x; mkdir -p /home/demo/upload/inbound/ /home/demo/upload/outbound/ /home/demo/upload/returned/; chown -R 1000:100 /home/demo/upload; /entrypoint demo:password:::upload;']
         ports:
           - containerPort: 22
             name: sftp
