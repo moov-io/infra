@@ -34,6 +34,24 @@ data:
               severity: critical
             annotations:
               message: "Unable to find or parse expiry for {{ $labels.domain }}"
+          - alert: DomainMetricsAbsent
+            expr: absent(domain_expiration) > 0
+            for: 1h
+            labels:
+              severity: warning
+            annotations:
+              description: "Metrics for domain-exporter are absent"
+  prometheus-paygate-rules.yml: |
+    groups:
+      - name: ./paygate.rules
+        rules:
+          - alert: MissingACHConfig
+            expr: missing_ach_file_upload_configs > 0
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              message: "Missing ACH upload configuration for {{ $labels.routing_number }}"
   prometheus-watchman-rules.yml: |
     groups:
       - name: ./watchman.rules
