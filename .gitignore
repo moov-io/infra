@@ -24,6 +24,8 @@ terraform.tfstate.backup*
 /images/infra-idx/nginx/cache/
 /images/infra-idx/nginx/run/
 
+/images/certspotter/data/
+
 /envs/prod/apps/13-ofac-secrets.yml
 /envs/prod/apps/16-customers-secrets.yml
 /envs/prod/apps/12-paygate-secrets.yml
