@@ -58,7 +58,7 @@ variable "min_master_version" {
 # Setup for a GCP kubernetes cluster.
 resource "google_container_cluster" "primary" {
   name               = var.cluster_name
-  zone               = local.primary_gcp_zone
+  location           = local.primary_gcp_zone
   initial_node_count = 1
 
   min_master_version = var.min_master_version
@@ -95,9 +95,9 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "permanent" {
-  name    = "${var.cluster_name}-permanent-nodes"
-  zone    = local.primary_gcp_zone
-  cluster = google_container_cluster.primary.name
+  name     = "${var.cluster_name}-permanent-nodes"
+  location = local.primary_gcp_zone
+  cluster  = google_container_cluster.primary.name
 
   lifecycle {
     prevent_destroy = true
@@ -120,9 +120,9 @@ resource "google_container_node_pool" "permanent" {
 }
 
 resource "google_container_node_pool" "preemptible" {
-  name    = "${var.cluster_name}-preemptible-nodes"
-  zone    = local.primary_gcp_zone
-  cluster = google_container_cluster.primary.name
+  name     = "${var.cluster_name}-preemptible-nodes"
+  location = local.primary_gcp_zone
+  cluster  = google_container_cluster.primary.name
 
   lifecycle {
     prevent_destroy = true
