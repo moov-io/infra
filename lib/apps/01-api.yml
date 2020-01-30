@@ -71,7 +71,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/api:v2020.01.30.1
+      - image: moov/api:v2020.01.30.2
         imagePullPolicy: Always
         name: api
         env:
@@ -132,8 +132,8 @@ spec:
         spec:
           containers:
           - name: cookie
-            image: moov/apitest:v2020.01.30.1
-            args: ["-cleanup"]
+            image: moov/apitest:v2020.01.30.2
+            args: ["-cleanup", "-pause"]
           restartPolicy: OnFailure
 
 ---
@@ -152,8 +152,8 @@ spec:
         spec:
           containers:
           - name: oauth
-            image: moov/apitest:v2020.01.30.1
-            args: ["-cleanup", "-oauth"]
+            image: moov/apitest:v2020.01.30.2
+            args: ["-cleanup", "-pause", "-oauth"]
           restartPolicy: OnFailure
 
 ---
@@ -172,7 +172,7 @@ spec:
         spec:
           containers:
           - name: iat
-            image: moov/apitest:v2020.01.30.1
-            args: ["-ach.type=IAT", "-cleanup"]
+            image: moov/apitest:v2020.01.30.2
+            args: ["-ach.type=IAT", "-cleanup", "-pause"]
           restartPolicy: OnFailure
 ---
