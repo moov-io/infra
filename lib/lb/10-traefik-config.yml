@@ -300,16 +300,6 @@ data:
             certResolver: default
             domains:
               - main: "api.moov.io"
-        "api-moov-io-api-apps":
-          entryPoints: [https]
-          service: api-apps
-          rule: "Host(`api.moov.io`) && PathPrefix(`/apps/`)"
-          middlewares:
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
         "docs-moov-io-http":
           entryPoints: [http]
           service: docs

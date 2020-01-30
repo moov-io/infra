@@ -13,21 +13,6 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: api-apps
-  namespace: apps
-spec:
-  type: ClusterIP
-  selector:
-    app: api-apps
-  ports:
-    - name: http
-      protocol: TCP
-      port: 8080
-      targetPort: 8080
 
 ---
 apiVersion: extensions/v1beta1
@@ -86,7 +71,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/api:v2020.01.21.1
+      - image: moov/api:v2020.01.30.1
         imagePullPolicy: Always
         name: api
         env:
@@ -130,104 +115,7 @@ spec:
         - name: nginx-run
           emptyDir: {}
       restartPolicy: Always
----
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  name: api-apps
-  namespace: apps
-  labels:
-    app: api-apps
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: api-apps
-  template:
-    metadata:
-      labels:
-        app: api-apps
-    spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                topologyKey: "kubernetes.io/hostname"
-              weight: 1
-      containers:
-      - image: nginx/nginx-prometheus-exporter:0.4.2
-        imagePullPolicy: Always
-        name: nginx-exporter
-        args:
-          - -nginx.scrape-uri=http://localhost:8080/stub_status
-        ports:
-          - containerPort: 9113
-            name: metrics
-            protocol: TCP
-        resources:
-          limits:
-            cpu: 100m
-            memory: 25Mi
-          requests:
-            cpu: 50m
-            memory: 10Mi
-        readinessProbe:
-          httpGet:
-            path: /metrics
-            port: 9113
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /metrics
-            port: 9113
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        securityContext:
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
-      - image: moov/api-apps:v2020.01.21.1
-        imagePullPolicy: Always
-        name: api-apps
-        ports:
-          - containerPort: 8080
-            name: http
-            protocol: TCP
-        volumeMounts:
-          - name: nginx-temp
-            mountPath: /var/cache/nginx/
-          - name: nginx-run
-            mountPath: /var/run/
-        resources:
-          limits:
-            cpu: 100m
-            memory: 25Mi
-          requests:
-            cpu: 25m
-            memory: 10Mi
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        securityContext:
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 101
-      volumes:
-        - name: nginx-temp
-          emptyDir: {}
-        - name: nginx-run
-          emptyDir: {}
-      restartPolicy: Always
+
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
@@ -244,9 +132,10 @@ spec:
         spec:
           containers:
           - name: cookie
-            image: moov/apitest:v2020.01.21.1
+            image: moov/apitest:v2020.01.30.1
             args: ["-cleanup"]
           restartPolicy: OnFailure
+
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
@@ -263,7 +152,7 @@ spec:
         spec:
           containers:
           - name: oauth
-            image: moov/apitest:v2020.01.21.1
+            image: moov/apitest:v2020.01.30.1
             args: ["-cleanup", "-oauth"]
           restartPolicy: OnFailure
 
@@ -283,7 +172,7 @@ spec:
         spec:
           containers:
           - name: iat
-            image: moov/apitest:v2020.01.21.1
+            image: moov/apitest:v2020.01.30.1
             args: ["-ach.type=IAT", "-cleanup"]
           restartPolicy: OnFailure
 ---
