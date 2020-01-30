@@ -71,7 +71,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/api:v2020.01.30.2
+      - image: moov/api:v2020.01.30.3
         imagePullPolicy: Always
         name: api
         env:
@@ -132,8 +132,13 @@ spec:
         spec:
           containers:
           - name: cookie
-            image: moov/apitest:v2020.01.30.2
-            args: ["-cleanup", "-pause"]
+            image: moov/apitest:v2020.01.30.3
+            imagePullPolicy: Always
+            args: ["-cleanup", "-pause", "-debug"]
+            ports:
+              - containerPort: 9099
+                name: metrics
+                protocol: TCP
           restartPolicy: OnFailure
 
 ---
@@ -152,8 +157,13 @@ spec:
         spec:
           containers:
           - name: oauth
-            image: moov/apitest:v2020.01.30.2
-            args: ["-cleanup", "-pause", "-oauth"]
+            image: moov/apitest:v2020.01.30.3
+            imagePullPolicy: Always
+            args: ["-cleanup", "-pause", "-oauth", "-debug"]
+            ports:
+              - containerPort: 9099
+                name: metrics
+                protocol: TCP
           restartPolicy: OnFailure
 
 ---
@@ -172,7 +182,12 @@ spec:
         spec:
           containers:
           - name: iat
-            image: moov/apitest:v2020.01.30.2
-            args: ["-ach.type=IAT", "-cleanup", "-pause"]
+            image: moov/apitest:v2020.01.30.3
+            imagePullPolicy: Always
+            args: ["-ach.type=IAT", "-cleanup", "-pause", "-debug"]
+            ports:
+              - containerPort: 9099
+                name: metrics
+                protocol: TCP
           restartPolicy: OnFailure
 ---
