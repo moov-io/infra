@@ -1,3 +1,8 @@
+resource "google_service_account" "mysql_backup" {
+    account_id   = "mysql-production-backups"
+    display_name = "mysql production backups"
+}
+
 resource "google_kms_key_ring" "mysql_backup" {
   name     = "moov-mysql-backup-key"
   project  = var.gcp_project
