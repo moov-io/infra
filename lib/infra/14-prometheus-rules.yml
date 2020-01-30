@@ -52,6 +52,13 @@ data:
               severity: warning
             annotations:
               message: "Missing ACH upload configuration for {{ $labels.routing_number }}"
+          - alert: FailedApitestTransfers
+            expr: sum(failed_ach_transfers) by (source) > 0
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              message: "{{ $labels.source }} transfers have been failing"
   prometheus-watchman-rules.yml: |
     groups:
       - name: ./watchman.rules

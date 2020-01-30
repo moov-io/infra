@@ -296,6 +296,8 @@ spec:
                 path: prometheus-app-rules.yml
               - key: prometheus-domain-rules.yml
                 path: prometheus-domain-rules.yml
+              - key: prometheus-paygate-rules.yml
+                path: prometheus-paygate-rules.yml
               - key: prometheus-watchman-rules.yml
                 path: prometheus-watchman-rules.yml
         - name: prometheus-mysql-rules
