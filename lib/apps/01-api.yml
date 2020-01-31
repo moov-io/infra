@@ -122,6 +122,8 @@ kind: CronJob
 metadata:
   name: apitest-cookie
   namespace: apps
+  labels:
+    app: apitest
 spec:
   suspend: false
   concurrencyPolicy: Forbid
@@ -129,6 +131,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: apitest
         spec:
           containers:
           - name: cookie
@@ -147,6 +152,8 @@ kind: CronJob
 metadata:
   name: apitest-oauth
   namespace: apps
+  labels:
+    app: apitest
 spec:
   suspend: false
   concurrencyPolicy: Forbid
@@ -154,6 +161,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: apitest
         spec:
           containers:
           - name: oauth
@@ -172,6 +182,8 @@ kind: CronJob
 metadata:
   name: apitest-ach-iat
   namespace: apps
+  labels:
+    app: apitest
 spec:
   suspend: false
   concurrencyPolicy: Forbid
@@ -179,6 +191,9 @@ spec:
   jobTemplate:
     spec:
       template:
+        metadata:
+          labels:
+            app: apitest
         spec:
           containers:
           - name: iat
