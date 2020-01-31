@@ -139,7 +139,7 @@ spec:
           - name: cookie
             image: moov/apitest:v2020.01.30.3
             imagePullPolicy: Always
-            args: ["-cleanup", "-pause", "-debug"]
+            args: ["-cleanup", "-pause"]
             ports:
               - containerPort: 9099
                 name: metrics
@@ -169,7 +169,7 @@ spec:
           - name: oauth
             image: moov/apitest:v2020.01.30.3
             imagePullPolicy: Always
-            args: ["-cleanup", "-pause", "-oauth", "-debug"]
+            args: ["-cleanup", "-pause", "-oauth"]
             ports:
               - containerPort: 9099
                 name: metrics
@@ -199,7 +199,7 @@ spec:
           - name: iat
             image: moov/apitest:v2020.01.30.3
             imagePullPolicy: Always
-            args: ["-ach.type=IAT", "-cleanup", "-pause", "-debug"]
+            args: ["-ach.type=IAT", "-cleanup", "-pause"]
             ports:
               - containerPort: 9099
                 name: metrics
