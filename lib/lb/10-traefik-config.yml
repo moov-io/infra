@@ -177,8 +177,20 @@ data:
               timeout: "5s"
               scheme: http
       middlewares:
+        auth-clean:
+          headers:
+            customRequestHeaders:
+              X-User-Id: "" # Removes
+        auth-check:
+          forwardAuth:
+            # address: https://api.moov.io/v1/auth/check
+            address: http://auth.apps.svc.cluster.local:8080/auth/check
+            authResponseHeaders:
+              - Content-Type
+              - X-User-Id
         cors:
           headers:
+            accessControlAllowCredentials: true
             accessControlAllowMethods: [GET, OPTIONS, PUT, POST, DELETE]
             accessControlAllowOrigin: "*"
             accessControlMaxAge: 600
@@ -283,6 +295,251 @@ data:
             prefixes:
               - "/soc2"
       routers:
+        ach:
+          entryPoints: [https]
+          service: ach
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/files`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - ach
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        ach-ping:
+          entryPoints: [https]
+          service: ach
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/ping`)"
+          middlewares:
+            - ach
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        auth-ping:
+          entryPoints: [https]
+          service: auth
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/auth/ping`)"
+          middlewares:
+            - auth-ping
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        auth-check:
+          entryPoints: [https]
+          service: auth
+          rule: "Host(`api.moov.io`) && Path(`/v1/auth/check`, `/v1/users/check`, `/v1/oauth2/token`)"
+          middlewares:
+            - auth
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        auth:
+          entryPoints: [https]
+          service: auth
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/users/`, `/v1/oauth2/`)"
+          middlewares:
+            - auth-clean
+            - auth
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-depositories":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/depositories`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - paygate-depositories
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-events":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/events`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - paygate-events
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-gateways":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/gateways`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - paygate-gateways
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-originators":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/originators`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - paygate-originators
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-receivers":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/receivers`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - paygate-receivers
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-transfers":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/transfers`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - paygate-transfers
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "paygate-ping":
+          entryPoints: [https]
+          service: paygate
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/paygate/ping`)"
+          middlewares:
+            - cors
+            - paygate-ping
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "watchman-ping":
+          entryPoints: [https]
+          service: watchman
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/watchman/ping`)"
+          middlewares:
+            - cors
+            - watchman
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "watchman":
+          entryPoints: [https]
+          service: watchman
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/watchman/`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - watchman
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "accounts":
+          entryPoints: [https]
+          service: accounts
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - accounts
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "accounts-ping":
+          entryPoints: [https]
+          service: accounts
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts/ping`)"
+          middlewares:
+            - accounts-ping
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "fed":
+          entryPoints: [https]
+          service: fed
+          rule: "Host(`api.moov.io`) && (PathPrefix(`/v1/fed/ach`) || PathPrefix(`/v1/fed/wire`))"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - fed
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "fed-ping":
+          entryPoints: [https]
+          service: fed
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/fed/ping`)"
+          middlewares:
+            - cors
+            - fed-ping
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "customers":
+          entryPoints: [https]
+          service: customers
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - customers
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "imagecashletter":
+          entryPoints: [https]
+          service: imagecashletter
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/imagecashletter/`)"
+          middlewares:
+            - auth-clean
+            - auth-check
+            - cors
+            - imagecashletter
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
         "api-moov-io-http":
           entryPoints: [http]
           service: api
@@ -293,7 +550,7 @@ data:
         "api-moov-io":
           entryPoints: [https]
           service: api
-          rule: "Host(`api.moov.io`)"
+          rule: "Host(`api.moov.io`) && Path(`/`, `/v1/`)"
           middlewares:
             - cors
           tls:
@@ -352,176 +609,6 @@ data:
             certResolver: default
             domains:
               - main: "moov.io"
-        ach:
-          entryPoints: [https]
-          service: ach
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/files`, `/v1/ach/ping`)"
-          middlewares:
-            - ach
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        auth:
-          entryPoints: [https]
-          service: auth
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/users`, `/v1/oauth2`)"
-          middlewares:
-            - auth
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "auth-ping":
-          entryPoints: [https]
-          service: auth
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/auth/ping`)"
-          middlewares:
-            - auth-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-depositories":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/depositories`)"
-          middlewares:
-            - paygate-depositories
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-events":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/events`)"
-          middlewares:
-            - paygate-events
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-gateways":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/gateways`)"
-          middlewares:
-            - paygate-gateways
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-originators":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/originators`)"
-          middlewares:
-            - paygate-originators
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-receivers":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/receivers`)"
-          middlewares:
-            - paygate-receivers
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-transfers":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/transfers`)"
-          middlewares:
-            - paygate-transfers
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-ping":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/paygate/ping`)"
-          middlewares:
-            - paygate-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "watchman":
-          entryPoints: [https]
-          service: watchman
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/watchman/`)"
-          middlewares:
-            - watchman
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "accounts":
-          entryPoints: [https]
-          service: accounts
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts`)"
-          middlewares:
-            - accounts
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "accounts-ping":
-          entryPoints: [https]
-          service: accounts
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts/ping`)"
-          middlewares:
-            - accounts-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "fed":
-          entryPoints: [https]
-          service: fed
-          rule: "Host(`api.moov.io`) && (PathPrefix(`/v1/fed/ach`) || PathPrefix(`/v1/fed/wire`))"
-          middlewares:
-            - fed
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "fed-ping":
-          entryPoints: [https]
-          service: fed
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/fed/ping`)"
-          middlewares:
-            - fed-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "customers":
-          entryPoints: [https]
-          service: customers
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/`)"
-          middlewares:
-            - customers
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "imagecashletter":
-          entryPoints: [https]
-          service: imagecashletter
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/imagecashletter/`)"
-          middlewares:
-            - imagecashletter
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
         "infra-oauth2":
           entryPoints: [https]
           service: oauth2-proxy
