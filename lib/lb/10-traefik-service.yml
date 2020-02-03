@@ -6,6 +6,7 @@ metadata:
   namespace: lb
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
     app: traefik
   ports:

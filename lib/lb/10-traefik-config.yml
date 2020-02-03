@@ -17,6 +17,9 @@ data:
         address: ":80"
       https:
         address: ":443"
+        forwardedHeaders:
+          trustedIPs:
+            - "10.0.0.0/8"
       traefik:
         address: ":8081"
     providers:
@@ -194,6 +197,10 @@ data:
             accessControlAllowMethods: [GET, OPTIONS, PUT, POST, DELETE]
             accessControlAllowOrigin: "*"
             accessControlMaxAge: 600
+        remote-addr:
+          headers:
+            hostsProxyHeaders:
+              - X-Forwarded-For
         api-moov-io-http:
           redirectScheme:
             scheme: https
@@ -427,6 +434,7 @@ data:
             - auth-check
             - cors
             - paygate-transfers
+            - remote-addr
           tls:
             certResolver: default
             domains:
