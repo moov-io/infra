@@ -295,6 +295,17 @@ data:
             prefixes:
               - "/soc2"
       routers:
+        ach-ping:
+          entryPoints: [https]
+          service: ach
+          rule: "Host(`api.moov.io`) && Path(`/v1/ach/ping`)"
+          middlewares:
+            - ach
+            - cors
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
         ach:
           entryPoints: [https]
           service: ach
@@ -302,17 +313,6 @@ data:
           middlewares:
             - auth-clean
             - auth-check
-            - ach
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        ach-ping:
-          entryPoints: [https]
-          service: ach
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/ping`)"
-          middlewares:
             - ach
             - cors
           tls:
@@ -550,7 +550,7 @@ data:
         "api-moov-io":
           entryPoints: [https]
           service: api
-          rule: "Host(`api.moov.io`) && Path(`/`, `/v1/`)"
+          rule: "Host(`api.moov.io`) && (Path(`/`, `/style.css`, `/v1/`) || PathPrefix(`/apps/`, `/admin/`))"
           middlewares:
             - cors
           tls:
