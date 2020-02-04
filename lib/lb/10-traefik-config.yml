@@ -558,7 +558,7 @@ data:
         "api-moov-io":
           entryPoints: [https]
           service: api
-          rule: "Host(`api.moov.io`) && (Path(`/`, `/style.css`, `/v1/`) || PathPrefix(`/apps/`, `/admin/`))"
+          rule: "Host(`api.moov.io`) && (Path(`/`, `/style.css`, `/rapidoc-min.js`, `/scroll.js`, `/v1/`) || PathPrefix(`/apps/`, `/admin/`))"
           middlewares:
             - cors
           tls:
