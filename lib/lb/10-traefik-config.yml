@@ -237,6 +237,10 @@ data:
           stripPrefix:
             prefixes:
               - "/v1/auth"
+        customers-ping:
+          stripPrefix:
+            prefixes:
+              - "/v1/customers"
         paygate-depositories:
           stripPrefix:
             prefixes:
@@ -518,6 +522,17 @@ data:
           middlewares:
             - cors
             - fed-ping
+          tls:
+            certResolver: default
+            domains:
+              - main: "api.moov.io"
+        "customers-ping":
+          entryPoints: [https]
+          service: customers
+          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/ping`)"
+          middlewares:
+            - cors
+            - customers-ping
           tls:
             certResolver: default
             domains:
