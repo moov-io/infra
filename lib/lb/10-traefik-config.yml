@@ -611,7 +611,7 @@ data:
         "moovio-watchman":
           entryPoints: [https]
           service: watchman
-          rule: "Host(`moov.io`) && PathPrefix(`/watchman`)"
+          rule: "(Host(`moov.io`) || Host(`www.moov.io`)) && PathPrefix(`/watchman`)"
           middlewares:
             - moovio-watchman
           tls:
@@ -621,13 +621,13 @@ data:
         "moov-io-http":
           entryPoints: [http]
           service: moovio
-          rule: "Host(`moov.io`)"
+          rule: "Host(`moov.io`) || Host(`www.moov.io`)"
           middlewares:
             - moov-io-http
         "moov-io":
           entryPoints: [https]
           service: moovio
-          rule: "Host(`moov.io`)"
+          rule: "Host(`moov.io`) || Host(`www.moov.io`)"
           tls:
             certResolver: default
             domains:
