@@ -608,10 +608,34 @@ data:
           rule: "Host(`slack.moov.io`)"
           middlewares:
             - slack-moovio-http
+        "www-moovio-watchman":
+          entryPoints: [https]
+          service: watchman
+          rule: "Host(`www.moov.io`) && PathPrefix(`/watchman`)"
+          middlewares:
+            - moovio-watchman
+          tls:
+            certResolver: default
+            domains:
+              - main: "www.moov.io"
+        "www-moov-io-http":
+          entryPoints: [http]
+          service: moovio
+          rule: "Host(`www.moov.io`)"
+          middlewares:
+            - moov-io-http
+        "www-moov-io":
+          entryPoints: [https]
+          service: moovio
+          rule: "Host(`www.moov.io`)"
+          tls:
+            certResolver: default
+            domains:
+              - main: "www.moov.io"
         "moovio-watchman":
           entryPoints: [https]
           service: watchman
-          rule: "(Host(`moov.io`) || Host(`www.moov.io`)) && PathPrefix(`/watchman`)"
+          rule: "Host(`moov.io`) && PathPrefix(`/watchman`)"
           middlewares:
             - moovio-watchman
           tls:
@@ -621,13 +645,13 @@ data:
         "moov-io-http":
           entryPoints: [http]
           service: moovio
-          rule: "Host(`moov.io`) || Host(`www.moov.io`)"
+          rule: "Host(`moov.io`)"
           middlewares:
             - moov-io-http
         "moov-io":
           entryPoints: [https]
           service: moovio
-          rule: "Host(`moov.io`) || Host(`www.moov.io`)"
+          rule: "Host(`moov.io`)"
           tls:
             certResolver: default
             domains:
