@@ -26,6 +26,11 @@ terraform.tfstate.backup*
 
 /images/certspotter/data/
 
+/tests/mysql-backups/*.sql
+!/tests/mysql-backups/customers-check.sql
+!/tests/mysql-backups/paygate-check.sql
+!/tests/mysql-backups/watchman-check.sql
+
 /envs/prod/apps/13-ofac-secrets.yml
 /envs/prod/apps/16-customers-secrets.yml
 /envs/prod/apps/12-paygate-secrets.yml

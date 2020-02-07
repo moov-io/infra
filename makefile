@@ -30,11 +30,13 @@ release: AUTHORS
 docker:
 	go run ./cmd/dockertest
 
-.PHONY: test
-test: check
-# Test our docker images
+.PHONY: test test-docker test-kubeval test-mysql
+test: check test-docker test-kubeval test-mysql
+
+test-docker:
 	@go run ./cmd/dockertest
-# Kubeval
+
+test-kubeval:
 ifneq ($(TRAVIS_OS_NAME),osx)
 	wget -nc https://github.com/instrumenta/kubeval/releases/download/0.14.0/kubeval-$(PLATFORM)-amd64.tar.gz
 	tar -xf kubeval-$(PLATFORM)-amd64.tar.gz kubeval && chmod +x ./kubeval
@@ -42,3 +44,8 @@ ifneq ($(TRAVIS_OS_NAME),osx)
 else
 	@echo "Skipping kubeval tests on TravisCI"
 endif
+
+test-mysql:
+	@for dir in $(shell ls -1 ./tests/); do \
+		cd ./tests/"$$dir" && ./test.sh && cd ../; \
+	done
