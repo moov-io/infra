@@ -31,7 +31,7 @@ docker:
 	go run ./cmd/dockertest
 
 .PHONY: test test-docker test-kubeval test-mysql
-test: check test-docker test-kubeval test-mysql
+test: check test-docker test-kubeval
 
 test-docker:
 	@go run ./cmd/dockertest
