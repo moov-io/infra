@@ -11,7 +11,8 @@ do
     echo "downloading $name fuzz data from $container"
     mkdir -p "$dir"/"$name"
 
-    files=($(kubectl exec -n apps "$container" -- ls -1 /go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/))
+    files=($(kubectl exec -n apps "$container" -- ls -1 /go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/ | grep -v 'lost+found'))
+    echo "downloading ${#files[@]} files from $container"
     for file in "${files[@]}"
     do
         kubectl cp apps/"$container":/go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/"$file" "$dir"/"$name" > /dev/null
