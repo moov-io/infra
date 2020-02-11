@@ -1,0 +1,140 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:9.6
+    restart: always
+    environment:
+      POSTGRES_USER: kong
+      POSTGRES_DB: kong
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - intranet
+
+  kong-migration:
+    image: kong:latest
+    command: "kong migrations bootstrap"
+    networks:
+      - intranet
+    restart: on-failure
+    environment:
+      KONG_PG_HOST: postgres
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  kong:
+    image: kong:latest
+    restart: always
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: postgres
+      KONG_PG_DATABASE: kong
+      KONG_LOG_LEVEL: info
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8443:8443"
+      - "8444:8444"
+    volumes:
+      - "./conf/:/usr/local/kong/declarative"
+    depends_on:
+      - postgres
+      - kong-migration
+    networks:
+      - intranet
+
+  # Moov Applications
+  ach:
+    image: moov/ach:v1.3.1
+    restart: always
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    networks:
+      - intranet
+  accounts:
+    image: moov/accounts:v0.4.1
+    restart: always
+    ports:
+      - "8085:8085"
+      - "9095:9095"
+    environment:
+      DEFAULT_ROUTING_NUMBER: '121042882'
+    networks:
+      - intranet
+  auth:
+    image: moov/auth:v0.8.0
+    restart: always
+    ports:
+      - "8081:8081"
+      - "9091:9091"
+    networks:
+      - intranet
+  customers:
+    image: moov/customers:v0.4.0-rc1
+    restart: always
+    ports:
+      - "8087:8087"
+      - "9097:9097"
+    environment:
+      WATCHMAN_ENDPOINT: 'http://watchman:8084'
+    depends_on:
+      - watchman
+    networks:
+      - intranet
+  fed:
+    image: moov/fed:v0.4.1
+    restart: always
+    ports:
+      - "8086:8086"
+      - "9096:9096"
+    environment:
+      FEDACH_DATA_PATH: './data/fed/FedACHdir.txt'
+      FEDWIRE_DATA_PATH: './data/fed/fpddir.txt'
+    networks:
+      - intranet
+  watchman:
+    image: moov/watchman:v0.13.1
+    restart: always
+    ports:
+      - "8084:8084"
+      - "9094:9094"
+    networks:
+      - intranet
+  paygate:
+    image: moov/paygate:latest
+    restart: always
+    ports:
+      - "8082:8082"
+      - "9092:9092"
+    networks:
+      - intranet
+    command: ["-http.addr", ":8082"]
+    environment:
+      ACCOUNTS_ENDPOINT: 'http://accounts:8085'
+      ACH_ENDPOINT: 'http://ach:8080'
+      CUSTOMERS_ENDPOINT: 'http://customers:8087'
+      FED_ENDPOINT: 'http://fed:8086'
+      ACH_FILE_MAX_LINES: 20 # upload files when they're a lot smaller than the 10k default
+      ACH_FILE_TRANSFER_INTERVAL: 30s # Merge and Upload files this often
+    depends_on:
+      - accounts
+      - ach
+      - auth
+      - customers
+      - fed
+
+networks:
+  intranet:

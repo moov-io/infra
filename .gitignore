@@ -31,6 +31,8 @@ terraform.tfstate.backup*
 !/tests/mysql-backups/paygate-check.sql
 !/tests/mysql-backups/watchman-check.sql
 
+/envs/dev/terraform.tfstate*
+
 /envs/prod/apps/13-ofac-secrets.yml
 /envs/prod/apps/16-customers-secrets.yml
 /envs/prod/apps/12-paygate-secrets.yml
