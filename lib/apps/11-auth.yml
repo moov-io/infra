@@ -142,7 +142,7 @@ spec:
           persistentVolumeClaim:
             claimName: auth-data
       containers:
-      - image: moov/auth:v0.8.0
+      - image: moov/auth:v0.8.1-rc1
         imagePullPolicy: Always
         name: auth
         args:
@@ -159,6 +159,8 @@ spec:
           - name: auth-data
             mountPath: /opt/moov/auth
         env:
+          - name: DEMO_CLEANUP_INTERVAL
+            value: "4h"
           - name: DOMAIN
             value: moov.io
           - name: OAUTH2_CLIENTS_DSN
