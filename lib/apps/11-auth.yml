@@ -142,7 +142,7 @@ spec:
           persistentVolumeClaim:
             claimName: auth-data
       containers:
-      - image: moov/auth:v0.8.1-rc1
+      - image: moov/auth:v0.8.1-rc2
         imagePullPolicy: Always
         name: auth
         args:
