@@ -24,22 +24,16 @@ resource "google_dns_record_set" "moov-A" {
   rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
-resource "google_dns_record_set" "moov-google-site-verification" {
+resource "google_dns_record_set" "moov-TXT" {
   name         = google_dns_managed_zone.moov-io.dns_name
   managed_zone = google_dns_managed_zone.moov-io.name
   type         = "TXT"
   ttl          = 60
 
-  rrdatas = ["google-site-verification=U9kk8AwHytRgjkIfMp_6WYZP5f4IlMqlYuqF5MmUxPk"]
-}
-
-resource "google_dns_record_set" "moov-SPF" {
-  name         = google_dns_managed_zone.moov-io.dns_name
-  managed_zone = google_dns_managed_zone.moov-io.name
-  type         = "TXT"
-  ttl          = 60
-
-  rrdatas = ["\"v=spf1 include:_spf.google.com ~all\""]
+  rrdatas = [
+    "\"v=spf1 include:_spf.google.com ~all\"",
+    "google-site-verification=U9kk8AwHytRgjkIfMp_6WYZP5f4IlMqlYuqF5MmUxPk"
+  ]
 }
 
 resource "google_dns_record_set" "moov-MX" {
