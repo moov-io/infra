@@ -4,6 +4,7 @@
 
 - [Profiling Go Programs](https://blog.golang.org/profiling-go-programs)
 - [SRE: Debugging: Simple Memory Leaks in Go](https://medium.com/dm03514-tech-blog/sre-debugging-simple-memory-leaks-in-go-e0a9e6d63d4d)
+- [Useful features of Go in Production Deployments](https://rakyll.org/go-cloud/)
 
 ### Connect to remote pprof endpoint
 
