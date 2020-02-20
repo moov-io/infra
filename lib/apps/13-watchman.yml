@@ -71,11 +71,6 @@ spec:
         env:
           - name: LOG_FORMAT
             value: plain
-          - name: TRADEGOV_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: watchman-api-keys
-                key: tradegov
           - name: DATABASE_TYPE
             value: mysql
           - name: MYSQL_ADDRESS
