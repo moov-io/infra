@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,9 +10,7 @@ data:
   domains.yaml: |-
     domains:
       - moov.io
-
 ---
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -77,9 +76,7 @@ spec:
         configMap:
           defaultMode: 0644
           name: domain-exporter
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -97,3 +94,4 @@ spec:
     name: domain-exporter
   selector:
     app: domain-exporter
+---

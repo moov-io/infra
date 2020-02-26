@@ -36,7 +36,7 @@ data:
               message: "Unable to find or parse expiry for {{ $labels.domain }}"
           - alert: DomainMetricsAbsent
             expr: absent(domain_expiration) > 0
-            for: 1h
+            for: 24h
             labels:
               severity: warning
             annotations:
