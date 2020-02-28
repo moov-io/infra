@@ -11,7 +11,7 @@ do
     echo "downloading $name fuzz data from $container"
     mkdir -p "$dir"/"$name"
 
-    files=($(kubectl exec -n apps "$container" -- ls -1 /go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/ | grep -v 'lost+found'))
+    files=($(kubectl exec -n apps "$container" -- ls -1 /go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/))
     echo "downloading ${#files[@]} files from $container"
     for file in "${files[@]}"
     do
