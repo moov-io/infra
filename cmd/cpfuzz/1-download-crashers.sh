@@ -15,7 +15,7 @@ do
     echo "downloading ${#files[@]} files from $container"
     for file in "${files[@]}"
     do
-        kubectl cp apps/"$container":/go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/"$file" "$dir"/"$name" > /dev/null
+        kubectl cp apps/"$container":/go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/"$file" "$dir"/"$name"/"$file"
     done
 done
 
