@@ -39,6 +39,13 @@ spec:
           persistentVolumeClaim:
             claimName: achfuzz-data
       priorityClassName: fuzz-low-priority
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ['sh', '-c', 'chmod -R g+rwX /go/src/github.com/moov-io/ach/test/fuzz-reader/crashers/']
+        volumeMounts:
+        - mountPath: /go/src/github.com/moov-io/ach/test/fuzz-reader/crashers/
+          name: achfuzz-data
       containers:
       - image: moov/achfuzz:v1.2.0
         imagePullPolicy: Always

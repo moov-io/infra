@@ -39,6 +39,13 @@ spec:
           persistentVolumeClaim:
             claimName: wirefuzz-data
       priorityClassName: fuzz-low-priority
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ['sh', '-c', 'chmod -R g+rwX /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/']
+        volumeMounts:
+        - mountPath: /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/
+          name: wirefuzz-data
       containers:
       - image: moov/wirefuzz:v0.3.0
         imagePullPolicy: Always
