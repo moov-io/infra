@@ -59,7 +59,7 @@ spec:
           persistentVolumeClaim:
             claimName: watchman-data
       containers:
-      - image: moov/watchman:v0.14.0-dev
+      - image: moov/watchman:v0.13.2
         imagePullPolicy: Always
         name: watchman
         args:
