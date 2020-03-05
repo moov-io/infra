@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: gofuzz-exporter
-        image: adamdecaf/gofuzz_exporter:v0.1.1
+        image: adamdecaf/gofuzz_exporter:v0.1.2
         ports:
           - containerPort: 10000
         args:
