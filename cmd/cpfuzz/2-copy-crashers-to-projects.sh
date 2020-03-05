@@ -10,7 +10,7 @@ then
     for dir in $(ls -1 "$last");
     do
         # Copy input files over to wire project
-        find "$last"/"$dir" -not -name '*.output' -not -name '*.quoted' -mindepth 1 | xargs -n1 -I '{}' cp {} ../"$dir"/test/testdata/crashers/
+        find "$last"/"$dir"/crashers -not -name '*.output' -not -name '*.quoted' -mindepth 1 -type f | xargs -n1 -I '{}' cp {} ../"$dir"/test/testdata/crashers/
     done
 else
     echo "No fuzz-* directories found in moov-io/infra"
