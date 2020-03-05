@@ -50,10 +50,10 @@ spec:
             protocol: TCP
         resources:
           limits:
-            cpu: 100m
+            cpu: 25m
             memory: 25Mi
           requests:
-            cpu: 50m
+            cpu: 10m
             memory: 10Mi
         readinessProbe:
           httpGet:
@@ -88,10 +88,10 @@ spec:
             mountPath: /var/run/
         resources:
           limits:
-            cpu: 100m
+            cpu: 25m
             memory: 25Mi
           requests:
-            cpu: 25m
+            cpu: 10m
             memory: 10Mi
         readinessProbe:
           httpGet:
