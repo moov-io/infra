@@ -6,10 +6,10 @@ Moov runs Docker containers of several applications which execute [go-fuzz](http
 
 For example, if we're running fuzzing for `ach` the `Deployment` would be called `achfuzz`. We also run these fuzz containers as a low `PriorityClass` called `fuzz-low-priority` which pushes fuzzing cpu time down if production requests need more cpu or memory.
 
-After you [setup `kubectl`](kubernetes.md) and authentiate [with Google's Cloud](google-cloud.md) you can download the fuzz data. You'll need to run `1-download-crashers.sh` located at [`cmd/cpfuzz/1-download-crashers.sh`](../cmd/cpfuzz/1-download-crashers.sh) from the root of the infra repository.
+After you [setup `kubectl`](kubernetes.md) and authentiate [with Google's Cloud](google-cloud.md) you can download the fuzz data. You'll need to run `1-download.sh` located at [`cmd/cpfuzz/1-download.sh`](../cmd/cpfuzz/1-download.sh) from the root of the infra repository.
 
 ```
-$ ./cmd/cpfuzz/1-download-crashers.sh
+$ ./cmd/cpfuzz/1-download.sh
 downloading ach fuzz data from achfuzz-6b79569674-zbf67
 downloading imagecashletter fuzz data from imagecashletterfuzz-76d76f654f-gmczz
 downloading wire fuzz data from wirefuzz-665478856d-8gpnr
@@ -51,3 +51,7 @@ Using fuzz findings from fuzz-2019-08-28
 ### Resetting fuzz pods
 
 Often it's useful to reset the fuzz pods (delete any data) after copying down any crasher files. To do this run `./cmd/cpfuzz/3-roll-fuzz-pods.sh` which will delete the fuzz Kubernetes manifests and reapply them.
+
+### Copying corpus files
+
+You can download the corpus files (go-fuzz creates additional files as it runs) with `./cmd/cpfuzz/1-download.sh corpus`.
