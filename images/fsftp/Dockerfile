@@ -2,7 +2,6 @@ FROM golang:1.14-alpine as builder
 RUN apk add -U git
 WORKDIR /go/src/github.com/moov-io/fsftp/
 ENV CGO_ENABLED=0
-ENV GO111MODULE=on
 COPY main.go main.go
 RUN go mod init github.com/moov-io/fsftp
 RUN go get -u ./...
