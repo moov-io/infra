@@ -28,7 +28,6 @@ func installJsonnet() error {
 	cmd := exec.Command("go", "get", "github.com/jsonnet-bundler/jsonnet-bundler/cmd/jb")
 	cmd.Env = []string{
 		fmt.Sprintf("HOME=%s", os.Getenv("HOME")),
-		"GO111MODULE=off",
 		fmt.Sprintf("GOPATH=%s", os.Getenv("GOPATH")),
 	}
 	out, err = cmd.CombinedOutput()
