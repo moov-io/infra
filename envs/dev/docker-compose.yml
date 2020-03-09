@@ -106,7 +106,7 @@ services:
     networks:
       - intranet
   watchman:
-    image: moov/watchman:v0.13.1
+    image: moov/watchman:v0.13.2
     restart: always
     ports:
       - "8084:8084"
