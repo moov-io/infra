@@ -26,7 +26,7 @@ func main() {
 	flag.Parse()
 
 	if *flagRoot == "" {
-		log.Fatalf("Please set a directory to serve with -root")
+		log.Fatal("Please set a directory to serve with -root")
 	}
 
 	factory := &filedriver.FileDriverFactory{
