@@ -31,7 +31,7 @@ docker:
 	go run ./cmd/dockertest
 
 .PHONY: test test-docker test-kubeval test-mysql
-test: check test-docker test-kubeval
+test: check test-docker test-kubeval test-promtool-configmap
 
 test-docker:
 	@go run ./cmd/dockertest
@@ -44,6 +44,15 @@ ifneq ($(TRAVIS_OS_NAME),osx)
 else
 	@echo "Skipping kubeval tests on TravisCI"
 endif
+
+test-promtool-configmap:
+	promtool-configmap --version
+# Handcrafted files
+	promtool-configmap envs/prod/infra/14-prometheus.yml
+	promtool-configmap envs/prod/infra/14-prometheus-rules.yml
+# Generated files
+	promtool-configmap envs/prod/infra/14-prometheus-kubernetes-mixin-alerts.yml
+	promtool-configmap envs/prod/infra/14-prometheus-kubernetes-mixin-rules.yml
 
 test-mysql:
 	@for dir in $(shell ls -1 ./tests/); do \

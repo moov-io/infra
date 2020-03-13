@@ -37,10 +37,6 @@ script:
   - gitleaks --repo-path=$(pwd) --redact -v
   # Terraform
   # cd envs/sbx && terraform init && terraform validate
-  # Prometheus
-  - promtool-configmap --version
-  - promtool-configmap envs/prod/infra/14-prometheus.yml
-  - promtool-configmap envs/prod/infra/14-prometheus-rules.yml
   # Run infra tests
   - make test
   - CGO_ENABLED=0 go test ./...
