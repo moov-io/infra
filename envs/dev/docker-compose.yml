@@ -95,7 +95,7 @@ services:
     networks:
       - intranet
   fed:
-    image: moov/fed:v0.4.1
+    image: moov/fed:v0.4.3
     restart: always
     ports:
       - "8086:8086"
