@@ -52,6 +52,13 @@ data:
               severity: warning
             annotations:
               message: "Missing ACH upload configuration for {{ $labels.routing_number }}"
+          - alert: FailedFileUpload
+            expr: sum(ach_file_upload_errors) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              message: "An ACH file for origin={{ $labels.origin }} failed to upload"
           - alert: FailedApitestTransfers
             expr: sum(failed_ach_transfers) by (source) > 0
             for: 10m
