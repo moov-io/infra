@@ -6,6 +6,10 @@ Welcome to Moov! .... TODO(adam,wade)
 
 - Install Go ([Download](https://golang.org/dl/)
    - Homebrew: `brew install go`
+- Install Docker
+  - [Docker for Mac](https://docs.docker.com/docker-for-mac/) - [Install Guide](https://docs.docker.com/docker-for-mac/install/)
+  - [Docker on Linux](https://docs.docker.com/install/)
+  - [Docker for Windows](https://docs.docker.com/docker-for-windows/) - [Install Guide](https://docs.docker.com/docker-for-windows/install/)
 - [Join Slack](https://slack.moov.io)
 - Clone moov-io projects from [GitHub](https://github.com/moov-io) you'll be using
    - Can tests pass in ACH? PayGate (with `-short`)? Watchman?
@@ -19,6 +23,7 @@ Welcome to Moov! .... TODO(adam,wade)
 - [Infrastructure services](https://infra.moov.io/)
    - [Grafana](https://infra.moov.io/grafana/?orgId=1)
    - [Loki](https://infra.moov.io/grafana/explore) (Logs)
+- [Infrastructure documentation](https://github.com/moov-io/infra/tree/master/docs#infrastructure-documentation)
 
 ### Reading
 
