@@ -1,5 +1,7 @@
 ## Your first day at Moov
 
+Welcome to Moov! .... TODO(adam,wade)
+
 ### Workstation setup
 
 - Install Go ([Download](https://golang.org/dl/)
