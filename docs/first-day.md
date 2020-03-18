@@ -4,7 +4,7 @@ Welcome to Moov! .... TODO(adam,wade)
 
 ### Workstation setup
 
-- Install Go ([Download](https://golang.org/dl/)
+- Install Go ([Download](https://golang.org/dl/))
    - Homebrew: `brew install go`
 - Install Docker
   - [Docker for Mac](https://docs.docker.com/docker-for-mac/) - [Install Guide](https://docs.docker.com/docker-for-mac/install/)
@@ -21,8 +21,7 @@ Welcome to Moov! .... TODO(adam,wade)
 - Continious Integration (CI): [TravisCI](http://travis-ci.com/moov-io)
    - Slack: `#builds` for all notifications
 - [Infrastructure services](https://infra.moov.io/)
-   - [Grafana](https://infra.moov.io/grafana/?orgId=1)
-   - [Loki](https://infra.moov.io/grafana/explore) (Logs)
+   - [Grafana](https://infra.moov.io/grafana/?orgId=1) / [Loki](https://infra.moov.io/grafana/explore) (Logs)
 - [Infrastructure documentation](https://github.com/moov-io/infra/tree/master/docs#infrastructure-documentation)
 
 ### Reading
