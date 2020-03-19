@@ -17,20 +17,6 @@ spec:
       protocol: TCP
       port: 9090
       targetPort: 9090
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: fed-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 1Gi
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -55,27 +41,16 @@ spec:
             - podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
-      volumes:
-        - name: fed-data
-          persistentVolumeClaim:
-            claimName: fed-data
       containers:
-      - image: moov/fed:v0.4.1
+      - image: moov/fed:v0.4.3
         imagePullPolicy: Always
         name: fed
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
         env:
-          - name: FEDACH_DATA_PATH
-            value: /data/fed/FedACHdir.txt
-          - name: FEDWIRE_DATA_PATH
-            value: /data/fed/fpddir.txt
           - name: LOG_FORMAT
             value: plain
-        volumeMounts:
-          - name: fed-data
-            mountPath: /data/fed/
         ports:
           - containerPort: 8080
             name: http
@@ -108,5 +83,4 @@ spec:
           runAsNonRoot: true
           runAsUser: 1000
       restartPolicy: Always
-
 ---
