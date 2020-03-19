@@ -14,7 +14,7 @@ spec:
       port: 50051
       targetPort: 50051
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: corteza-corredor

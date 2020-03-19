@@ -101,17 +101,22 @@ data:
           - __meta_kubernetes_pod_uid
         target_label: __path__
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
+  labels:
+    app: promtail
   name: promtail
   namespace: infra
 spec:
   minReadySeconds: 10
+  selector:
+    matchLabels:
+      app: promtail
   template:
     metadata:
       labels:
-        name: promtail
+        app: promtail
     spec:
       containers:
       - args:

@@ -46,7 +46,7 @@ spec:
   scope: Namespaced
   version: v1beta2
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: etcd-operator
