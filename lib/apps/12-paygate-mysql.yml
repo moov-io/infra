@@ -175,7 +175,7 @@ spec:
       template:
         spec:
           containers:
-            - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.2.0
+            - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.3.0
               name: backup
               imagePullPolicy: Always
               env:
@@ -214,7 +214,7 @@ spec:
                 - name: SLACK_ENABLED
                   value: "true"
                 - name: SLACK_CHANNEL
-                  value: "#alerts"
+                  value: "#auto-backups"
                 - name: SLACK_WEBHOOK_URL
                   valueFrom:
                     secretKeyRef:
