@@ -46,7 +46,7 @@ spec:
       serviceAccountName: oauth2-proxy
       terminationGracePeriodSeconds: 30
       containers:
-      - image: quay.io/pusher/oauth2_proxy:v4.1.0
+      - image: quay.io/pusher/oauth2_proxy:v5.1.0
         imagePullPolicy: Always
         name: oauth2-proxy
         resources:
@@ -73,6 +73,7 @@ spec:
                 name: oauth2-proxy-config
                 key: cookie_secret
         args:
+          - --reverse-proxy=true
           - -cookie-domain=moov.io
           - -cookie-secure
           - -email-domain=*
