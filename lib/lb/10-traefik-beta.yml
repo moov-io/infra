@@ -94,7 +94,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: traefik:v2.1
+      - image: traefik:v2.2
         imagePullPolicy: Always
         name: traefik
         args:
