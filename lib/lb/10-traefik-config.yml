@@ -305,6 +305,11 @@ data:
           stripPrefix:
             prefixes:
               - "/soc2"
+            forceslash: true
+        soc2-redirect:
+          redirectRegex:
+            regex: "/soc2$"
+            replacement: "/soc2/"
       routers:
         ach-ping:
           entryPoints: [https]
@@ -753,6 +758,7 @@ data:
           service: soc2
           rule: "Host(`moov.io`) && PathPrefix(`/soc2`)"
           middlewares:
+            - soc2-redirect
             - soc2
           tls:
             certResolver: default
