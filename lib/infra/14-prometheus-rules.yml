@@ -41,6 +41,17 @@ data:
               severity: warning
             annotations:
               description: "Metrics for domain-exporter are absent"
+  prometheus-kubernetes-rules.yml: |
+    groups:
+      - name: ./kubernetes.rules
+        rules:
+          - alert: UnschedulablePods
+            expr: kube_pod_status_unschedulable > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              message: "{{ $labels.namespace }}/{{ $labels.pod }} is unschedulable"
   prometheus-paygate-rules.yml: |
     groups:
       - name: ./paygate.rules
