@@ -43,7 +43,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/wire:v0.3.0
+      - image: moov/wire:v0.5.0
         imagePullPolicy: Always
         name: wire
         args:
