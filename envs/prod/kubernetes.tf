@@ -19,7 +19,7 @@ variable "password" {
 }
 
 variable "permanent_pool_node_count" {
-  default = 2
+  default = 1
 }
 
 variable "permanent_node_disk_size_gb" {
@@ -52,7 +52,7 @@ variable "preemptible_node_machine_type" {
 
 variable "min_master_version" {
   # Note: Update the root makefile kubeval Kubernetes version when this changes
-  default = "1.15.4-gke.22"
+  default = "1.15.11-gke.5"
 }
 
 # Setup for a GCP kubernetes cluster.
