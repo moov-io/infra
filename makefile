@@ -48,11 +48,11 @@ endif
 test-promtool-configmap:
 	promtool-configmap --version
 # Handcrafted files
-	promtool-configmap envs/prod/infra/14-prometheus.yml
-	promtool-configmap envs/prod/infra/14-prometheus-rules.yml
+	promtool-configmap envs/oss/infra/14-prometheus.yml
+	promtool-configmap envs/oss/infra/14-prometheus-rules.yml
 # Generated files
-	promtool-configmap envs/prod/infra/14-prometheus-kubernetes-mixin-alerts.yml
-	promtool-configmap envs/prod/infra/14-prometheus-kubernetes-mixin-rules.yml
+	promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-alerts.yml
+	promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-rules.yml
 
 test-mysql:
 	@for dir in $(shell ls -1 ./tests/); do \

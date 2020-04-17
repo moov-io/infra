@@ -16,7 +16,7 @@ groups:
           description: "Data was last refreshed {{ humanizeTimestamp $value }} ago"
 ```
 
-Right now the production alerts Moov has created are defined in [14-prometheus-rules.yml](../envs/prod/infra/14-prometheus-rules.yml) and we include [kubernetes-monitoring/kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin) alerts as well - these cover a base Kubernetes setup.
+Right now the production alerts Moov has created are defined in [14-prometheus-rules.yml](../envs/oss/infra/14-prometheus-rules.yml) and we include [kubernetes-monitoring/kubernetes-mixin](https://github.com/kubernetes-monitoring/kubernetes-mixin) alerts as well - these cover a base Kubernetes setup.
 
 ## Updating Prometheus Alerts
 

@@ -93,8 +93,8 @@ func copyFile(dir, wd, stub string) error {
 		return fmt.Errorf("file %s didn't exist: %v", filename, err)
 	}
 
-	// Right now we only render envs/prod and the rendered prometheus_alerts.yaml file
-	path := filepath.Join(wd, "envs", "prod", "infra", fmt.Sprintf("14-prometheus-kubernetes-mixin-%s.yml", stub))
+	// Right now we only render envs/oss and the rendered prometheus_alerts.yaml file
+	path := filepath.Join(wd, "envs", "oss", "infra", fmt.Sprintf("14-prometheus-kubernetes-mixin-%s.yml", stub))
 
 	indent := []byte("\n      ")
 

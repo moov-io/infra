@@ -1,6 +1,6 @@
-## envs/prod
+## envs/oss
 
-`sbx` is our only environment currently. It's organized with terraform to setup a Kubernetes cluster and then `kubectl` object files laid out in the directories (by each namespace).
+`oss` is our only environment currently. It's organized with terraform to setup a Kubernetes cluster and then `kubectl` object files laid out in the directories (by each namespace).
 
 - `gcp.tf`: Our Google Cloud project setup. Contains enabled APIs, cluster admins, and zone setup.
 - `kubernetes.tf`: Kubernetes cluster setup
@@ -19,7 +19,7 @@ Make sure your [Google Cloud credentials.json is setup](../../docs/google-cloud.
 
 You'll need to [decrypt the files with blackbox](../../docs/secrets.md). Run `blackbox_decrypt_all_files` at the root of this repository.
 
-Note: The `sbx` environment is a testing ground. Never put production secrets into this repository.
+Note: The `oss` environment is a testing ground. Never put production secrets into this repository.
 
 ### Kubernetes Namespaces
 
