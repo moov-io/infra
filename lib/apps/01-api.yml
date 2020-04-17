@@ -117,92 +117,90 @@ spec:
       restartPolicy: Always
 
 ---
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: apitest-cookie
-  namespace: apps
-  labels:
-    app: apitest
-spec:
-  suspend: false
-  concurrencyPolicy: Forbid
-  schedule: "*/2 * * * *"
-  jobTemplate:
-    spec:
-      template:
-        metadata:
-          labels:
-            app: apitest
-        spec:
-          containers:
-          - name: cookie
-            image: moov/apitest:v2020.04.09.1
-            imagePullPolicy: Always
-            args: ["-cleanup", "-pause"]
-            ports:
-              - containerPort: 9099
-                name: metrics
-                protocol: TCP
-          restartPolicy: OnFailure
-
+# apiVersion: batch/v1beta1
+# kind: CronJob
+# metadata:
+#   name: apitest-cookie
+#   namespace: apps
+#   labels:
+#     app: apitest
+# spec:
+#   suspend: false
+#   concurrencyPolicy: Forbid
+#   schedule: "*/2 * * * *"
+#   jobTemplate:
+#     spec:
+#       template:
+#         metadata:
+#           labels:
+#             app: apitest
+#         spec:
+#           containers:
+#           - name: cookie
+#             image: moov/apitest:v2020.04.09.1
+#             imagePullPolicy: Always
+#             args: ["-cleanup", "-pause"]
+#             ports:
+#               - containerPort: 9099
+#                 name: metrics
+#                 protocol: TCP
+#           restartPolicy: OnFailure
 ---
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: apitest-oauth
-  namespace: apps
-  labels:
-    app: apitest
-spec:
-  suspend: false
-  concurrencyPolicy: Forbid
-  schedule: "*/2 * * * *"
-  jobTemplate:
-    spec:
-      template:
-        metadata:
-          labels:
-            app: apitest
-        spec:
-          containers:
-          - name: oauth
-            image: moov/apitest:v2020.04.09.1
-            imagePullPolicy: Always
-            args: ["-cleanup", "-pause", "-oauth"]
-            ports:
-              - containerPort: 9099
-                name: metrics
-                protocol: TCP
-          restartPolicy: OnFailure
-
+# apiVersion: batch/v1beta1
+# kind: CronJob
+# metadata:
+#   name: apitest-oauth
+#   namespace: apps
+#   labels:
+#     app: apitest
+# spec:
+#   suspend: false
+#   concurrencyPolicy: Forbid
+#   schedule: "*/2 * * * *"
+#   jobTemplate:
+#     spec:
+#       template:
+#         metadata:
+#           labels:
+#             app: apitest
+#         spec:
+#           containers:
+#           - name: oauth
+#             image: moov/apitest:v2020.04.09.1
+#             imagePullPolicy: Always
+#             args: ["-cleanup", "-pause", "-oauth"]
+#             ports:
+#               - containerPort: 9099
+#                 name: metrics
+#                 protocol: TCP
+#           restartPolicy: OnFailure
 ---
-apiVersion: batch/v1beta1
-kind: CronJob
-metadata:
-  name: apitest-ach-iat
-  namespace: apps
-  labels:
-    app: apitest
-spec:
-  suspend: false
-  concurrencyPolicy: Forbid
-  schedule: "*/2 * * * *"
-  jobTemplate:
-    spec:
-      template:
-        metadata:
-          labels:
-            app: apitest
-        spec:
-          containers:
-          - name: iat
-            image: moov/apitest:v2020.04.09.1
-            imagePullPolicy: Always
-            args: ["-ach.type=IAT", "-cleanup", "-pause"]
-            ports:
-              - containerPort: 9099
-                name: metrics
-                protocol: TCP
-          restartPolicy: OnFailure
+# apiVersion: batch/v1beta1
+# kind: CronJob
+# metadata:
+#   name: apitest-ach-iat
+#   namespace: apps
+#   labels:
+#     app: apitest
+# spec:
+#   suspend: false
+#   concurrencyPolicy: Forbid
+#   schedule: "*/2 * * * *"
+#   jobTemplate:
+#     spec:
+#       template:
+#         metadata:
+#           labels:
+#             app: apitest
+#         spec:
+#           containers:
+#           - name: iat
+#             image: moov/apitest:v2020.04.09.1
+#             imagePullPolicy: Always
+#             args: ["-ach.type=IAT", "-cleanup", "-pause"]
+#             ports:
+#               - containerPort: 9099
+#                 name: metrics
+#                 protocol: TCP
+#           restartPolicy: OnFailure
 ---
