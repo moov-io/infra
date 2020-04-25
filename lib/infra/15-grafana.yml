@@ -241,8 +241,11 @@ spec:
             name: http
             protocol: TCP
         securityContext:
+          # runAsNonRoot: true
+          # runAsUser: 65534
+          runAsUser: 0 # TODO(adam): we need to lower/change this uid
           # From https://github.com/grafana/grafana/issues/13187
-          runAsUser: 472
+          # runAsUser: 472
       volumes:
         - name: grafana-data
           persistentVolumeClaim:
