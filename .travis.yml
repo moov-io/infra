@@ -43,7 +43,6 @@ script:
   - make check
   - make test
   - CGO_ENABLED=0 go test ./...
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then go list -m all | ~/bin/nancy; fi
 
 notifications:
   slack:
