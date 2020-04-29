@@ -3,8 +3,8 @@ PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 .PHONY: all
 .PHONY: check
 check:
-	go fmt ./...
-	go vet ./...
+	@wget -nc -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
+	bash ./lint-project.sh
 
 .PHONY: clean
 clean:

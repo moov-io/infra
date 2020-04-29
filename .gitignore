@@ -18,6 +18,8 @@ terraform.tfstate.backup*
 
 /fuzz-*/
 
+/lint-project.sh
+
 /kubeval
 /kubeval-*.tar.gz
 
