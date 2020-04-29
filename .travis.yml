@@ -5,12 +5,18 @@ services:
 
 language: go
 
-os:
-  - linux
-  - osx
-
-go:
-  - 1.14.x
+matrix:
+  include:
+    - os: linux
+      go: 1.14.x
+      cache:
+        directories:
+          - "/home/travis/.cache/go-build" # GOCACHE
+    - os: osx
+      go: 1.14.x
+      cache:
+        directories:
+          - "/Users/travis/Library/Caches/go-build" # GOCACHE
 
 before_install:
   - mkdir -p ~/bin/
