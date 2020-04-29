@@ -6,6 +6,16 @@ mkdir -p ./bin/
 # Collect all our files for processing
 GOFILES=$(find . -type f -name '*.go' | grep -v client | grep -v vendor)
 
+# Set TRAVIS_OS_NAME if it's empty (local dev)
+if [[ "$TRAVIS_OS_NAME" == "" ]]; then
+    if [[ $(uname -s) == "Darwin" ]]; then
+        export TRAVIS_OS_NAME=osx
+    else
+        export TRAVIS_OS_NAME=linux
+    fi
+fi
+echo "running go linters for $TRAVIS_OS_NAME"
+
 # Check gofmt
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     test -z $(gofmt -s -l $GOFILES)
