@@ -27,7 +27,7 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O misspell.tar.gz https://github
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf misspell.tar.gz
     cp ./misspell ./bin/misspell
-    misspell -error -locale US $GOFILES
+    ./bin/misspell -error -locale US $GOFILES
 fi
 
 # staticcheck
@@ -36,7 +36,7 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O staticcheck.tar.gz https://git
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
-    staticcheck ./...
+    ./bin/staticcheck ./...
 fi
 
 # nancy (vulnerable dependencies)
