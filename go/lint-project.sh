@@ -47,7 +47,8 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L -o ./bin/nancy https://githu
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.3/nancy-darwin.amd64-v0.2.3; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
-    go list -m all | ./bin/nancy -exclude-vulnerability CVE-2020-7220,CVE-2020-10660,CVE-2020-10661 # Vault Enterprise, needs gocloud.dev release
+    # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
+    go list -m all | ./bin/nancy -exclude-vulnerability CVE-2018-19653,CVE-2020-7219,CVE-2020-7220,CVE-2020-10660,CVE-2020-10661
 fi
 
 # golangci-lint
