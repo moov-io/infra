@@ -66,7 +66,7 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
         ./bin/gocyclo -over $GOCYCLO_LIMIT $GOFILES
     else
         ./bin/gocyclo -over 25 $GOFILES
-    elif
+    fi
 fi
 
 # Run 'go test'
