@@ -5,7 +5,7 @@ PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 check:
 	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
 	@chmod +x ./lint-project.sh
-	./lint-project.sh
+	time ./lint-project.sh
 
 .PHONY: clean
 clean:

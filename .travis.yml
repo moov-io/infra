@@ -25,10 +25,6 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-linux; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O ~/bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-macos; fi
   - chmod +x ~/bin/promtool-configmap
-  # nancy (vulnerable dependencies)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L -o ~/bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.0/nancy-linux.amd64-v0.1.0; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L -o ~/bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.0/nancy-darwin.amd64-v0.1.0; fi
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then chmod +x ~/bin/nancy; fi
   # gitleaks
   - go get github.com/zricethezav/gitleaks
   - go get ./...
@@ -38,6 +34,7 @@ script:
   # Terraform
   # cd envs/sbx && terraform init && terraform validate
   # Run infra tests
+  - make check
   - make test
   - CGO_ENABLED=0 go test ./...
   - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then go list -m all | ~/bin/nancy; fi
