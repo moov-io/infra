@@ -47,7 +47,7 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O ./bin/gocyclo https://github
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/gocyclo
-    gocyclo -over 25 $GOFILES
+    ./bin/gocyclo -over 25 $GOFILES
 fi
 
 # Run 'go test'
