@@ -16,8 +16,6 @@ import (
 )
 
 var (
-	flagVerbose = flag.Bool("verbose", false, "Verbose: show all log output")
-
 	// baseConfigMap is a Kubernetes object template for the ConfigMap's that
 	// hold the Prometheus configuration.
 	baseConfigMap = []byte(`apiVersion: v1
@@ -35,7 +33,7 @@ func main() {
 	flag.Parse()
 
 	// Verify we are in the root of infra/
-	wd, err := os.Getwd()
+	wd, _ := os.Getwd()
 	if dir := filepath.Base(wd); dir != "infra" || wd == "" {
 		log.Fatalf("ERROR: unknown directory 'kubernetes-mixins' is ran from: %s", dir)
 	}

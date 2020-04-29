@@ -39,7 +39,7 @@ func main() {
 	}
 
 	// Verify we are in the root of infra/
-	parent, err := os.Getwd()
+	parent, _ := os.Getwd()
 	if dir := filepath.Base(parent); dir != "infra" || parent == "" {
 		log.Fatalf("ERROR: unknown directory 'dockertest' is ran from: %s", dir)
 	}
