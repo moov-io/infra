@@ -1,6 +1,5 @@
 PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 
-.PHONY: all
 .PHONY: check
 check:
 	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
