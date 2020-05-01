@@ -53,7 +53,7 @@ fi
 
 # golangci-lint
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
-    wget -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.25.1
+    wget -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.26.0
     ./bin/golangci-lint run --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
 fi
 
