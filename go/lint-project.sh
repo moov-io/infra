@@ -38,7 +38,7 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     cp ./staticcheck/staticcheck ./bin/staticcheck
 
     # Grab directories with Go files but not 'admin' or 'client'
-    GODIRS=$(find ./** -type f -mindepth 1  -name "*.go" | grep -v admin | grep -v client | xargs -n1 -I '{}' dirname {} | sort -u)
+    GODIRS=$(find ./** -mindepth 1 -type f -name "*.go" | grep -v admin | grep -v client | xargs -n1 -I '{}' dirname {} | sort -u)
     ./bin/staticcheck $GODIRS
 fi
 
