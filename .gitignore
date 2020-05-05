@@ -20,6 +20,11 @@ terraform.tfstate.backup*
 
 /lint-project.sh
 
+misspell*
+staticcheck*
+/bin/
+/coverage.txt
+
 /kubeval
 /kubeval-*.tar.gz
 
