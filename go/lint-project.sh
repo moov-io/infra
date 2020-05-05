@@ -22,8 +22,8 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
 fi
 
 # Misspell
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_mac_64bit.tar.gz; fi
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_mac_64bit.tar.gz; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf misspell.tar.gz
     cp ./misspell ./bin/misspell
@@ -31,8 +31,8 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 fi
 
 # staticcheck
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_linux_amd64.tar.gz; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_darwin_amd64.tar.gz; fi
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_linux_amd64.tar.gz; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_darwin_amd64.tar.gz; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
@@ -43,8 +43,8 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.3/nancy-linux.amd64-v0.2.3; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.3/nancy-darwin.amd64-v0.2.3; fi
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.4/nancy-linux.amd64-v0.2.4; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.4/nancy-darwin.amd64-v0.2.4; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
@@ -53,13 +53,13 @@ fi
 
 # golangci-lint
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
-    wget -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.26.0
+    wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.26.0
     ./bin/golangci-lint run --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
 fi
 
 # gocyclo
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-linux-amd64; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-linux-amd64; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/gocyclo
     if [ -n "$GOCYCLO_LIMIT" ]; then
