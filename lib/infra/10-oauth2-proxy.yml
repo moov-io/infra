@@ -46,7 +46,7 @@ spec:
       serviceAccountName: oauth2-proxy
       terminationGracePeriodSeconds: 30
       containers:
-      - image: quay.io/pusher/oauth2_proxy:v5.1.0
+      - image: quay.io/oauth2-proxy/oauth2-proxy:v5.1.1
         imagePullPolicy: Always
         name: oauth2-proxy
         resources:
