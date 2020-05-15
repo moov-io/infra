@@ -31,8 +31,8 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 fi
 
 # staticcheck
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_linux_amd64.tar.gz; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_darwin_amd64.tar.gz; fi
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.4/staticcheck_linux_amd64.tar.gz; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.4/staticcheck_darwin_amd64.tar.gz; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
