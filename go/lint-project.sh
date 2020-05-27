@@ -69,6 +69,18 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     fi
 fi
 
+# Run exhaustive to verify Enums aren't missing cases
+if [[ "$EXPERIMENTAL" == *"exhaustive"* ]]; then
+    go get github.com/nishanths/exhaustive/cmd/exhaustive
+    echo "Running nishanths/exhaustive"
+
+    if [ -n "$DEFAULT_SIGNIFIES_EXHAUSTIVE" ]; then
+        exhaustive -default-signifies-exhaustive ./...
+    else
+        exhaustive ./...
+    fi
+fi
+
 # Run 'go test'
 if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
