@@ -52,26 +52,33 @@ data:
           kvstore:
             store: inmemory
           replication_factor: 1
+        final_sleep: 0s
       chunk_idle_period: 15m
+      chunk_retain_period: 30s
+      max_transfer_retries: 0
     schema_config:
       configs:
         - from: 2019-01-01
           store: boltdb
           object_store: filesystem
-          schema: v9
+          schema: v11
           index:
             prefix: index_
             period: 168h
     storage_config:
       boltdb:
-        directory: /data/loki/index
+        directory: /loki/index
       filesystem:
-        directory: /data/loki/chunks
+        directory: /loki/chunks
+    limits_config:
+      enforce_metric_name: false
+      reject_old_samples: true
+      reject_old_samples_max_age: 168h
+    chunk_store_config:
+      max_look_back_period: 0s
     table_manager:
       retention_deletes_enabled: true
       retention_period: 840h
-    limits_config:
-      enforce_metric_name: false
 
 ---
 apiVersion: apps/v1
@@ -98,7 +105,7 @@ spec:
       serviceAccountName: loki
       terminationGracePeriodSeconds: 30
       containers:
-        - image: grafana/loki:1.4.1
+        - image: grafana/loki:1.5.0
           imagePullPolicy: Always
           name: loki
           args:
@@ -109,7 +116,7 @@ spec:
             - name: loki-config
               mountPath: /etc/loki/
             - name: loki-data
-              mountPath: /data/loki
+              mountPath: /loki
           ports:
             - containerPort: 3100
               name: http
@@ -123,19 +130,19 @@ spec:
               memory: 100Mi
           readinessProbe:
             httpGet:
-              # GET /ready returns 204, which doesn't seem to work
               path: /loki/ready
               port: 3100
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            initialDelaySeconds: 45
           livenessProbe:
             httpGet:
               path: /loki/ready
               port: 3100
-            initialDelaySeconds: 10
-            periodSeconds: 10
-          # securityContext: # TODO(adam): K8s pods have problems running as non-root
-          #   runAsUser: 0
+            initialDelaySeconds: 45
+      securityContext:
+        fsGroup: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        runAsUser: 10001
       volumes:
         - name: loki-config
           configMap:
