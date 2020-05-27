@@ -103,7 +103,7 @@ spec:
       serviceAccountName: grafana
       terminationGracePeriodSeconds: 30
       containers:
-      - image: nginx:1.17
+      - image: nginx:1.18
         imagePullPolicy: Always
         name: nginx
         args:
@@ -160,7 +160,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: grafana/grafana:6.7.3
+      - image: grafana/grafana:7.0.1
         imagePullPolicy: Always
         name: grafana
         resources:
