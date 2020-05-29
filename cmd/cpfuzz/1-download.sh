@@ -1,8 +1,10 @@
 #!/bin/bash
 set -e
 
+context=$(kubectl config get-contexts --output name | grep automated-clearing-house)
+
 dir="fuzz-"$(date +"%Y-%m-%d")
-containers=($(kubectl get pods -n apps | grep fuzz | cut -d' ' -f1))
+containers=($(kubectl --context "$context" get pods -n apps | grep fuzz | cut -d' ' -f1))
 echo "found ${#containers[@]} fuzz containers"
 
 subdir=""
@@ -19,11 +21,11 @@ do
     echo "downloading $name fuzz data from $container"
     mkdir -p "$dir"/"$name"/"$subdir"
 
-    files=($(kubectl exec -n apps "$container" -- ls -1 /go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/))
+    files=($(kubectl --context "$context" exec -n apps "$container" -- ls -1 /go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/))
     echo "downloading ${#files[@]} files from $container"
     for file in "${files[@]}"
     do
-        kubectl cp apps/"$container":/go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/"$file" "$dir"/"$name"/"$subdir"/"$file"
+        kubectl --context "$context" cp apps/"$container":/go/src/github.com/moov-io/"$name"/test/fuzz-reader/crashers/"$file" "$dir"/"$name"/"$subdir"/"$file"
     done
 done
 

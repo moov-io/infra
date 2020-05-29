@@ -1,6 +1,7 @@
 #!/bin/bash
-
 set -e
+
+context=$(kubectl config get-contexts --output name | grep automated-clearing-house)
 
 # assume this is ran from the root of moov-io/infra
 
@@ -12,6 +13,6 @@ files=(
 
 for file in "${files[@]}"
 do
-    kubectl delete -f "$file"
-    kubectl apply -f "$file"
+    kubectl --context "$context" delete -f "$file"
+    kubectl --context "$context" apply -f "$file"
 done
