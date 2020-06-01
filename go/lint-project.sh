@@ -18,7 +18,10 @@ echo "running go linters for $TRAVIS_OS_NAME"
 
 # Check gofmt
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-    test -z $(gofmt -s -l $GOFILES)
+    for file in "${GOFILES[@]}"
+    do
+        test -z $(gofmt -s -l "$file")
+    done
 fi
 
 # Misspell
@@ -27,7 +30,11 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O misspell.tar.gz https://git
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf misspell.tar.gz
     cp ./misspell ./bin/misspell
-    ./bin/misspell -error -locale US $GOFILES
+
+    for file in "${GOFILES[@]}"
+    do
+        ./bin/misspell -error -locale US "$file"
+    done
 fi
 
 # staticcheck
@@ -62,11 +69,15 @@ if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/gocyclo https://git
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/gocyclo
+
+    args='-over 25'
     if [ -n "$GOCYCLO_LIMIT" ]; then
-        ./bin/gocyclo -over $GOCYCLO_LIMIT $GOFILES
-    else
-        ./bin/gocyclo -over 25 $GOFILES
+        args="-over $GOCYCLO_LIMIT"
     fi
+    for file in "${GOFILES[@]}"
+    do
+        ./bin/gocyclo $args $file
+    done
 fi
 
 # Run exhaustive to verify Enums aren't missing cases
