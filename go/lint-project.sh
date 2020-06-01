@@ -20,7 +20,7 @@ echo "running go linters for $TRAVIS_OS_NAME"
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
     for file in "${GOFILES[@]}"
     do
-        test -z $(gofmt -s -l "$file")
+        test -z $(gofmt -s -l $file)
     done
 fi
 
@@ -33,7 +33,7 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 
     for file in "${GOFILES[@]}"
     do
-        ./bin/misspell -error -locale US "$file"
+        ./bin/misspell -error -locale US $file
     done
 fi
 
