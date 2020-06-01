@@ -17,11 +17,23 @@ fi
 echo "running go linters for $TRAVIS_OS_NAME"
 
 # Check gofmt
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
+    set +e
+    code=0
     for file in "${GOFILES[@]}"
     do
         test -z $(gofmt -s -l $file)
+        if [[ $? != 0 ]];
+        then
+            code=1
+            echo "$file is not formatted"
+        fi
     done
+    set -e
+    if [[ $code != 0 ]];
+    then
+        exit $code
+    fi
 fi
 
 # Misspell
