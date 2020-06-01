@@ -4,7 +4,7 @@ set -e
 mkdir -p ./bin/
 
 # Collect all our files for processing
-GOFILES=$(find . -type f -name '*.go' | grep -v client | grep -v vendor)
+GOFILES=($(find . -type f -name '*.go' | grep -v client | grep -v vendor))
 
 # Set TRAVIS_OS_NAME if it's empty (local dev)
 if [[ "$TRAVIS_OS_NAME" == "" ]]; then
