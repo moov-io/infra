@@ -2,7 +2,7 @@ PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 
 .PHONY: check
 check:
-	time ./go/lint-project.sh
+	GOCYCLO_LIMIT=15 time ./go/lint-project.sh
 
 .PHONY: clean
 clean:
