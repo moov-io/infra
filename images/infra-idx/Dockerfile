@@ -1,4 +1,4 @@
-FROM nginx:1.18
+FROM nginx:1.19
 USER nginx
 
 COPY nginx/nginx.conf /opt/nginx/nginx.conf
