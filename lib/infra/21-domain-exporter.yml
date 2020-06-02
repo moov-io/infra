@@ -10,14 +10,14 @@ data:
   domains.yaml: |-
     domains:
       - moov.io
-      - moovfinancial.com
-      - moovopen.com
-      - atthecoreoffintech.com
-      - moovcore.com
-      - moovhq.com
-      - nacha.io
-      - ofac.io
-      - sidecore.io
+      # - moovfinancial.com
+      # - moovopen.com
+      # - atthecoreoffintech.com
+      # - moovcore.com
+      # - moovhq.com
+      # - nacha.io
+      # - ofac.io
+      # - sidecore.io
 ---
 apiVersion: apps/v1
 kind: Deployment

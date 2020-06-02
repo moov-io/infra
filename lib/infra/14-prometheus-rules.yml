@@ -40,7 +40,7 @@ data:
             labels:
               severity: warning
             annotations:
-              description: "Metrics for domain-exporter are absent"
+              message: "Metrics for domain-exporter are absent"
   prometheus-kubernetes-rules.yml: |
     groups:
       - name: ./kubernetes.rules
