@@ -105,15 +105,6 @@ resource "google_dns_record_set" "crm" {
   rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
-resource "google_dns_record_set" "api-crm" {
-  name         = "api.crm.${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = google_dns_managed_zone.moov-io.name
-  type         = "A"
-  ttl          = 60
-
-  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
-}
-
 resource "google_dns_record_set" "docs" {
   name         = "docs.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = google_dns_managed_zone.moov-io.name
