@@ -40,15 +40,6 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
-        api-apps:
-          loadBalancer:
-            servers:
-              - url: 'http://api-apps.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         docs:
           loadBalancer:
             servers:
@@ -64,33 +55,6 @@ data:
               - url: 'http://moovio.apps.svc.cluster.local:8080/'
             healthCheck:
               path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
-        ach:
-          loadBalancer:
-            servers:
-              - url: 'http://ach.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
-        auth:
-          loadBalancer:
-            servers:
-              - url: 'http://auth.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
-        paygate:
-          loadBalancer:
-            servers:
-              - url: 'http://paygate.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
               interval: "30s"
               timeout: "5s"
               scheme: http
@@ -112,42 +76,6 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
-        accounts:
-          loadBalancer:
-            servers:
-              - url: 'http://accounts.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
-        fed:
-          loadBalancer:
-            servers:
-              - url: 'http://fed.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
-        customers:
-          loadBalancer:
-            servers:
-              - url: 'http://customers.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
-        imagecashletter:
-          loadBalancer:
-            servers:
-              - url: 'http://imagecashletter.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/ping"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         oauth2-proxy:
           loadBalancer:
             servers:
@@ -159,24 +87,6 @@ data:
             healthCheck:
               path: "/"
               interval: "30s"
-              timeout: "5s"
-              scheme: http
-        corteza:
-          loadBalancer:
-            servers:
-              - url: "http://corteza-webapp.sales.svc.cluster.local/"
-            healthCheck:
-              path: "/"
-              interval: "10s"
-              timeout: "5s"
-              scheme: http
-        corteza-api:
-          loadBalancer:
-            servers:
-              - url: "http://corteza-server.sales.svc.cluster.local/"
-            healthCheck:
-              path: "/version"
-              interval: "10s"
               timeout: "5s"
               scheme: http
       middlewares:
@@ -225,50 +135,6 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
-        ach:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        auth:
-          stripPrefix:
-            prefixes:
-              - "/v1/"
-        auth-ping:
-          stripPrefix:
-            prefixes:
-              - "/v1/auth"
-        customers-ping:
-          stripPrefix:
-            prefixes:
-              - "/v1/customers"
-        paygate-depositories:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        paygate-events:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        paygate-gateways:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        paygate-originators:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        paygate-receivers:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        paygate-transfers:
-          stripPrefix:
-            prefixes:
-              - "/v1/ach/"
-        paygate-ping:
-          stripPrefix:
-            prefixes:
-              - "/v1/paygate"
         moovio-watchman:
           stripPrefix:
             prefixes:
@@ -277,30 +143,6 @@ data:
           stripPrefix:
             prefixes:
               - "/v1/watchman"
-        accounts:
-          stripPrefix:
-            prefixes:
-              - "/v1/"
-        accounts-ping:
-          stripPrefix:
-            prefixes:
-              - "/v1/accounts"
-        fed:
-          stripPrefix:
-            prefixes:
-              - "/v1/"
-        fed-ping:
-          stripPrefix:
-            prefixes:
-              - "/v1/fed/"
-        customers:
-          stripPrefix:
-            prefixes:
-              - "/v1/"
-        imagecashletter:
-          stripPrefix:
-            prefixes:
-              - "/v1/imagecashletter"
         soc2:
           stripPrefix:
             prefixes:
@@ -311,154 +153,6 @@ data:
             regex: "/soc2$"
             replacement: "/soc2/"
       routers:
-        ach-ping:
-          entryPoints: [https]
-          service: ach
-          rule: "Host(`api.moov.io`) && Path(`/v1/ach/ping`)"
-          middlewares:
-            - ach
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        ach:
-          entryPoints: [https]
-          service: ach
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/files`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - ach
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        auth-ping:
-          entryPoints: [https]
-          service: auth
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/auth/ping`)"
-          middlewares:
-            - auth-ping
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        auth-check:
-          entryPoints: [https]
-          service: auth
-          rule: "Host(`api.moov.io`) && Path(`/v1/auth/check`, `/v1/users/check`, `/v1/oauth2/token`)"
-          middlewares:
-            - auth
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        auth:
-          entryPoints: [https]
-          service: auth
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/users/`, `/v1/oauth2/`)"
-          middlewares:
-            - auth-clean
-            - auth
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-depositories":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/depositories`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - paygate-depositories
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-events":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/events`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - paygate-events
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-gateways":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/gateways`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - paygate-gateways
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-originators":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/originators`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - paygate-originators
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-receivers":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/receivers`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - paygate-receivers
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-transfers":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/ach/transfers`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - paygate-transfers
-            - remote-addr
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "paygate-ping":
-          entryPoints: [https]
-          service: paygate
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/paygate/ping`)"
-          middlewares:
-            - cors
-            - paygate-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
         "watchman-ping":
           entryPoints: [https]
           service: watchman
@@ -479,91 +173,6 @@ data:
             - auth-check
             - cors
             - watchman
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "accounts":
-          entryPoints: [https]
-          service: accounts
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - accounts
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "accounts-ping":
-          entryPoints: [https]
-          service: accounts
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/accounts/ping`)"
-          middlewares:
-            - accounts-ping
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "fed":
-          entryPoints: [https]
-          service: fed
-          rule: "Host(`api.moov.io`) && (PathPrefix(`/v1/fed/ach`) || PathPrefix(`/v1/fed/wire`))"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - fed
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "fed-ping":
-          entryPoints: [https]
-          service: fed
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/fed/ping`)"
-          middlewares:
-            - cors
-            - fed-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "customers-ping":
-          entryPoints: [https]
-          service: customers
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/ping`)"
-          middlewares:
-            - cors
-            - customers-ping
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "customers":
-          entryPoints: [https]
-          service: customers
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/customers/`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - customers
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "imagecashletter":
-          entryPoints: [https]
-          service: imagecashletter
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/imagecashletter/`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - imagecashletter
           tls:
             certResolver: default
             domains:
@@ -731,28 +340,6 @@ data:
             certResolver: default
             domains:
               - main: "crm.moov.io"
-        corteza:
-          entryPoints: [https]
-          service: corteza
-          rule: "Host(`crm.moov.io`)"
-          tls:
-            certResolver: default
-            domains:
-              - main: "crm.moov.io"
-        "crm-moov-io-http":
-          entryPoints: [http]
-          service: oauth2-proxy
-          rule: "Host(`crm.moov.io`)"
-          middlewares:
-            - crm-moov-io-http
-        corteza-api:
-          entryPoints: [https]
-          service: corteza-api
-          rule: "Host(`api.crm.moov.io`)"
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.crm.moov.io"
         soc2:
           entryPoints: [https]
           service: soc2
