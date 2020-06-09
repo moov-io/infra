@@ -50,12 +50,20 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 fi
 
 # gitleaks
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-linux-amd64; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-darwin-amd64; fi
-if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
-    chmod +x ./bin/gitleaks
+if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-linux-amd64; fi
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-darwin-amd64; fi
 
-    ./bin/gitleaks --repo-path=$(pwd) --redact --pretty --verbose
+    if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
+        chmod +x ./bin/gitleaks
+
+        # Scan a few of the most recent commits
+        depth=10
+        if [ -n "$GITLEAKS_DEPTH" ]; then
+            depth=$GITLEAKS_DEPTH
+        fi
+        ./bin/gitleaks --depth=$depth --repo-path=$(pwd) --pretty --verbose
+    fi
 fi
 
 # staticcheck
