@@ -49,6 +49,15 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     done
 fi
 
+# gitleaks
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-linux-amd64; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-darwin-amd64; fi
+if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
+    chmod +x ./bin/gitleaks
+
+    ./bin/gitleaks --repo-path=$(pwd) --redact --pretty --verbose
+fi
+
 # staticcheck
 if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.4/staticcheck_linux_amd64.tar.gz; fi
 if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.4/staticcheck_darwin_amd64.tar.gz; fi
