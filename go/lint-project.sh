@@ -62,7 +62,7 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
         if [ -n "$GITLEAKS_DEPTH" ]; then
             depth=$GITLEAKS_DEPTH
         fi
-        ./bin/gitleaks --depth=$depth --repo-path=$(pwd) --pretty --verbose
+        ./bin/gitleaks --branch=master --depth=$depth --repo-path=$(pwd) --pretty --verbose
     fi
 fi
 
