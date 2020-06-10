@@ -8,7 +8,7 @@ resource "google_kms_key_ring" "mysql_backup" {
   project  = var.gcp_project
   location = var.gcp_region
 
-  depends_on = [google_project_services.ach]
+  depends_on = [google_project_service.ach]
 }
 
 resource "google_kms_key_ring_iam_binding" "mysql_backup_key_ring" {

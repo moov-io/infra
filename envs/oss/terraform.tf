@@ -4,7 +4,7 @@ resource "google_kms_key_ring" "moov-terraform-state" {
   project  = var.gcp_project
   location = var.gcp_region
 
-  depends_on = [google_project_services.ach]
+  depends_on = [google_project_service.ach]
 }
 
 resource "google_kms_key_ring_iam_binding" "key_ring" {

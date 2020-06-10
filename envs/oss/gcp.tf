@@ -17,9 +17,8 @@ resource "google_project" "ach" {
 }
 
 # Enable all our needed Google API's
-resource "google_project_services" "ach" {
-  project = var.gcp_project
-  services = [
+resource "google_project_service" "ach" {
+  for_each = toset([
     "bigquery.googleapis.com",
     "bigquerystorage.googleapis.com",
     "cloudkms.googleapis.com",
@@ -42,7 +41,12 @@ resource "google_project_services" "ach" {
     "storage-api.googleapis.com",
     "street-view-image-backend.googleapis.com",
     "streetviewpublish.googleapis.com",
-  ]
+  ])
+
+  service = each.key
+
+  project = var.gcp_project
+  disable_on_destroy = true
 }
 
 variable "gcp_creds_filepath" {
