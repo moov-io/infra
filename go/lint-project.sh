@@ -50,6 +50,8 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 fi
 
 # gitleaks
+# Right now there are some false positives which make it harder to scan
+# See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-linux-amd64; fi
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v4.3.1/gitleaks-darwin-amd64; fi
