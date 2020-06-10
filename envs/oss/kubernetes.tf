@@ -3,9 +3,9 @@ provider "kubernetes" {
 
   username = var.username
   password = var.password
-  # client_certificate = "${base64decode(file("client.crt"))}"
-  # client_key = "${base64decode(file("client.key"))}"
-  # cluster_ca_certificate = "${base64decode(file("ca.crt"))}"
+  # client_certificate     = base64decode(file("client.crt"))
+  # client_key             = base64decode(file("client.key"))
+  cluster_ca_certificate = base64decode(file("ca.crt"))
 }
 
 variable "cluster_name" {
