@@ -2,7 +2,7 @@
 
 You should be [familiar with Kubernetes](https://kubernetes.io/docs/tutorials/kubernetes-basics/) (k8s). We use lots of `Service`, `Deployment`, `Ingress` and `PersistentVolumeClaim` objects along with a few others where needed. Our clusters run with [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) on Google's Kubernetes Engine (GKE).
 
-**Links**: [infra.moov.io](https://infra.moov.io) | [Google Cloud Status](https://status.cloud.google.com/) | [GKE Dashboard](https://console.cloud.google.com/kubernetes/list)
+**Links**: [infra-oss.moov.io](https://infra-oss.moov.io) | [Google Cloud Status](https://status.cloud.google.com/) | [GKE Dashboard](https://console.cloud.google.com/kubernetes/list)
 
 There are also several gommunity guides for troubleshooting Kubernetes problems:
 
@@ -33,7 +33,7 @@ See also: [Viewing logs in Kubernetes](https://medium.com/devopslinks/viewing-lo
 
 ### Viewing Logs with Loki / Grafana
 
-[Loki](https://github.com/grafana/loki) is a new log aggretaion platform which attempts to transform logs into metric streams (with log information as labels). This project is new, but Grafana allows exploring, building dashboards, and alerts. Checkout the [explore page showing paygate logs](https://infra.moov.io/grafana/explore?left=%5B"now%2Fd","now%2Fd","Loki",%7B"expr":"%7Bapp%3D%5C"paygate%5C"%7D"%7D,%7B"ui":%5Btrue,true,true,"none"%5D%7D%5D) and the [basic usage guide](https://github.com/grafana/loki/blob/master/docs/usage.md#searching-with-labels-and-distributed-grep).
+[Loki](https://github.com/grafana/loki) is a new log aggretaion platform which attempts to transform logs into metric streams (with log information as labels). This project is new, but Grafana allows exploring, building dashboards, and alerts. Checkout the [explore page showing paygate logs](https://infra-oss.moov.io/grafana/explore?left=%5B"now%2Fd","now%2Fd","Loki",%7B"expr":"%7Bapp%3D%5C"paygate%5C"%7D"%7D,%7B"ui":%5Btrue,true,true,"none"%5D%7D%5D) and the [basic usage guide](https://github.com/grafana/loki/blob/master/docs/usage.md#searching-with-labels-and-distributed-grep).
 
 - [Loki Troubleshooting Guide](https://github.com/grafana/loki/blob/master/docs/troubleshooting.md)
 - [An early preview of Loki](https://itnext.io/grafana-logging-using-loki-45665916aec9)

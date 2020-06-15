@@ -6,7 +6,7 @@ This repository holds the configurion for [moov.io](https://github.com/moov-io)'
 [![Build Status](https://travis-ci.com/moov-io/infra.svg?branch=master)](https://travis-ci.com/moov-io/infra)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/infra/master/LICENSE)
 
-Links: [Graphs](https://infra.moov.io/grafana/) | [Logs](https://infra.moov.io/grafana/explore) | [Metrics](https://infra.moov.io/prometheus/) | [Alerts](https://infra.moov.io/alertmanager/#/alerts)
+Links: [Graphs](https://infra-oss.moov.io/grafana/) | [Logs](https://infra-oss.moov.io/grafana/explore) | [Metrics](https://infra-oss.moov.io/prometheus/) | [Alerts](https://infra-oss.moov.io/alertmanager/#/alerts)
 
 ### Project Goals
 

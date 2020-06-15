@@ -2,7 +2,7 @@
 
 ### Viewing Logs
 
-To view logs in [Grafana / Loki](https://infra.moov.io/grafana/explore) you can run a query like the following:
+To view logs in [Grafana / Loki](https://infra-oss.moov.io/grafana/explore) you can run a query like the following:
 
 ```
 {app="paygate-mysql"}
@@ -20,7 +20,7 @@ Note: We have a more comprehensive guide to [viewing logs](https://github.com/mo
 
 We host several dashboards to monitor MySQL statistics on our Grafana instance.
 
-- [MySQL Overview](https://infra.moov.io/grafana/d/MQWgroiiz/mysql-overview)
+- [MySQL Overview](https://infra-oss.moov.io/grafana/d/MQWgroiiz/mysql-overview)
 
 ### Backups
 

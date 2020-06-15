@@ -5,7 +5,7 @@
 1. To deploy a service needs a Docker image, build commands, and a binary to run. Since all of our applications are in Go we include a `Dockerfile` in each repository.
    1. [non cgo example](https://github.com/moov-io/ach/blob/master/Dockerfile)
    1. [cgo example](https://github.com/moov-io/auth/blob/master/Dockerfile) (needed for SQLite integration - via libc requirement)
-1. In order for your applications metrics to be accumulated in [Grafana](https://infra.moov.io/grafana) it will need an admin servlet. This is designed for admin commands (i.e. forced refresh) and to offer a Prometheus metrics endpoint.
+1. In order for your applications metrics to be accumulated in [Grafana](https://infra-oss.moov.io/grafana) it will need an admin servlet. This is designed for admin commands (i.e. forced refresh) and to offer a Prometheus metrics endpoint.
    1. [admin server example](https://github.com/moov-io/base/tree/master/admin#moov-iobaseadmin)
 1. Add your service to `http/bind` (Example: [OFAC](https://github.com/moov-io/base/pull/33))
 

@@ -20,8 +20,8 @@ Welcome to Moov! .... TODO(adam,wade)
 
 - Continious Integration (CI): [TravisCI](http://travis-ci.com/moov-io)
    - Slack: `#builds` for all notifications
-- [Infrastructure services](https://infra.moov.io/)
-   - [Grafana](https://infra.moov.io/grafana/?orgId=1) / [Loki](https://infra.moov.io/grafana/explore) (Logs)
+- [Infrastructure services](https://infra-oss.moov.io/)
+   - [Grafana](https://infra-oss.moov.io/grafana/?orgId=1) / [Loki](https://infra-oss.moov.io/grafana/explore) (Logs)
 - [Infrastructure documentation](https://github.com/moov-io/infra/tree/master/docs#infrastructure-documentation)
 
 ### Reading
