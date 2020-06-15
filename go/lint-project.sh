@@ -81,8 +81,8 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.7/nancy-linux.amd64-v0.2.7; fi
-if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.2.7/nancy-darwin.amd64-v0.2.7; fi
+if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.3.1/nancy-linux.amd64-v0.3.1; fi
+if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.3.1/nancy-darwin.amd64-v0.3.1; fi
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
