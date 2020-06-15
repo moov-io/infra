@@ -83,7 +83,7 @@ spec:
           - -http-address=0.0.0.0:4180
           - -pass-host-header
           - -provider=github
-          - -redirect-url=https://infra.moov.io/oauth2/callback
+          - -redirect-url=https://infra-oss.moov.io/oauth2/callback
           - -upstream=http://grafana.infra.svc.cluster.local:9090/grafana/
           - -upstream=http://prometheus.infra.svc.cluster.local:9090/prometheus/
           - -upstream=http://alertmanager.infra.svc.cluster.local:9090/alertmanager/

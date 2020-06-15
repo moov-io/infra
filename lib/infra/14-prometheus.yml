@@ -224,7 +224,7 @@ spec:
           # - --web.enable-lifecycle # TODO(adam): kubectl port-forward doesn't work to curl -XPOST /-/reload
           - --web.console.libraries=/usr/share/prometheus/console_libraries
           - --web.console.templates=/usr/share/prometheus/consoles
-          - --web.external-url=https://infra.moov.io/prometheus/
+          - --web.external-url=https://infra-oss.moov.io/prometheus/
         volumeMounts:
           - name: prometheus-config
             mountPath: /opt/prometheus/

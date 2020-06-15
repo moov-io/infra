@@ -178,12 +178,12 @@ spec:
           - name: GF_SERVER_PROTOCOL
             value: http
           - name: GF_SERVER_DOMAIN
-            value: infra.moov.io
+            value: infra-oss.moov.io
           # - name: GF_SERVER_ENFORCE_DOMAIN
           #   value: "true"
           - name: GF_SERVER_ROOT_URL
             # value: '%(protocol)s://%(domain)s:/grafana/'
-            value: https://infra.moov.io/grafana/
+            value: https://infra-oss.moov.io/grafana/
           - name: GF_SREVER_ROUTER_LOGGING
             value: "true"
           - name: GF_DATABASE_TYPE
