@@ -24,12 +24,12 @@ Note: The `oss` environment is a testing ground. Never put production secrets in
 ### Kubernetes Namespaces
 
 - `apps/`: Kubernetes Service, Deployment, and Ingress for each application
-- `infra/`: `infra.moov.io` setup, contains Grafana, prometheus, and oauth2_proxy (for infra resources)
+- `infra/`: `infra-oss.moov.io` setup, contains Grafana, prometheus, and oauth2_proxy (for infra resources)
 - `lb/`: Load Balancer (Traefik) setup and configuration
 
-### infra.moov.io
+### infra-oss.moov.io
 
-[`infra.moov.io`](https://infra.moov.io/) is our VPN-less portal for Grafana, Prometheus and other infra services. It requires being part of the [`moov-io` Github organization](https://github.com/moov-io) and uses OAuth2 auth via Github.
+[`infra-oss.moov.io`](https://infra-oss.moov.io/) is our VPN-less portal for Grafana, Prometheus and other infra services. It requires being part of the [`moov-io` Github organization](https://github.com/moov-io) and uses OAuth2 auth via Github.
 
 The index page is generated with [Banno/kube-ingress-index](https://github.com/Banno/kube-ingress-index), which scans Ingress objects and generates a dynamic table of contents.
 

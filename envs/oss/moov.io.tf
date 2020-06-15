@@ -115,8 +115,8 @@ resource "google_dns_record_set" "docs" {
   rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
-resource "google_dns_record_set" "infra" {
-  name         = "infra.${google_dns_managed_zone.moov-io.dns_name}"
+resource "google_dns_record_set" "infra-oss" {
+  name         = "infra-oss.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = google_dns_managed_zone.moov-io.name
   type         = "A"
   ttl          = 60
