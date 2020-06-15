@@ -273,65 +273,65 @@ data:
         "infra-oauth2":
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/oauth2`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/oauth2`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         "infra-moov-io-http":
           entryPoints: [http]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`)"
+          rule: "Host(`infra-oss.moov.io`)"
           middlewares:
             - infra-moov-io-http
         "infra-idx":
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && Path(`/`)"
+          rule: "Host(`infra-oss.moov.io`) && Path(`/`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         alertmanager:
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/alertmanager/`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/alertmanager/`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         traefik:
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/traefik/`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/traefik/`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         prometheus:
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/prometheus/`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/prometheus/`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         grafana:
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/grafana/`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/grafana/`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         polaris:
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`infra.moov.io`) && PathPrefix(`/polaris/`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/polaris/`)"
           tls:
             certResolver: default
             domains:
-              - main: "infra.moov.io"
+              - main: "infra-oss.moov.io"
         stargazers:
           entryPoints: [https]
           service: oauth2-proxy
