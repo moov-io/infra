@@ -43,9 +43,15 @@ if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     tar xf misspell.tar.gz
     cp ./misspell ./bin/misspell
 
+    ignore=""
+    if [ -n "$MISSPELL_IGNORE" ];
+    then
+        ignore=$MISSPELL_IGNORE
+    fi
+
     for file in "${GOFILES[@]}"
     do
-        ./bin/misspell -error -locale US $file
+        ./bin/misspell -error -locale US -i "$ignore" $file
     done
 fi
 
