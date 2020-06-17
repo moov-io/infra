@@ -10,7 +10,9 @@ variable "image_tag" {
 
 variable "client_id_filepath" {}
 variable "client_secret_filepath" {}
-variable "cookie_secret_filepath" {}
+variable "cookie_secret_filepath" {
+  description = "Base64 encoded string of HTTP cookie secret. Check oauth2-proxy docs or a script to generate this value"
+}
 
 variable "container_arguments" {
   type = list(string)
