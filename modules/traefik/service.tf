@@ -30,3 +30,7 @@ resource "kubernetes_service_account" "traefik" {
     namespace = var.namespace
   }
 }
+
+output "traefik_public_ip" {
+  value = kubernetes_service.traefik.load_balancer_ingress[0].ip
+}
