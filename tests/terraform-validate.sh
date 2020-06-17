@@ -8,7 +8,11 @@ for module in "${modules[@]}"
 do
     cd "$module"
     echo "Checking $module"
-    terraform init
+
+    if [ ! -d ".terraform" ]; then
+        terraform init
+    fi
+
     terraform validate
     cd "$old"
 done
