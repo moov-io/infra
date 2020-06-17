@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-modules=($(find ./modules -type d -maxdepth 1 -mindepth 1))
+modules=($(find ./modules -maxdepth 1 -mindepth 1 -type d))
 old=$(pwd)
 
 for module in "${modules[@]}"
