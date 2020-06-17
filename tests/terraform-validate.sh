@@ -8,6 +8,7 @@ for module in "${modules[@]}"
 do
     cd "$module"
     echo "Checking $module"
+    terraform init
     terraform validate
     cd "$old"
 done
