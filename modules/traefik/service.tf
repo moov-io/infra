@@ -7,7 +7,7 @@ resource "kubernetes_service" "traefik" {
     selector = {
       app = "traefik"
     }
-    session_affinity = "LoadBalancer"
+    type = "LoadBalancer"
     external_traffic_policy = "Local"
     port {
       name        = "http"
@@ -21,7 +21,6 @@ resource "kubernetes_service" "traefik" {
       port        = 443
       target_port = 443
     }
-    type = "LoadBalancer"
   }
 }
 
