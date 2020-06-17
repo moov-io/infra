@@ -107,7 +107,7 @@ resource "kubernetes_deployment" "grafana" {
           }
           env {
             name = "GF_PATHS_DATA"
-            value = "opt/grafana/"
+            value = "/opt/grafana/"
           }
           env {
             name = "GF_SERVER_HTTP_PORT"
@@ -218,7 +218,7 @@ resource "kubernetes_deployment" "grafana" {
           }
           volume_mount {
             name = "grafana-data"
-            mount_path = "/etc/grafana/"
+            mount_path = "/opt/grafana/"
           }
           port {
             container_port = 3000
