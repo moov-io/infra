@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim" "traefik-acme" {
   metadata {
-    name      = "terraform-acme"
+    name      = "traefik-acme"
     namespace = var.namespace
   }
   spec {
