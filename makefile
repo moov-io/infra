@@ -29,10 +29,13 @@ docker:
 	go run ./cmd/dockertest
 
 .PHONY: test test-docker test-kubeval test-mysql
-test: check test-docker test-kubeval test-promtool-configmap
+test: check test-docker test-terraform test-kubeval test-promtool-configmap
 
 test-docker:
 	@go run ./cmd/dockertest
+
+test-terraform:
+	@./tests/terraform-validate.sh
 
 test-kubeval:
 ifneq ($(TRAVIS_OS_NAME),osx)

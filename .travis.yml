@@ -21,9 +21,9 @@ matrix:
 before_install:
   - mkdir -p ~/bin/
   # Terraform
-  # - wget -O terraform.zip https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
-  # - unzip -d ~/bin/ terraform.zip
-  # - mkdir -p ~/.google/ && touch ~/.google/credentials.json
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget -O terraform.zip https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O terraform.zip https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_darwin_amd64.zip; fi
+  - unzip -d ~/bin/ terraform.zip
   # adamdecaf/promtool-configmap
   - wget -O prometheus.tar.gz https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.darwin-amd64.tar.gz
   - tar xf prometheus.tar.gz && cp -r ./prometheus-*/promtool ~/bin/promtool
