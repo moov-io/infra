@@ -16,7 +16,7 @@ resource "kubernetes_deployment" "infra-idx" {
     template {
       metadata {
         labels = {
-          app = "traefik"
+          app = "infra-idx"
         }
       }
       spec {
