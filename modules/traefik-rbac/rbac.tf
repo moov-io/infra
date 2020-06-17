@@ -26,6 +26,6 @@ resource "kubernetes_cluster_role_binding" "traefik" {
   subject {
     kind      = "ServiceAccount"
     name      = var.service_account
-    api_group = var.service_account_namespace
+    namespace = var.service_account_namespace
   }
 }
