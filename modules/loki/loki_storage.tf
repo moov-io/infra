@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim" "loki" {
   metadata {
-    name      = "loki"
+    name      = "loki-data"
     namespace = var.namespace
   }
   spec {

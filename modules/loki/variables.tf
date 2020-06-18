@@ -32,4 +32,3 @@ variable "promtail_args" {
     "-config.file=/etc/promtail/promtail.yml",
   ]
 }
-# -client.url=http://loki.infra.svc.cluster.local:3100/loki/api/prom/push # TOOD(adam): HTTPS
