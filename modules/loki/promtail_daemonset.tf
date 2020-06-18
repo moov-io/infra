@@ -54,7 +54,7 @@ resource "kubernetes_daemonset" "promtail" {
           }
           volume_mount {
             mount_path = "/etc/promtail"
-            name = "promtail"
+            name = "promtail-config"
           }
           volume_mount {
             mount_path = "/var/log"
@@ -71,9 +71,9 @@ resource "kubernetes_daemonset" "promtail" {
           operator = "Exists"
         }
         volume {
-          name = "promtail"
+          name = "promtail-config"
           config_map {
-            name = "promtail"
+            name = "promtail-config"
           }
         }
         volume {
