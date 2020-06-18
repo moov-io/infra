@@ -88,16 +88,16 @@ resource "kubernetes_deployment" "traefik" {
               path = "/metrics"
               port = 9113
             }
-            initial_delay_seconds = 5
-            period_seconds        = 10
+            initial_delay_seconds = 1
+            period_seconds        = 5
           }
           liveness_probe {
             http_get {
               path = "/metrics"
               port = 9113
             }
-            initial_delay_seconds = 5
-            period_seconds        = 10
+            initial_delay_seconds = 1
+            period_seconds        = 5
           }
           security_context {
             read_only_root_filesystem = true
