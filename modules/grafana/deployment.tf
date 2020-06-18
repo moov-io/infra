@@ -52,7 +52,7 @@ resource "kubernetes_deployment" "grafana" {
           image_pull_policy = "Always"
           name = "nginx-exporter"
           args = [
-            "-nginx.scrape-uri=http://localhost:8080/stub_status",
+            "-nginx.scrape-uri=http://localhost:9090/stub_status",
           ]
           port {
             container_port = 9113
