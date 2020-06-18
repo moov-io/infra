@@ -1,9 +1,3 @@
-locals {
-  computed_args = compact([
-    "${var.base_path != "" ? "-server.path-prefix=${var.base_path}" : "" }",
-  ])
-}
-
 resource "kubernetes_deployment" "prometheus" {
   metadata {
     name = "prometheus"
@@ -33,7 +27,7 @@ resource "kubernetes_deployment" "prometheus" {
           image = "prom/prometheus:${var.image_tag}"
           image_pull_policy = "Always"
           name = "prometheus"
-          args = concat(var.args, var.additional_args, local.computed_args)
+          args = concat(var.args, var.additional_args)
           volume_mount {
             name = "prometheus-config"
             mount_path = "/opt/prometheus/"
