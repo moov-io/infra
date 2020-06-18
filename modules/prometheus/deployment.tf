@@ -23,6 +23,7 @@ resource "kubernetes_deployment" "prometheus" {
         service_account_name = "prometheus"
         # priorityClassName: high-priority # TODO(adam): need to setup this
         termination_grace_period_seconds = 30
+        automount_service_account_token = true
         container {
           image = "prom/prometheus:${var.image_tag}"
           image_pull_policy = "Always"
