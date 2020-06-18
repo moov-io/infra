@@ -56,7 +56,7 @@ resource "kubernetes_deployment" "prometheus" {
           }
           readiness_probe {
             http_get {
-              path = "${var.base_path}/ready"
+              path = "${var.base_path}-/healthy"
               port = 9090
             }
             initial_delay_seconds = 60
@@ -67,7 +67,7 @@ resource "kubernetes_deployment" "prometheus" {
           }
           liveness_probe {
             http_get {
-              path = "${var.base_path}/ready"
+              path = "${var.base_path}-/healthy"
               port = 9090
             }
             initial_delay_seconds = 60
