@@ -33,7 +33,7 @@ resource "kubernetes_deployment" "prometheus" {
           image = "prom/prometheus:${var.image_tag}"
           image_pull_policy = "Always"
           name = "prometheus"
-          args = concat(var.args, local.computed_args)
+          args = concat(var.args, var.additional_args, local.computed_args)
           volume_mount {
             name = "prometheus-config"
             mount_path = "/opt/prometheus/"

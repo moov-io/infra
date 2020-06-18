@@ -28,7 +28,8 @@ variable "args" {
     "--web.console.templates=/usr/share/prometheus/consoles",
   ]
 }
-# --web.enable-lifecycle # TODO(adam): kubectl port-forward doesn't work to curl -XPOST /-/reload
 
-# "--storage.tsdb.retention.time=168h", # 7 * 24hours
-# "--web.external-url=https://infra-oss.moov.io/prometheus/",
+variable "additional_args" {
+  type = list(string)
+  default = []
+}
