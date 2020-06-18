@@ -155,7 +155,7 @@ resource "kubernetes_deployment" "grafana" {
           }
           env {
             name = "GF_AUTH_ANONYMOUS_ORG_ROLE"
-            value = "dmin"
+            value = "Admin"
           }
           env {
             name = "GF_USERS_ALLOW_SIGN_UP"
@@ -224,6 +224,10 @@ resource "kubernetes_deployment" "grafana" {
             container_port = 3000
             name = "http"
             protocol = "TCP"
+          }
+          security_context {
+            run_as_user = 0 # TODO(adam): we need to lower/change this uid
+            # From https://github.com/grafana/grafana/issues/13187
           }
         }
         volume {
