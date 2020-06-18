@@ -74,6 +74,10 @@ resource "kubernetes_daemonset" "promtail" {
           name = "promtail-config"
           config_map {
             name = "promtail-config"
+            items {
+              key = "promtail.yaml"
+              path = "promtail.yaml"
+            }
           }
         }
         volume {

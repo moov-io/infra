@@ -16,7 +16,7 @@ variable "base_path" {
 variable "loki_args" {
   type = list(string)
   default = [
-    "-config.file=/etc/loki/loki.yml",
+    "-config.file=/etc/loki/loki.yaml",
     "-log.level=info",
   ]
 }
@@ -29,6 +29,6 @@ variable "promtail_config_filepath" {}
 variable "promtail_args" {
   type = list(string)
   default = [
-    "-config.file=/etc/promtail/promtail.yml",
+    "-config.file=/etc/promtail/promtail.yaml",
   ]
 }
