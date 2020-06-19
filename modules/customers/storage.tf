@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim" "data" {
   metadata {
-    name = "data"
+    name = "customers"
     namespace = var.namespace
   }
   spec {
