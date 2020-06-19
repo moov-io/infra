@@ -1,6 +1,6 @@
-resource "kubernetes_config_map" "domain-exporter-config" {
+resource "kubernetes_config_map" "domain-exporter" {
   metadata {
-    name = "domain-exporter-config"
+    name = "domain-exporter"
     namespace = var.namespace
   }
 
