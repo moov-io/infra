@@ -1,6 +1,6 @@
-resource "kubernetes_persistent_volume_claim" "customers-data" {
+resource "kubernetes_persistent_volume_claim" "data" {
   metadata {
-    name = "customers-data"
+    name = "data"
     namespace = var.namespace
   }
   spec {
