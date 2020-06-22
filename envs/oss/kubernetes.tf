@@ -19,7 +19,7 @@ variable "password" {
 }
 
 variable "permanent_pool_node_count" {
-  default = 1
+  default = 3
 }
 
 variable "permanent_node_disk_size_gb" {
