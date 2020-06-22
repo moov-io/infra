@@ -4,17 +4,25 @@
 
 We store secrets a couple of ways inside this repository. For kubernetes resources we're just [using StackExchange/blackbox](https://github.com/StackExchange/blackbox) to encrypt the files and for terraform state we're storing that inside google cloud storage.
 
-### Install / Setup
+### Need to access secrets?
 
-You'll need a GPG key for blackbox, ideally a new one specific to moov. Add a passphrase and make it 4096bit.
+Generate a GPG keypair and send it to Adam (or someone on the Infra team).
 
 ```
-$ git clone git@github.com:moov-io/infra
-$ cd infra/
+# Create a passphrase protected 4096bit key
+$ gpg --gen-key
 
-# Pull down submodules (i.e. blackbox)
-$ git submodule init && git submodule update
+# Send this file to Adam / Infra team
+$ gpg --export <key-id> > ${USER}-moov.pub
+```
 
+### Export / Backup
+
+You'll need a GPG key specific for Moov to use with blackbox. Add a passphrase and make it 4096bit.
+
+Once created you can export it somewhere safe (Lastpass), but this key needs to be physically and/or digitally secure. (Flash drive inside a safe, LastPass)
+
+```
 # Create a passphrase protected 4096bit key
 $ gpg --gen-key
 
@@ -54,7 +62,3 @@ $ git commit -m'NEW ADMIN: 700D183B' keyrings/live/pubring.gpg keyrings/live/tru
 
 $ git push origin master
 ```
-
-## TODO decrypt sanity with gpg-agent
-
-// TODO(adam): ~/.gnupg/gpg-agent.conf magic setup
