@@ -1,6 +1,6 @@
 resource "kubernetes_config_map" "traefik-config" {
   metadata {
-    name = "traefik-config"
+    name = "traefik-${var.stage}-config"
     namespace = var.namespace
   }
 
@@ -11,7 +11,7 @@ resource "kubernetes_config_map" "traefik-config" {
 
 resource "kubernetes_config_map" "traefik-nginx-config" {
   metadata {
-    name = "traefik-nginx-config"
+    name = "traefik-${var.stage}-nginx-config"
     namespace = var.namespace
   }
 

@@ -34,7 +34,7 @@ resource "kubernetes_deployment" "traefik" {
             }
           }
         }
-        service_account_name = var.service_account_name
+        service_account_name = "traefik"
         termination_grace_period_seconds = 30
         container {
           image = "nginx:${var.nginx_tag}"
