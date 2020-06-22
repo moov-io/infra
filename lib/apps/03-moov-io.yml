@@ -23,7 +23,7 @@ metadata:
   labels:
     app: moovio
 spec:
-  replicas: 2
+  replicas: 5
   selector:
     matchLabels:
       app: moovio
