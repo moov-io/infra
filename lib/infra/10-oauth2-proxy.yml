@@ -74,7 +74,7 @@ spec:
                 key: cookie_secret
         args:
           - --reverse-proxy=true
-          - -cookie-domain=moov.io
+          - -cookie-domain=infra=oss.moov.io
           - -cookie-secure
           - -email-domain=*
           # - -gcp-healthchecks # only in v3.2.0 and later
