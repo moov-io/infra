@@ -33,3 +33,10 @@ variable "additional_args" {
   type = list(string)
   default = []
 }
+
+variable "resources_memory_limit" {
+  default = "3000Mi"
+}
+variable "resources_memory_request" {
+  default = "2000Mi"
+}

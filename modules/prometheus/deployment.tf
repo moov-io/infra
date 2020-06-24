@@ -48,10 +48,10 @@ resource "kubernetes_deployment" "prometheus" {
           }
           resources {
             limits {
-              memory = "3000Mi"
+              memory = var.resources_memory_limit
             }
             requests {
-              memory = "2000Mi"
+              memory = var.resources_memory_request
             }
           }
           readiness_probe {
