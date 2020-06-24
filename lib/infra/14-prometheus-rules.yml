@@ -16,31 +16,6 @@ data:
               severity: critical
             annotations:
               message: "{{ $labels.app }} has unhealthy pods {{ $labels.kubernetes_pod_name }}"
-  prometheus-domain-rules.yml: |
-    groups:
-      - name: ./domain.rules
-        rules:
-          - alert: DomainExpiring
-            expr: domain_expiration{} < 45
-            for: 24h
-            labels:
-              severity: warning
-            annotations:
-              message: "{{ $labels.domain }} expires in {{ $value }} days"
-          - alert: DomainUnfindable
-            expr: domain_expiration_unfindable > 0
-            for: 24h
-            labels:
-              severity: critical
-            annotations:
-              message: "Unable to find or parse expiry for {{ $labels.domain }}"
-          - alert: DomainMetricsAbsent
-            expr: absent(domain_expiration) > 0
-            for: 24h
-            labels:
-              severity: warning
-            annotations:
-              message: "Metrics for domain-exporter are absent"
   prometheus-kubernetes-rules.yml: |
     groups:
       - name: ./kubernetes.rules

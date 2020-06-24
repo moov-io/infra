@@ -294,8 +294,6 @@ spec:
             items:
               - key: prometheus-app-rules.yml
                 path: prometheus-app-rules.yml
-              - key: prometheus-domain-rules.yml
-                path: prometheus-domain-rules.yml
               - key: prometheus-kubernetes-rules.yml
                 path: prometheus-kubernetes-rules.yml
               - key: prometheus-paygate-rules.yml
