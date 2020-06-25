@@ -3,6 +3,9 @@ resource "kubernetes_persistent_volume_claim" "traefik-acme" {
     name      = "traefik-acme"
     namespace = var.namespace
   }
+  lifecycle {
+    prevent_destroy = true
+  }
   spec {
     access_modes = ["ReadWriteOnce"]
     resources {
