@@ -49,7 +49,28 @@ resource "kubernetes_deployment" "watchman" {
           }
           env {
             name = "DATABASE_TYPE"
-            value = "sqlite"
+            value = var.database_type
+          }
+          env {
+            name = "MYSQL_USER"
+            value = var.mysql_user
+          }
+          env {
+            name = "MYSQL_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name = "watchman-mysql"
+                key = "password"
+              }
+            }
+          }
+          env {
+            name = "MYSQL_ADDRESS"
+            value = var.mysql_address
+          }
+          env {
+            name = "MYSQL_DATABASE"
+            value = var.mysql_database
           }
           port {
             container_port = 8080
