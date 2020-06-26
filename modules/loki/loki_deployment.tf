@@ -27,6 +27,7 @@ resource "kubernetes_deployment" "loki" {
       }
       spec {
         service_account_name = "loki"
+        automount_service_account_token = true
         termination_grace_period_seconds = 30
         container {
           image = "grafana/loki:${var.loki_tag}"
