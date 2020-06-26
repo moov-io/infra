@@ -46,7 +46,7 @@ spec:
         - mountPath: /go/src/github.com/moov-io/ach/test/fuzz-reader/crashers/
           name: achfuzz-data
       containers:
-      - image: moov/achfuzz:v1.2.0
+      - image: moov/achfuzz:v1.4.0-rc3
         imagePullPolicy: Always
         name: achfuzz
         volumeMounts:
