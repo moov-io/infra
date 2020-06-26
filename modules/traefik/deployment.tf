@@ -134,7 +134,7 @@ resource "kubernetes_deployment" "traefik" {
         volume {
           name = "traefik-config"
           config_map {
-            name = "traefik-config"
+            name = "traefik-${var.stage}-config"
             items {
               key = "traefik.yaml"
               path = "traefik.yaml"
@@ -144,13 +144,13 @@ resource "kubernetes_deployment" "traefik" {
         volume {
           name = "traefik-acme-${var.stage}"
           persistent_volume_claim {
-            claim_name = "traefik-acme" // TODO(adam): variable?
+            claim_name = "traefik-acme"
           }
         }
         volume {
           name = "nginx-conf"
           config_map {
-            name = "traefik-nginx-config"
+            name = "traefik-${var.stage}-nginx-config"
             items {
               key = "nginx.conf"
               path = "nginx.conf"
@@ -168,7 +168,7 @@ resource "kubernetes_deployment" "traefik" {
         volume {
           name = "nginx-www"
           config_map {
-            name = "traefik-nginx-config"
+            name = "traefik-${var.stage}-nginx-config"
             items {
               key = "metrics"
               path = "metrics"
