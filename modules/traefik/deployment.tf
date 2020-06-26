@@ -117,7 +117,7 @@ resource "kubernetes_deployment" "traefik" {
             mount_path = "/etc/traefik/"
           }
           volume_mount {
-            name = "traefik-acme-${var.stage}"
+            name = "traefik-${var.stage}-acme"
             mount_path = "/opt/traefik/"
           }
           port {
@@ -142,9 +142,9 @@ resource "kubernetes_deployment" "traefik" {
           }
         }
         volume {
-          name = "traefik-acme-${var.stage}"
+          name = "traefik-${var.stage}-acme"
           persistent_volume_claim {
-            claim_name = "traefik-acme"
+            claim_name = "traefik-${var.stage}-acme"
           }
         }
         volume {

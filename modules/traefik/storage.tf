@@ -1,6 +1,6 @@
 resource "kubernetes_persistent_volume_claim" "traefik-acme" {
   metadata {
-    name      = "traefik-acme"
+    name      = "traefik-${var.stage}-acme"
     namespace = var.namespace
   }
   lifecycle {
@@ -14,8 +14,4 @@ resource "kubernetes_persistent_volume_claim" "traefik-acme" {
       }
     }
   }
-}
-
-output "volume_name" {
-  value = ""
 }

@@ -31,3 +31,7 @@ variable "nginx_exporter_tag" {
 variable "traefik_tag" {
   default = "v2.2"
 }
+
+variable "capacity" {
+  default = "1Gi"
+}
