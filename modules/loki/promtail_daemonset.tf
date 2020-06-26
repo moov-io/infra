@@ -21,6 +21,7 @@ resource "kubernetes_daemonset" "promtail" {
       }
       spec {
         service_account_name = "promtail"
+        automount_service_account_token = true
         container {
           image = "grafana/promtail:${var.promtail_tag}"
           image_pull_policy = "Always"
