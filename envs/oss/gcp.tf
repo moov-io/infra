@@ -3,7 +3,7 @@ provider "google" {
   credentials = file(var.gcp_creds_filepath)
   project     = var.gcp_project
   region      = var.gcp_region
-  version     = "~> 2.20"
+  version     = "~> 3.0"
 }
 
 resource "google_project" "ach" {
