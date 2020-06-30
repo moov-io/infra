@@ -87,12 +87,6 @@ spec:
             memory: 25Mi
         readinessProbe:
           httpGet:
-            path: /metrics
-            port: 9203
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
             path: /alertmanager/api/v2/status
             port: 9090
           initialDelaySeconds: 30
