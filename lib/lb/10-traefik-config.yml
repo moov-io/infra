@@ -115,10 +115,6 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
-        crm-moov-io-http:
-          redirectScheme:
-            scheme: https
-            permanent: true
         docs-moov-io-http:
           redirectScheme:
             scheme: https
@@ -335,11 +331,11 @@ data:
         stargazers:
           entryPoints: [https]
           service: oauth2-proxy
-          rule: "Host(`crm.moov.io`) && PathPrefix(`/stargazers`)"
+          rule: "Host(`infra-oss.moov.io`) && PathPrefix(`/stargazers`)"
           tls:
             certResolver: default
             domains:
-              - main: "crm.moov.io"
+              - main: "infra-oss.moov.io"
         soc2:
           entryPoints: [https]
           service: soc2
