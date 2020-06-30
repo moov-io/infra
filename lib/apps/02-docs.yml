@@ -71,7 +71,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/docs:v2020.06.11.1
+      - image: moov/docs:v2020.06.30.1
         imagePullPolicy: Always
         name: docs
         ports:
