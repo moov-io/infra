@@ -218,7 +218,6 @@ rules:
   verbs:
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -232,5 +231,4 @@ subjects:
 - kind: ServiceAccount
   name: kube-state-metrics
   namespace: infra
-
 ---
