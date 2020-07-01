@@ -92,7 +92,8 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.
 if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -m all | ./bin/nancy -exclude-vulnerability CVE-2018-19653,CVE-2020-7219,CVE-2020-7220,CVE-2020-10660,CVE-2020-10661
+    go list -m all | ./bin/nancy -exclude-vulnerability CVE-2018-19653,CVE-2020-10660,CVE-2020-10661,CVE-2020-13223,CVE-2020-13250,CVE-2020-7219,CVE-2020-7220
+
     echo "" # newline
 fi
 
