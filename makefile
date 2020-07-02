@@ -28,6 +28,23 @@ release: AUTHORS
 docker:
 	go run ./cmd/dockertest
 
+.PHONY: install
+install:
+	@mkdir -p ./bin/
+ifeq ($(PLATFORM),linux)
+	wget -O prometheus.tar.gz https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.linux-amd64.tar.gz
+	wget -O ./bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-linux
+endif
+ifeq ($(PLATFORM),darwin)
+	wget -O prometheus.tar.gz https://github.com/prometheus/prometheus/releases/download/v2.15.2/prometheus-2.15.2.darwin-amd64.tar.gz
+	wget -O ./bin/promtool-configmap https://github.com/adamdecaf/promtool-configmap/releases/download/v0.3.0/promtool-configmap-macos
+endif
+ifneq ($(OS),Windows_NT)
+	tar xf prometheus.tar.gz && cp -r ./prometheus-*/promtool ./bin/promtool
+	rm -rf prometheus-2.15.2.darwin-amd64/ prometheus.tar.gz
+	chmod +x ./bin/promtool-configmap
+endif
+
 .PHONY: test test-docker test-kubeval test-mysql
 test: check test-docker test-terraform test-kubeval test-promtool-configmap
 
@@ -47,13 +64,13 @@ else
 endif
 
 test-promtool-configmap:
-	promtool-configmap --version
+	./bin/promtool-configmap --version
 # Handcrafted files
-	promtool-configmap envs/oss/infra/14-prometheus.yml
-	promtool-configmap envs/oss/infra/14-prometheus-rules.yml
+	./bin/promtool-configmap envs/oss/infra/14-prometheus.yml
+	./bin/promtool-configmap envs/oss/infra/14-prometheus-rules.yml
 # Generated files
-	promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-alerts.yml
-	promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-rules.yml
+	./bin/promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-alerts.yml
+	./bin/promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-rules.yml
 
 test-mysql:
 	@for dir in $(shell ls -1 ./tests/); do \
