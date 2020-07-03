@@ -1,4 +1,5 @@
 FROM debian:10
+LABEL maintainer="Moov <support@moov.io>"
 
 # Docs: https://www.tarsnap.com/pkg-deb.html
 
