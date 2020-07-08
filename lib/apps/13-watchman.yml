@@ -17,19 +17,6 @@ spec:
       protocol: TCP
       port: 9090
       targetPort: 9090
-
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: watchman-data
-  namespace: apps
-spec:
-  accessModes:
-    - ReadWriteOnce # mountable only to a single node
-  resources:
-    requests:
-      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -54,10 +41,6 @@ spec:
             - podAffinityTerm:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
-      volumes:
-        - name: watchman-data
-          persistentVolumeClaim:
-            claimName: watchman-data
       containers:
       - image: moov/watchman:v0.14.0
         imagePullPolicy: Always
@@ -65,9 +48,6 @@ spec:
         args:
           - -http.addr=:8080
           - -admin.addr=:9090
-        volumeMounts:
-          - name: watchman-data
-            mountPath: /opt/moov/watchman/
         env:
           - name: LOG_FORMAT
             value: plain
