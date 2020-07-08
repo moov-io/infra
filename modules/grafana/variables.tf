@@ -29,3 +29,10 @@ variable "server_root_url" {}
 variable "admin_user_filepath" {}
 variable "admin_password_filepath" {}
 variable "secret_key_filepath" {}
+
+variable "resources_memory_limit" {
+  default = "50Mi"
+}
+variable "resources_memory_request" {
+  default = "25Mi"
+}

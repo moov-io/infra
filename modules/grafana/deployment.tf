@@ -61,12 +61,10 @@ resource "kubernetes_deployment" "grafana" {
           }
           resources {
             limits {
-              cpu    = "100m"
-              memory = "50Mi"
+              memory = var.resources_memory_limit
             }
             requests {
-              cpu    = "50m"
-              memory = "25Mi"
+              memory = var.resources_memory_request
             }
           }
           readiness_probe {
