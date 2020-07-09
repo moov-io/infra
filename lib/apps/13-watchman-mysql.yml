@@ -176,8 +176,14 @@ spec:
         spec:
           containers:
             - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.3.0
+              imagePullPolicy: Always
               name: backup
               env:
+                - name: AGE_PUBLIC_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: watchman-mysql-secrets
+                      key: public_key
                 - name: GCP_GCLOUD_AUTH
                   valueFrom:
                     secretKeyRef:
