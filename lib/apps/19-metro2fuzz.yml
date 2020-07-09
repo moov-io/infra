@@ -40,9 +40,9 @@ spec:
       initContainers:
       - name: volume-permissions
         image: busybox
-        command: ['sh', '-c', 'chmod -R g+rwX /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/']
+        command: ['sh', '-c', 'chmod -R g+rwX /go/src/github.com/moov-io/metro2/test/fuzz-reader/crashers/']
         volumeMounts:
-        - mountPath: /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/
+        - mountPath: /go/src/github.com/moov-io/metro2/test/fuzz-reader/crashers/
           name: metro2fuzz-data
       containers:
       - image: moov/metro2fuzz:v0.2.3
@@ -50,7 +50,7 @@ spec:
         name: metro2fuzz
         volumeMounts:
           - name: metro2fuzz-data
-            mountPath: /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/
+            mountPath: /go/src/github.com/moov-io/metro2/test/fuzz-reader/crashers/
         resources:
           limits:
             cpu: 400m
