@@ -28,7 +28,7 @@ spec:
         args:
           - "-interval=60s"
           - "-loki.address=http://loki.infra.svc.cluster.local:3100/loki/"
-          - "-apps=achfuzz,imagecashletterfuzz,wirefuzz"
+          - "-apps=achfuzz,imagecashletterfuzz,metro2fuzz,wirefuzz"
         imagePullPolicy: Always
         resources:
           limits:
