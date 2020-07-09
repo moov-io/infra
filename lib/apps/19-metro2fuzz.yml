@@ -45,7 +45,7 @@ spec:
         - mountPath: /go/src/github.com/moov-io/metro2/test/fuzz-reader/crashers/
           name: metro2fuzz-data
       containers:
-      - image: moov/metro2fuzz:v0.2.3
+      - image: moov/metro2fuzz:v0.2.4
         imagePullPolicy: Always
         name: metro2fuzz
         volumeMounts:
