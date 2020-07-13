@@ -57,7 +57,7 @@ services:
 
   # Moov Applications
   ach:
-    image: moov/ach:v1.4.0
+    image: moov/ach:v1.4.1
     restart: always
     ports:
       - "8080:8080"
@@ -95,7 +95,7 @@ services:
     networks:
       - intranet
   fed:
-    image: moov/fed:v0.5.0
+    image: moov/fed:v0.5.1
     restart: always
     ports:
       - "8086:8086"
@@ -106,7 +106,7 @@ services:
     networks:
       - intranet
   watchman:
-    image: moov/watchman:v0.14.0
+    image: moov/watchman:v0.14.2
     restart: always
     ports:
       - "8084:8084"
