@@ -71,7 +71,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/api:v2020.06.09.1
+      - image: moov/api:v2020.07.14.1
         imagePullPolicy: Always
         name: api
         env:
