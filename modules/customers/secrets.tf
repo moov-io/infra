@@ -8,3 +8,14 @@ resource "kubernetes_secret" "customers-transit-secrets" {
     "transit-local-base64-key" = "${file(var.transit_local_base64_key_filepath)}"
   }
 }
+
+resource "kubernetes_secret" "customers-mysql-secrets" {
+  metadata {
+    name = "customers-mysql-secrets"
+    namespace = var.namespace
+  }
+
+  data = {
+    "password" = "${fileexists(var.mysql_password_filepath) ? var.mysql_password_filepath : ""}"
+  }
+}

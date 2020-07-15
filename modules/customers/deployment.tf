@@ -79,41 +79,33 @@ resource "kubernetes_deployment" "customers" {
           }
           env {
             name = "DATABASE_TYPE"
-            value = "sqlite"
+            value = var.database_type
           }
-          # env {
-          #   name: DATABASE_TYPE
-          #   value: mysql
-          # }
           env {
             name = "SQLITE_DB_PATH"
-            value = "/opt/moov/customers/customers.db"
+            value = var.sqlite_db_path
           }
-          # env {
-          #   name: MYSQL_ADDRESS
-          #   value: 'tcp(customers-mysql.apps.svc.cluster.local:3306)'
-          # }
-          # env {
-          #   name: MYSQL_DATABASE
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: customers-mysql-secrets
-          #       key: database
-          # }
-          # env {
-          #   name: MYSQL_USER
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: customers-mysql-secrets
-          #       key: username
-          # }
-          # env {
-          #   name: MYSQL_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: customers-mysql-secrets
-          #       key: password
-          # }
+          env {
+            name = "MYSQL_ADDRESS"
+            value = var.mysql_address
+          }
+          env {
+            name = "MYSQL_DATABASE"
+            value = var.mysql_database
+          }
+          env {
+            name = "MYSQL_USER"
+            value = var.mysql_username
+          }
+          env {
+            name = "MYSQL_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name = "customers-mysql-secrets"
+                key = "password"
+              }
+            }
+          }
           volume_mount {
             name = "customers"
             mount_path = "/opt/moov/customers/"
