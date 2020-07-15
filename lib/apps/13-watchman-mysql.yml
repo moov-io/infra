@@ -169,6 +169,7 @@ metadata:
   labels:
     app: watchman-mysql-backup
 spec:
+  suspend: true
   schedule: "@daily"
   jobTemplate:
     spec:
@@ -194,7 +195,7 @@ spec:
                 - name: GCP_BUCKET_NAME
                   value: "moov-production-mysql-backups"
                 - name: GCP_BUCKET_BACKUP_PATH
-                  value: "/apps/watchman"
+                  value: "/oss/watchman"
                 - name: TARGET_DATABASE_HOST
                   value: "watchman-mysql.apps.svc.cluster.local"
                 - name: TARGET_DATABASE_PORT
