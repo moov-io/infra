@@ -58,7 +58,12 @@ resource "kubernetes_deployment" "customers" {
           }
           env {
             name = "TRANSIT_LOCAL_BASE64_KEY"
-            value = var.transit_local_base64_key
+            value_from {
+              secret_key_ref {
+                name = "customers-transit-secrets"
+                key = "transit-local-base64-key"
+              }
+            }
           }
           env {
             name = "CLOUD_PROVIDER"

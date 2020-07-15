@@ -24,6 +24,4 @@ variable "capacity" {
   default = "1Gi"
 }
 
-variable "transit_local_base64_key" {
-  default = ""
-}
+variable "transit_local_base64_key_filepath" {}
