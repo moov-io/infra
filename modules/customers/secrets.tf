@@ -16,6 +16,6 @@ resource "kubernetes_secret" "customers-mysql-secrets" {
   }
 
   data = {
-    "password" = "${fileexists(var.mysql_password_filepath) ? var.mysql_password_filepath : ""}"
+    "password" = "${fileexists(var.mysql_password_filepath) ? trimspace(file(var.mysql_password_filepath)) : ""}"
   }
 }
