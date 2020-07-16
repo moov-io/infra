@@ -17,11 +17,7 @@ resource "google_dns_record_set" "moov-A" {
   type         = "A"
   ttl          = 60
 
-  # github pages
-  # rrdatas = ["185.199.108.153", "185.199.111.153", "185.199.109.153", "185.199.110.153"]
-
-  # our Kubernetes cluster
-  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
+  rrdatas = ["104.198.14.52"] # Netlify
 }
 
 resource "google_dns_record_set" "moov-TXT" {
@@ -145,8 +141,7 @@ resource "google_dns_record_set" "slack" {
 resource "google_dns_record_set" "www" {
   name         = "www.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = google_dns_managed_zone.moov-io.name
-  type         = "A"
+  type         = "CNAME"
   ttl          = 60
-
-  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
+  rrdatas      = ["moov-io.netlify.app."]
 }
