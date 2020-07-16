@@ -56,8 +56,6 @@ spec:
             value: "true"
           - name: SLACKIN_CORS
             value: "true"
-          # - name: SLACKIN_CHANNELS
-          #   value: "#ach,#general,#paygate,#watchman"
           - name: SLACKIN_PATH
             value: "/"
           - name: RECAPTCHA_SECRET
@@ -74,7 +72,9 @@ spec:
           - name: RECAPTCHA_INVISIBLE
             value: "true"
           - name: SLACKIN_THEME
-            value: "dark"
+            value: "light"
+          - name: SLACKIN_ACCENT
+            value: "#000000"
           - name: SLACKIN_COC
             value: "https://github.com/moov-io/ach/blob/master/CODE_OF_CONDUCT.md"
         ports:
