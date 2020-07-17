@@ -219,6 +219,8 @@ spec:
                   value: "_%Y_%m_%d"
                 - name: SLACK_ENABLED
                   value: "true"
+                - name: SLACK_USERNAME
+                  value: "oss-watchman-mysql-backup"
                 - name: SLACK_CHANNEL
                   value: "#auto-backups"
                 - name: SLACK_WEBHOOK_URL
