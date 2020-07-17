@@ -24,6 +24,7 @@ variable "capacity" {
   default = "1Gi"
 }
 
+variable "accounts_local_base64_key_filepath" {}
 variable "transit_local_base64_key_filepath" {}
 
 variable "database_type" {

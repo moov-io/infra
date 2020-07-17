@@ -1,3 +1,14 @@
+resource "kubernetes_secret" "customers-secrets" {
+  metadata {
+    name = "customers-secrets"
+    namespace = var.namespace
+  }
+
+  data = {
+    "accounts-local-base64-key" = "${trimspace(file(var.accounts_local_base64_key_filepath))}"
+  }
+}
+
 resource "kubernetes_secret" "customers-transit-secrets" {
   metadata {
     name = "customers-transit-secrets"

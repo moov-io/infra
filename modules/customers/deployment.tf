@@ -57,6 +57,19 @@ resource "kubernetes_deployment" "customers" {
             value = var.watchman_endpoint
           }
           env {
+            name = "CLOUD_PROVIDER"
+            value = "local"
+          }
+          env {
+            name = "SECRETS_LOCAL_BASE64_KEY"
+            value_from {
+              secret_key_ref {
+                name = "customers-secrets"
+                key = "accounts-local-base64-key"
+              }
+            }
+          }
+          env {
             name = "TRANSIT_LOCAL_BASE64_KEY"
             value_from {
               secret_key_ref {
@@ -64,10 +77,6 @@ resource "kubernetes_deployment" "customers" {
                 key = "transit-local-base64-key"
               }
             }
-          }
-          env {
-            name = "CLOUD_PROVIDER"
-            value = "local"
           }
           # - name: FILEBLOB_BASE_URL
           #   value: ./storage/
