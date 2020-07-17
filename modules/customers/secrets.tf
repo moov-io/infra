@@ -5,7 +5,7 @@ resource "kubernetes_secret" "customers-transit-secrets" {
   }
 
   data = {
-    "transit-local-base64-key" = "${file(var.transit_local_base64_key_filepath)}"
+    "transit-local-base64-key" = "${trimspace(file(var.transit_local_base64_key_filepath))}"
   }
 }
 
