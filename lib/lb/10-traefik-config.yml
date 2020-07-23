@@ -49,15 +49,6 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
-        moovio:
-          loadBalancer:
-            servers:
-              - url: 'http://moovio.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         slackin:
           loadBalancer:
             servers:
@@ -131,7 +122,7 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
-        moovio-watchman:
+        demo-moovio-watchman:
           stripPrefix:
             prefixes:
               - "/watchman"
@@ -218,54 +209,16 @@ data:
           rule: "Host(`slack.moov.io`)"
           middlewares:
             - slack-moovio-http
-        "www-moovio-watchman":
+        "demo-moovio-watchman":
           entryPoints: [https]
           service: watchman
-          rule: "Host(`www.moov.io`) && PathPrefix(`/watchman`)"
+          rule: "Host(`demo.moov.io`) && PathPrefix(`/watchman`)"
           middlewares:
-            - moovio-watchman
+            - demo-moovio-watchman
           tls:
             certResolver: default
             domains:
-              - main: "www.moov.io"
-        "www-moov-io-http":
-          entryPoints: [http]
-          service: moovio
-          rule: "Host(`www.moov.io`)"
-          middlewares:
-            - moov-io-http
-        "www-moov-io":
-          entryPoints: [https]
-          service: moovio
-          rule: "Host(`www.moov.io`)"
-          tls:
-            certResolver: default
-            domains:
-              - main: "www.moov.io"
-        "moovio-watchman":
-          entryPoints: [https]
-          service: watchman
-          rule: "Host(`moov.io`) && PathPrefix(`/watchman`)"
-          middlewares:
-            - moovio-watchman
-          tls:
-            certResolver: default
-            domains:
-              - main: "moov.io"
-        "moov-io-http":
-          entryPoints: [http]
-          service: moovio
-          rule: "Host(`moov.io`)"
-          middlewares:
-            - moov-io-http
-        "moov-io":
-          entryPoints: [https]
-          service: moovio
-          rule: "Host(`moov.io`)"
-          tls:
-            certResolver: default
-            domains:
-              - main: "moov.io"
+              - main: "demo.moov.io"
         "infra-oauth2":
           entryPoints: [https]
           service: oauth2-proxy
