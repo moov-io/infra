@@ -59,7 +59,7 @@ resource "kubernetes_deployment" "github-exporter" {
           }
           readiness_probe {
             http_get {
-              path = "/metrics"
+              path = "/ping"
               port = 9171
             }
             initial_delay_seconds = 5
@@ -67,7 +67,7 @@ resource "kubernetes_deployment" "github-exporter" {
           }
           liveness_probe {
             http_get {
-              path = "/metrics"
+              path = "/ping"
               port = 9171
             }
             initial_delay_seconds = 5
