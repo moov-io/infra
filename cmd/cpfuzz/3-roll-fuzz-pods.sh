@@ -9,6 +9,7 @@ files=(
     envs/oss/apps/10-achfuzz.yml
     envs/oss/apps/17-imagecashletterfuzz.yml
     envs/oss/apps/18-wirefuzz.yml
+    envs/oss/apps/19-metro2fuzz.yml
 )
 
 for file in "${files[@]}"
