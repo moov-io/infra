@@ -78,7 +78,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: moov/infra-idx:v0.2.1
+      - image: moov/infra-idx:v0.3.1
         imagePullPolicy: Always
         name: infra-idx
         resources:
