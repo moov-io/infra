@@ -34,7 +34,6 @@ The project has the following directories:
 - [`cmd/`](https://github.com/moov-io/infra/tree/master/cmd) - Various command line utilities used in this project and as tests
 - [`docs/`](https://github.com/moov-io/infra/tree/master/docs) - Human readable documentation.
 - `envs/`
-  - [`envs/dev`](https://github.com/moov-io/infra/tree/master/envs/dev) - Our local development environment (for running on a developer's laptop)
   - [`envs/oss`](https://github.com/moov-io/infra/tree/master/envs/oss) - Our Open Source environment
 - [`images/`](https://github.com/moov-io/infra/tree/master/images) - Docker images we create and manage
 - [`lib/`](https://github.com/moov-io/infra/tree/master/lib) - Shared (Kubernetes) resources across environments
