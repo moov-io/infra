@@ -57,7 +57,7 @@ services:
 
   # Moov Applications
   ach:
-    image: moov/ach:v1.4.1
+    image: moov/ach:v1.4.3
     restart: always
     ports:
       - "8080:8080"
