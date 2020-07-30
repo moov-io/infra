@@ -195,6 +195,17 @@ data:
             certResolver: default
             domains:
               - main: "docs.moov.io"
+        "docs-moov-io-soc2":
+          entryPoints: [https]
+          service: soc2
+          rule: "Host(`docs.moov.io`) && PathPrefix(`/soc2`)"
+          middlewares:
+            - soc2-redirect
+            - soc2
+          tls:
+            certResolver: default
+            domains:
+              - main: "docs.moov.io"
         "slack-moovio":
           entryPoints: [https]
           service: slackin
@@ -289,17 +300,6 @@ data:
             certResolver: default
             domains:
               - main: "infra-oss.moov.io"
-        soc2:
-          entryPoints: [https]
-          service: soc2
-          rule: "Host(`moov.io`) && PathPrefix(`/soc2`)"
-          middlewares:
-            - soc2-redirect
-            - soc2
-          tls:
-            certResolver: default
-            domains:
-              - main: "moov.io"
     api:
       insecure: true
       dashboard: true
