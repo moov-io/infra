@@ -31,15 +31,6 @@ data:
       #   namespaces: [apps, infra, lb]
     http:
       services:
-        api:
-          loadBalancer:
-            servers:
-              - url: 'http://api.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         docs:
           loadBalancer:
             servers:
@@ -81,17 +72,6 @@ data:
               timeout: "5s"
               scheme: http
       middlewares:
-        auth-clean:
-          headers:
-            customRequestHeaders:
-              X-User-Id: "" # Removes
-        auth-check:
-          forwardAuth:
-            # address: https://api.moov.io/v1/auth/check
-            address: http://auth.apps.svc.cluster.local:8080/auth/check
-            authResponseHeaders:
-              - Content-Type
-              - X-User-Id
         cors:
           headers:
             accessControlAllowCredentials: true
@@ -102,10 +82,6 @@ data:
           headers:
             hostsProxyHeaders:
               - X-Forwarded-For
-        api-moov-io-http:
-          redirectScheme:
-            scheme: https
-            permanent: true
         docs-moov-io-http:
           redirectScheme:
             scheme: https
@@ -140,47 +116,6 @@ data:
             regex: "/soc2$"
             replacement: "/soc2/"
       routers:
-        "watchman-ping":
-          entryPoints: [https]
-          service: watchman
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/watchman/ping`)"
-          middlewares:
-            - cors
-            - watchman
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "watchman":
-          entryPoints: [https]
-          service: watchman
-          rule: "Host(`api.moov.io`) && PathPrefix(`/v1/watchman/`)"
-          middlewares:
-            - auth-clean
-            - auth-check
-            - cors
-            - watchman
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
-        "api-moov-io-http":
-          entryPoints: [http]
-          service: api
-          rule: "Host(`api.moov.io`)"
-          middlewares:
-            - api-moov-io-http
-            - cors
-        "api-moov-io":
-          entryPoints: [https]
-          service: api
-          rule: "Host(`api.moov.io`) && (Path(`/`, `/style.css`, `/rapidoc-min.js`, `/scroll.js`, `/v1/`) || PathPrefix(`/apps/`, `/admin/`))"
-          middlewares:
-            - cors
-          tls:
-            certResolver: default
-            domains:
-              - main: "api.moov.io"
         "docs-moov-io-http":
           entryPoints: [http]
           service: docs
