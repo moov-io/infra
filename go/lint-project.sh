@@ -76,8 +76,8 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
 fi
 
 # staticcheck
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.4/staticcheck_linux_amd64.tar.gz; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.4/staticcheck_darwin_amd64.tar.gz; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.5/staticcheck_linux_amd64.tar.gz; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.5/staticcheck_darwin_amd64.tar.gz; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
@@ -100,7 +100,7 @@ fi
 
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
-    wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.29.0
+    wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.30.0
     ./bin/golangci-lint run --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
 fi
 
