@@ -269,5 +269,11 @@ resource "kubernetes_deployment" "grafana" {
         restart_policy = "Always"
       }
     }
+    strategy {
+      type = "RollingUpdate"
+      rolling_update {
+        max_unavailable = 1
+      }
+    }
   }
 }
