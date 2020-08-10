@@ -49,12 +49,28 @@ resource "kubernetes_deployment" "customers" {
             value = var.fed_endpoint
           }
           env {
+            name = "FED_DEBUG_CALLS"
+            value = var.fed_debug_calls
+          }
+          env {
             name = "PAYGATE_ENDPOINT"
             value = var.paygate_endpoint
           }
           env {
+            name = "PAYGATE_DEBUG_CALLS"
+            value = var.paygate_debug_calls
+          }
+          env {
+            name = "OFAC_MATCH_THRESHOLD"
+            value = var.ofac_match_threshold
+          }
+          env {
             name = "WATCHMAN_ENDPOINT"
             value = var.watchman_endpoint
+          }
+          env {
+            name = "WATCHMAN_DEBUG_CALLS"
+            value = var.watchman_debug_calls
           }
           env {
             name = "CLOUD_PROVIDER"

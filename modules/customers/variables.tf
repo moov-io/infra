@@ -12,12 +12,28 @@ variable "fed_endpoint" {
   default = "http://fed.apps.svc.cluster.local:8080"
 }
 
+variable "fed_debug_calls" {
+  default = "false"
+}
+
 variable "paygate_endpoint" {
   default = "http://paygate.apps.svc.cluster.local:8080"
 }
 
+variable "paygate_debug_calls" {
+  default = "false"
+}
+
+variable "ofac_match_threshold" {
+  default = "0.99"
+}
+
 variable "watchman_endpoint" {
   default = "http://watchman.apps.svc.cluster.local:8080"
+}
+
+variable "watchman_debug_calls" {
+  default = "false"
 }
 
 variable "capacity" {
