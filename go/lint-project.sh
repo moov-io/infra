@@ -92,8 +92,31 @@ if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/s
 if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.3.1/nancy-darwin.amd64-v0.3.1; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
+
+    ignored_deps=(
+        # Consul Enterprise
+        CVE-2018-19653
+        CVE-2020-13250
+        CVE-2020-7219
+        # Vault Enterprise
+        CVE-2020-10660
+        CVE-2020-10661
+        CVE-2020-13223
+        CVE-2020-7220
+        # etcd
+        CVE-2020-15114
+    )
+    ignored=$(printf ",%s" "${ignored_deps[@]}")
+    ignored=${ignored:1}
+
+    # Append additional CVEs
+    if [ -n "$IGNORED_CVES" ];
+    then
+        ignore="$ignore"",""$IGNORED_CVES"
+    fi
+
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -m all | ./bin/nancy -exclude-vulnerability CVE-2018-19653,CVE-2020-10660,CVE-2020-10661,CVE-2020-13223,CVE-2020-13250,CVE-2020-7219,CVE-2020-7220
+    go list -m all | ./bin/nancy -exclude-vulnerability "$ignored"
 
     echo "" # newline
 fi
