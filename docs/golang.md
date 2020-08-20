@@ -1,5 +1,20 @@
 ## Go debugging
 
+### Linting
+
+We run a series of linters over all Go code in CI. This is done with the `./go/lint-project.sh` which runs linters such as: `go fmt`, misspell, staticcheck, nancy, golangci-lint, gocyclo, gitleaks (experimental), and exhaustive (experimental). Lastly `go test` is ran.
+
+The following variables can be used to configure the linters:
+
+- `GITLEAKS_DEPTH=10`
+- `GOCYCLO_LIMIT=15`
+- `IGNORED_CVES=CVE-XXXX-YYYY,CVE-ZZZZ-XXX`
+- `MISSPELL_IGNORE="palestiniens,palestinians"`
+
+Experiemtnal linters can be enabled:
+
+- `EXPERIMENTAL=gitleaks,exhaustive`
+
 ### Production Debugging
 
 - [Profiling Go Programs](https://blog.golang.org/profiling-go-programs)
