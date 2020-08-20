@@ -112,7 +112,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     # Append additional CVEs
     if [ -n "$IGNORED_CVES" ];
     then
-        ignore="$ignore"",""$IGNORED_CVES"
+        ignored="$ignored"",""$IGNORED_CVES"
     fi
 
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
