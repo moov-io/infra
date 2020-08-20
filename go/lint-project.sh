@@ -157,6 +157,10 @@ if [[ "$EXPERIMENTAL" == *"exhaustive"* ]]; then
     fi
 fi
 
+## Clear GOARCH and GOOS for testing...
+GOARCH=''
+GOOS=''
+
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
