@@ -105,6 +105,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
         CVE-2020-7220
         # etcd
         CVE-2020-15114
+        CVE-2020-15115
+        CVE-2020-15136
     )
     ignored=$(printf ",%s" "${ignored_deps[@]}")
     ignored=${ignored:1}
