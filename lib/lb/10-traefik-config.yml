@@ -58,6 +58,24 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        achwebui:
+          loadBalancer:
+            servers:
+              - url: 'http://ach-webui.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/wasm_exec.js"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
+        imagecashletterwebui:
+          loadBalancer:
+            servers:
+              - url: 'http://imagecashletter-webui.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/wasm_exec.js"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
         oauth2-proxy:
           loadBalancer:
             servers:
@@ -102,6 +120,14 @@ data:
           stripPrefix:
             prefixes:
               - "/watchman"
+        demo-moovio-achwebui:
+          stripPrefix:
+            prefixes:
+              - "/ach"
+        demo-moovio-imagecashletterwebui:
+          stripPrefix:
+            prefixes:
+              - "/x9"
         watchman:
           stripPrefix:
             prefixes:
@@ -161,6 +187,26 @@ data:
           rule: "Host(`demo.moov.io`) && PathPrefix(`/watchman`)"
           middlewares:
             - demo-moovio-watchman
+          tls:
+            certResolver: default
+            domains:
+              - main: "demo.moov.io"
+        "demo-moovio-achwebui":
+          entryPoints: [https]
+          service: achwebui
+          rule: "Host(`demo.moov.io`) && PathPrefix(`/ach`)"
+          middlewares:
+            - demo-moovio-achwebui
+          tls:
+            certResolver: default
+            domains:
+              - main: "demo.moov.io"
+        "demo-moovio-imagecashletterwebui":
+          entryPoints: [https]
+          service: imagecashletterwebui
+          rule: "Host(`demo.moov.io`) && PathPrefix(`/x9`)"
+          middlewares:
+            - demo-moovio-imagecashletterwebui
           tls:
             certResolver: default
             domains:
