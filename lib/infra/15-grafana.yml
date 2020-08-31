@@ -92,6 +92,10 @@ metadata:
     app: grafana
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: grafana
