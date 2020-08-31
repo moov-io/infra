@@ -88,8 +88,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.3.1/nancy-linux.amd64-v0.3.1; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.3.1/nancy-darwin.amd64-v0.3.1; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.0/nancy-linux.amd64-v1.0.0; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.0/nancy-darwin.amd64-v1.0.0; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
 
@@ -118,7 +118,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -m all | ./bin/nancy -exclude-vulnerability "$ignored"
+    go list -m all | ./bin/nancy sleuth -exclude-vulnerability "$ignored"
 
     echo "" # newline
 fi
