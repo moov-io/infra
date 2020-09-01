@@ -118,7 +118,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -m all | ./bin/nancy sleuth -exclude-vulnerability "$ignored"
+    go list -m all | ./bin/nancy sleuth --exclude-vulnerability "$ignored"
 
     echo "" # newline
 fi
