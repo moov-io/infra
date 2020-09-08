@@ -63,7 +63,7 @@ data:
             servers:
               - url: 'http://ach-webui.apps.svc.cluster.local:8080/'
             healthCheck:
-              path: "/wasm_exec.js"
+              path: "/ach/wasm_exec.js"
               interval: "30s"
               timeout: "5s"
               scheme: http
@@ -120,10 +120,6 @@ data:
           stripPrefix:
             prefixes:
               - "/watchman"
-        demo-moovio-achwebui:
-          stripPrefix:
-            prefixes:
-              - "/ach"
         demo-moovio-imagecashletterwebui:
           stripPrefix:
             prefixes:
@@ -195,8 +191,6 @@ data:
           entryPoints: [https]
           service: achwebui
           rule: "Host(`demo.moov.io`) && PathPrefix(`/ach`)"
-          middlewares:
-            - demo-moovio-achwebui
           tls:
             certResolver: default
             domains:
