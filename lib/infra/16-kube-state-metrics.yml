@@ -132,6 +132,7 @@ rules:
   - namespaces
   - endpoints
   verbs:
+  - get
   - list
   - watch
 - apiGroups:

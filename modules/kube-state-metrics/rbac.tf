@@ -22,7 +22,7 @@ resource "kubernetes_cluster_role" "kube-state-metrics" {
       "namespaces",
       "endpoints",
     ]
-    verbs = ["list", "watch"]
+    verbs = ["get", "list", "watch"]
   }
   rule {
     api_groups = ["extensions"]
