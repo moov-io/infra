@@ -42,7 +42,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/watchman:v0.14.0
+      - image: moov/watchman:v0.15.0
         imagePullPolicy: Always
         name: watchman
         args:
