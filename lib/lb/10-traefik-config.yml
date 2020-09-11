@@ -72,7 +72,7 @@ data:
             servers:
               - url: 'http://imagecashletter-webui.apps.svc.cluster.local:8080/'
             healthCheck:
-              path: "/wasm_exec.js"
+              path: "/x9/wasm_exec.js"
               interval: "30s"
               timeout: "5s"
               scheme: http
