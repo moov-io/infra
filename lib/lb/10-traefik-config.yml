@@ -129,10 +129,6 @@ data:
           stripPrefix:
             prefixes:
               - "/watchman"
-        demo-moovio-imagecashletterwebui:
-          stripPrefix:
-            prefixes:
-              - "/x9"
         watchman:
           stripPrefix:
             prefixes:
@@ -208,8 +204,6 @@ data:
           entryPoints: [https]
           service: imagecashletterwebui
           rule: "Host(`demo.moov.io`) && PathPrefix(`/x9`)"
-          middlewares:
-            - demo-moovio-imagecashletterwebui
           tls:
             certResolver: default
             domains:
