@@ -76,6 +76,15 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        wirewebui:
+          loadBalancer:
+            servers:
+              - url: 'http://wire-webui.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/wire/wasm_exec.js"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
         oauth2-proxy:
           loadBalancer:
             servers:
@@ -201,6 +210,14 @@ data:
           rule: "Host(`demo.moov.io`) && PathPrefix(`/x9`)"
           middlewares:
             - demo-moovio-imagecashletterwebui
+          tls:
+            certResolver: default
+            domains:
+              - main: "demo.moov.io"
+        "demo-moovio-wirewebui":
+          entryPoints: [https]
+          service: wirewebui
+          rule: "Host(`demo.moov.io`) && PathPrefix(`/wire`)"
           tls:
             certResolver: default
             domains:
