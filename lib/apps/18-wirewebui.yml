@@ -47,6 +47,7 @@ spec:
         name: wire-webui
         args:
           - -http.addr=:8080
+          - -admin.addr=:9090
           - -base-path=/wire
         ports:
           - containerPort: 8080

@@ -47,6 +47,7 @@ spec:
         name: imagecashletter-webui
         args:
           - -http.addr=:8080
+          - -admin.addr=:9090
           - -base-path=/x9
         ports:
           - containerPort: 8080
