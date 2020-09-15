@@ -7,7 +7,7 @@ resource "kubernetes_deployment" "watchman" {
     }
   }
   spec {
-    replicas = 1
+    replicas = var.instances
     strategy {
       rolling_update {
         max_unavailable = 1

@@ -1,5 +1,9 @@
 variable "namespace" {}
 
+variable "instances" {
+  default = 1
+}
+
 variable "tag" {
   default = "latest"
 }
