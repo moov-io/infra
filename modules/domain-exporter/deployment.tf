@@ -42,7 +42,6 @@ resource "kubernetes_deployment" "domain-exporter" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "10m"
               memory = "25Mi"
             }
           }

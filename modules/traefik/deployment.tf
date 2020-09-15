@@ -79,7 +79,6 @@ resource "kubernetes_deployment" "traefik" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "50m"
               memory = "25Mi"
             }
           }

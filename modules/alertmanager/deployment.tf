@@ -52,7 +52,6 @@ resource "kubernetes_deployment" "alertmanager" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "10m"
               memory = "25Mi"
             }
           }

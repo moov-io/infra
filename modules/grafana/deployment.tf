@@ -99,7 +99,6 @@ resource "kubernetes_deployment" "grafana" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "25m"
               memory = "50Mi"
             }
           }

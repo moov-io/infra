@@ -67,7 +67,6 @@ resource "kubernetes_deployment" "oauth2-proxy" {
               memory = "25Mi"
             }
             requests {
-              cpu    = "10m"
               memory = "10Mi"
             }
           }

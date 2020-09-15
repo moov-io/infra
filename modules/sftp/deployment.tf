@@ -57,7 +57,6 @@ resource "kubernetes_deployment" "sftp" {
           #     memory = "100Mi"
           #   }
           #   requests {
-          #     cpu    = "25m"
           #     memory = "25Mi"
           #   }
           # }

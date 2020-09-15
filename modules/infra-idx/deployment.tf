@@ -47,7 +47,6 @@ resource "kubernetes_deployment" "infra-idx" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "50m"
               memory = "25Mi"
             }
           }
@@ -83,7 +82,6 @@ resource "kubernetes_deployment" "infra-idx" {
               memory = "25Mi"
             }
             requests {
-              cpu    = "10m"
               memory = "10Mi"
             }
           }

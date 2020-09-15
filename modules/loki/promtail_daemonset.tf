@@ -45,7 +45,6 @@ resource "kubernetes_daemonset" "promtail" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "10m"
               memory = "25Mi"
             }
           }

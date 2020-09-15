@@ -53,7 +53,6 @@ resource "kubernetes_deployment" "loki" {
               memory = "250Mi"
             }
             requests {
-              cpu    = "50m"
               memory = "100Mi"
             }
           }

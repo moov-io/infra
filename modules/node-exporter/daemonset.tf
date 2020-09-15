@@ -43,7 +43,6 @@ resource "kubernetes_daemonset" "node-exporter" {
               memory = "50Mi"
             }
             requests {
-              cpu    = "25m"
               memory = "25Mi"
             }
           }

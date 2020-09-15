@@ -108,7 +108,6 @@ resource "kubernetes_deployment" "paygate" {
               memory = "100Mi"
             }
             requests {
-              cpu    = "25m"
               memory = "25Mi"
             }
           }

@@ -155,7 +155,6 @@ resource "kubernetes_deployment" "customers" {
               memory = "100Mi"
             }
             requests {
-              cpu    = "25m"
               memory = "25Mi"
             }
           }
