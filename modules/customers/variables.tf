@@ -8,6 +8,10 @@ variable "instances" {
   default = 1
 }
 
+variable "namespace_header" {
+  default = ""
+}
+
 variable "fed_endpoint" {
   default = "http://fed.apps.svc.cluster.local:8080"
 }

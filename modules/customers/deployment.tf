@@ -45,6 +45,10 @@ resource "kubernetes_deployment" "customers" {
             "-admin.addr=:9090",
           ]
           env {
+            name = "NAMESPACE_HEADER"
+            value = var.namespace_header
+          }
+          env {
             name = "FED_ENDPOINT"
             value = var.fed_endpoint
           }
