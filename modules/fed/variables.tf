@@ -3,3 +3,7 @@ variable "tag" {
 }
 
 variable "namespace" {}
+
+variable "instances" {
+  default = 1
+}

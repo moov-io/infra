@@ -7,7 +7,7 @@ resource "kubernetes_deployment" "fed" {
     }
   }
   spec {
-    replicas = 1
+    replicas = var.instances
     strategy {
       rolling_update {
         max_unavailable = 1
