@@ -177,8 +177,20 @@ resource "kubernetes_deployment" "customers" {
         }
         volume {
           name = "customers"
-          persistent_volume_claim {
-            claim_name = "customers"
+
+          # With SQLite we can only have one instance so mount the PVC
+          dynamic "persistent_volume_claim" {
+            for_each = var.database_type == "sqlite" ? [1] : []
+            content {
+              claim_name = "customers"
+            }
+          }
+
+          # For other databases just mount an empty dir since
+          # there will be multiple instances.
+          dynamic "empty_dir" {
+            for_each = var.database_type != "sqlite" ? [1] : []
+            content { }
           }
         }
         restart_policy = "Always"
