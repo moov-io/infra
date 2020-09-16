@@ -117,6 +117,9 @@ if [[ "$OS_NAME" != "windows" ]]; then
         ignored="$ignored"",""$IGNORED_CVES"
     fi
 
+    # Clean nancy cache
+    ./bin/nancy --clean-cache
+
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
     go list -m all | ./bin/nancy sleuth --exclude-vulnerability "$ignored"
 
