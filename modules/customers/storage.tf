@@ -4,9 +4,9 @@ resource "kubernetes_persistent_volume_claim" "data" {
     name = "customers"
     namespace = var.namespace
   }
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
   spec {
     access_modes = ["ReadWriteOnce"]
     resources {
