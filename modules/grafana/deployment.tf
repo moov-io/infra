@@ -155,6 +155,10 @@ resource "kubernetes_deployment" "grafana" {
             value = "Admin"
           }
           env {
+            name = "GF_INSTALL_PLUGINS"
+            value = join(",", var.install_plugins)
+          }
+          env {
             name = "GF_USERS_ALLOW_SIGN_UP"
             value = "false"
           }

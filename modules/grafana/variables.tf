@@ -30,6 +30,10 @@ variable "admin_user_filepath" {}
 variable "admin_password_filepath" {}
 variable "secret_key_filepath" {}
 
+variable "install_plugins" {
+  default = []
+}
+
 variable "resources_memory_limit" {
   default = "50Mi"
 }
