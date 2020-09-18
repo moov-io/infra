@@ -24,6 +24,9 @@ resource "kubernetes_deployment" "alertmanager" {
         labels = {
           app = "alertmanager"
         }
+        annotations = {
+          "prometheus.io/path" = var.metrics_path
+        }
       }
       spec {
         service_account_name = "alertmanager"

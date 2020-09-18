@@ -28,3 +28,7 @@ variable "additional_args" {
 }
 
 variable "config_filepath" {}
+
+variable "metrics_path" {
+  default = "/metrics"
+}
