@@ -78,7 +78,15 @@ resource "kubernetes_deployment" "customers" {
           }
           env {
             name = "CLOUD_PROVIDER"
-            value = "local"
+            value = var.cloud_provider
+          }
+          env {
+            name = "BUCKET_NAME"
+            value = var.bucket_name
+          }
+          env {
+            name = "GOOGLE_APPLICATION_CREDENTIALS"
+            value = var.google_application_credentials
           }
           env {
             name = "SECRETS_LOCAL_BASE64_KEY"

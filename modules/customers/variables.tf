@@ -65,3 +65,14 @@ variable "mysql_username" {
   default = "customers"
 }
 variable "mysql_password_filepath" {}
+
+## Document Storage
+variable "bucket_name" {
+  default = ""
+}
+variable "cloud_provider" {
+  default = ""
+}
+variable "google_application_credentials" {
+  default = ""
+}
