@@ -86,7 +86,6 @@ resource "kubernetes_deployment" "customers" {
           }
           env {
             name = "GOOGLE_APPLICATION_CREDENTIALS"
-            value = var.google_application_credentials
             value_from {
               secret_key_ref {
                 name = "customers-secrets"
