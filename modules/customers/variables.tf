@@ -70,9 +70,11 @@ variable "mysql_password_filepath" {}
 variable "bucket_name" {
   default = ""
 }
+
 variable "cloud_provider" {
   default = ""
 }
+
 variable "google_application_credentials" {
-  default = ""
+  default = "missing.json"
 }
