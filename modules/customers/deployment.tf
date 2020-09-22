@@ -86,12 +86,7 @@ resource "kubernetes_deployment" "customers" {
           }
           env {
             name = "GOOGLE_APPLICATION_CREDENTIALS"
-            value_from {
-              secret_key_ref {
-                name = "customers-secrets"
-                key = "google-application-credentials"
-              }
-            }
+            value = "/opt/moov/customers-documents/google-application-credentials"
           }
           env {
             name = "SECRETS_LOCAL_BASE64_KEY"
@@ -111,10 +106,6 @@ resource "kubernetes_deployment" "customers" {
               }
             }
           }
-          # - name: FILEBLOB_BASE_URL
-          #   value: ./storage/
-          # - name: FILEBLOB_HMAC_SECRET
-          #   value: insecure-example-value
           env {
             name = "LOG_FORMAT"
             value = "plain"
@@ -151,6 +142,10 @@ resource "kubernetes_deployment" "customers" {
           volume_mount {
             name = "customers"
             mount_path = "/opt/moov/customers/"
+          }
+          volume_mount {
+            name = "customers-documents"
+            mount_path = "/opt/moov/customers-documents/"
           }
           port {
             container_port = 8080
@@ -203,6 +198,19 @@ resource "kubernetes_deployment" "customers" {
           # there will be multiple instances.
           dynamic "empty_dir" {
             for_each = var.database_type != "sqlite" ? [1] : []
+            content { }
+          }
+        }
+        volume {
+          name = "customers-documents"
+          dynamic "secret" {
+            for_each = var.google_application_credentials != "" ? [1] : []
+            content {
+              secret_name = "customers-secrets"
+            }
+          }
+          dynamic "empty_dir" {
+            for_each = var.google_application_credentials == "" ? [1] : []
             content { }
           }
         }
