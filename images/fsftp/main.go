@@ -8,8 +8,8 @@ import (
 	"flag"
 	"log"
 
-	filedriver "github.com/goftp/file-driver"
-	"github.com/goftp/server"
+	"goftp.io/server"
+	"goftp.io/server/driver/file"
 )
 
 var (
@@ -29,7 +29,7 @@ func main() {
 		log.Fatal("Please set a directory to serve with -root")
 	}
 
-	factory := &filedriver.FileDriverFactory{
+	factory := &file.DriverFactory{
 		RootPath: *flagRoot,
 		Perm:     server.NewSimplePerm("user", "group"),
 	}
