@@ -112,20 +112,15 @@ resource "kubernetes_deployment" "paygate" {
             }
           }
           readiness_probe {
-            http_get {
-              # path = "/ping"
-              # port = 8080
-              path = "/version"
-              port = 9090
+            tcp_socket {
+              port = 8080
             }
             initial_delay_seconds = 5
             period_seconds        = 10
           }
           liveness_probe {
             http_get {
-              # path = "/ping"
-              # port = 8080
-              path = "/version"
+              path = "/live"
               port = 9090
             }
             initial_delay_seconds = 5
