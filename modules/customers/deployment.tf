@@ -175,8 +175,7 @@ resource "kubernetes_deployment" "customers" {
             }
           }
           readiness_probe {
-            http_get {
-              path = "/ping"
+            tcp_socket {
               port = 8080
             }
             initial_delay_seconds = 5
@@ -184,8 +183,8 @@ resource "kubernetes_deployment" "customers" {
           }
           liveness_probe {
             http_get {
-              path = "/ping"
-              port = 8080
+              path = "/live"
+              port = 9090
             }
             initial_delay_seconds = 5
             period_seconds        = 10
