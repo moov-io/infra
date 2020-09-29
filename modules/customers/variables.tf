@@ -75,6 +75,13 @@ variable "cloud_provider" {
   default = ""
 }
 
+variable "documents_bucket" {
+  default = ""
+}
+variable "documents_provider" {
+  default = ""
+}
+
 variable "google_application_credentials" {
   default = "missing.json"
 }

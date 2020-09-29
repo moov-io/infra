@@ -85,6 +85,14 @@ resource "kubernetes_deployment" "customers" {
             value = var.bucket_name
           }
           env {
+            name = "DOCUMENTS_BUCKET"
+            value = var.documents_bucket
+          }
+          env {
+            name = "DOCUMENTS_PROVIDER"
+            value = var.documents_provider
+          }
+          env {
             name = "GOOGLE_APPLICATION_CREDENTIALS"
             value = "/opt/moov/customers-documents/google-application-credentials"
           }
