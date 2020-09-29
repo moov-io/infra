@@ -92,8 +92,7 @@ resource "kubernetes_deployment" "watchman" {
             }
           }
           readiness_probe {
-            http_get {
-              path = "/ping"
+            tcp_socket {
               port = 8080
             }
             initial_delay_seconds = 10
@@ -103,8 +102,8 @@ resource "kubernetes_deployment" "watchman" {
           }
           liveness_probe {
             http_get {
-              path = "/ping"
-              port = 8080
+              path = "/live"
+              port = 9090
             }
             initial_delay_seconds = 10
             period_seconds        = 20
