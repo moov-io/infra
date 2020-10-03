@@ -17,6 +17,13 @@ variable "instances" {
   default = 1
 }
 
-variable "capacity" {
+variable "sqlite_capacity" {
   default = "1Gi"
+}
+variable "sqlite_enabled" {
+  default = true
+}
+
+variable "merging_capacity" {
+  default = "5Gi"
 }

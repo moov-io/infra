@@ -102,6 +102,10 @@ resource "kubernetes_deployment" "paygate" {
             name = "paygate"
             mount_path = "/opt/moov/paygate/"
           }
+          volume_mount {
+            name = "paygate-merging"
+            mount_path = "/storage/"
+          }
           resources {
             limits {
               cpu    = "100m"
@@ -129,8 +133,21 @@ resource "kubernetes_deployment" "paygate" {
         }
         volume {
           name = "paygate"
+          dynamic "persistent_volume_claim" {
+            for_each = var.sqlite_enabled ? [1] : []
+            content {
+              claim_name = "paygate"
+            }
+          }
+          dynamic "empty_dir" {
+            for_each = var.sqlite_enabled ? [] : [1]
+            content { }
+          }
+        }
+        volume {
+          name = "paygate-merging"
           persistent_volume_claim {
-            claim_name = "paygate"
+            claim_name = "paygate-merging"
           }
         }
         restart_policy = "Always"
