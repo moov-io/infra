@@ -39,7 +39,7 @@ resource "kubernetes_deployment" "prometheus" {
           }
           volume_mount {
             name = "prometheus-data"
-            mount_path = "/prometheus"
+            mount_path = "/data/prometheus"
           }
           port {
             container_port = 9090
