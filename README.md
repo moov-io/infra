@@ -1,6 +1,6 @@
 ## moov-io/infra
 
-This repository holds the configurion for [moov.io](https://github.com/moov-io)'s infrastructure. If you find a problem (security or otherwise), please contact us at [`security@moov.io`](mailto:security@moov.io).
+This repository holds the configurion for [moov.io](https://github.com/moov-io)'s infrastructure. If you believe you have identified a security vulnerability please should report the as soon as possible via email to security@moov.io. Please do not post it to a public issue tracker.
 
 [![GoDoc](https://godoc.org/github.com/moov-io/infra?status.svg)](https://godoc.org/github.com/moov-io/infra)
 [![Build Status](https://github.com/moov-io/infra/workflows/Go/badge.svg)](https://github.com/moov-io/infra/actions)
