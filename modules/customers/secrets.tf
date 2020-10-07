@@ -5,7 +5,7 @@ resource "kubernetes_secret" "customers-secrets" {
   }
 
   data = {
-    "accounts-local-base64-key" = "${trimspace(file(var.accounts_local_base64_key_filepath))}"
+    "local-base64-key" = "${trimspace(file(var.local_base64_key_filepath))}"
     "google-application-credentials" = "${fileexists(var.google_application_credentials) ? trimspace(file(var.google_application_credentials)) : ""}"
   }
 }

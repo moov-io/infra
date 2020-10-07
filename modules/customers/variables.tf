@@ -8,10 +8,6 @@ variable "instances" {
   default = 1
 }
 
-variable "namespace_header" {
-  default = ""
-}
-
 variable "fed_endpoint" {
   default = "http://fed.apps.svc.cluster.local:8080"
 }
@@ -44,7 +40,7 @@ variable "capacity" {
   default = "1Gi"
 }
 
-variable "accounts_local_base64_key_filepath" {}
+variable "local_base64_key_filepath" {}
 variable "transit_local_base64_key_filepath" {}
 
 variable "database_type" {
@@ -67,18 +63,13 @@ variable "mysql_username" {
 variable "mysql_password_filepath" {}
 
 ## Document Storage
-variable "bucket_name" {
+variable "documents_bucket_name" {
   default = ""
 }
-
-variable "cloud_provider" {
+variable "documents_storage_provider" {
   default = ""
 }
-
-variable "documents_bucket" {
-  default = ""
-}
-variable "documents_provider" {
+variable "documents_secret_provider" {
   default = ""
 }
 

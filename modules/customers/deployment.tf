@@ -45,10 +45,6 @@ resource "kubernetes_deployment" "customers" {
             "-admin.addr=:9090",
           ]
           env {
-            name = "NAMESPACE_HEADER"
-            value = var.namespace_header
-          }
-          env {
             name = "FED_ENDPOINT"
             value = var.fed_endpoint
           }
@@ -77,20 +73,16 @@ resource "kubernetes_deployment" "customers" {
             value = var.watchman_debug_calls
           }
           env {
-            name = "CLOUD_PROVIDER"
-            value = var.cloud_provider
+            name = "DOCUMENTS_BUCKET_NAME"
+            value = var.documents_bucket_name
           }
           env {
-            name = "BUCKET_NAME"
-            value = var.bucket_name
+            name = "DOCUMENTS_STORAGE_PROVIDER"
+            value = var.documents_storage_provider
           }
           env {
-            name = "DOCUMENTS_BUCKET"
-            value = var.documents_bucket
-          }
-          env {
-            name = "DOCUMENTS_PROVIDER"
-            value = var.documents_provider
+            name = "DOCUMENTS_SECRET_PROVIDER"
+            value = var.documents_secret_provider
           }
           env {
             name = "GOOGLE_APPLICATION_CREDENTIALS"
@@ -101,7 +93,7 @@ resource "kubernetes_deployment" "customers" {
             value_from {
               secret_key_ref {
                 name = "customers-secrets"
-                key = "accounts-local-base64-key"
+                key = "local-base64-key"
               }
             }
           }
