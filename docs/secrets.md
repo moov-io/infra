@@ -36,8 +36,11 @@ $ gpg --export-secret-key <key-id> > ${USER}-moov.pem
 The following steps can be used to add a new blackbox admin.
 
 ```
-# Export a public key (so they can add you)
-$ gpg --export <key-id> > $name.pub
+# Import the new public key into your system's keyring
+$ gpg --import person-moov.pub
+gpg: key 95206224ACC92821: public key "Jane Doe <jane.doe@moov.io>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
 
 $ gpg --list-keys
 /home/adam/.gnupg/pubring.gpg
