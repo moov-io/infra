@@ -120,6 +120,7 @@ resource "null_resource" "rbac_setup" {
 variable "cluster_admins" {
   default = [
     "adam@moov.io",
+    "brandon@moov.io",
   ]
   # "wade@moov.io",
 }
