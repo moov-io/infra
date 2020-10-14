@@ -1,7 +1,4 @@
-envs/oss/apps/12-paygate-mysql-secrets.yml
-envs/oss/apps/12-paygate-secrets.yml
 envs/oss/apps/13-watchman-secrets.yml
-envs/oss/apps/16-customers-secrets.yml
 envs/oss/apps/database-backups.yml
 envs/oss/apps/slack-secrets.yml
 envs/oss/ca.crt
@@ -9,7 +6,5 @@ envs/oss/client.crt
 envs/oss/client.key
 envs/oss/infra/11-secrets.yml
 envs/oss/infra/22-alertmanager-config.yml
-envs/oss/sales/10-corteza-secrets.yml
-envs/oss/sales/10-mysql-secrets.yml
 envs/oss/sales/20-stargazers-secrets.yml
 envs/oss/sales/30-slackin-secrets.yml
