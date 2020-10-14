@@ -54,6 +54,8 @@ spec:
             value: "0.0.0.0"
           - name: SLACKIN_PROXY
             value: "true"
+          - name: SLACKIN_INTERVAL
+            value: 60000
           - name: SLACKIN_CORS
             value: "true"
           - name: SLACKIN_PATH

@@ -108,7 +108,7 @@ locals {
 //
 // To work around this, let's just shell out and create the CRB's ourself.
 resource "null_resource" "rbac_setup" {
-  count = length(var.cluster_admins)
+  count = 0
 
   # kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user=myname@example.org
   # kubectl create clusterrolebinding myname-cluster-admin-binding --clusterrole=cluster-admin --user=myname@example.org
