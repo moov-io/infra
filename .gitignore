@@ -51,3 +51,4 @@ staticcheck*
 /envs/oss/apps/slack-secrets.yml
 /envs/oss/sales/30-slackin-secrets.yml
 /envs/oss/apps/database-backups.yml
+/envs/oss/terraform.tfvars
