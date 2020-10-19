@@ -22,7 +22,6 @@
 
 ### Other Resources
 
-- [Creating a New Moov Service](new-service.md)
 - [Legal Tasks](legal.md)
 
 ## Getting Help
