@@ -13,46 +13,7 @@ Note: We deploy traefik as two deploymens, "alpha" and "beta" (along with their 
 
 #### Infra auth proxy
 
-We run the [pusher/oauth2_proxy](https://github.com/pusher/oauth2_proxy) to handle auth infront of our infra resources. You just need to authorize our Github OAuth2 application (oauth creds are in `11-secrets.yml`) to be granted access. This [blog post](https://www.digitalocean.com/community/tutorials/how-to-protect-private-kubernetes-services-behind-a-github-login-with-oauth2_proxy) from DigitalOcean covers a similar setup to how we've deployed oauth2_proxy.
-
-#### API authentication
-
-An HTTP call like `GET /v1/depositories/:id` with a cookie or OAuth token will hit our LB (traefik)  at `api.moov.io` and a "forward auth" call gets made from traefik to our auth service. The cookie or OAuth token is checked, and if valid '200 OK' is returned to traefik. Only on that '200 OK' is the actual request proxied to paygate (or in this case watchman).
-
-The `Ingress` annotations to setup this forward-auth looks something like this:
-
-```yaml
-ingress.kubernetes.io/auth-type: forward
-ingress.kubernetes.io/auth-url: https://api.moov.io/v1/auth/check
-ingress.kubernetes.io/auth-response-headers: X-Request-Id,X-User-Id,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Headers,Access-Control-Allow-Credentials,Content-Type
-```
-
-Then, with an `Ingress` setup to route to an app traefik first verifies the forward-auth call returns `200 OK` and if so routes accordingly to the `Ingress` object.
-
-```yaml
-spec:
-  rules:
-    - host: api.moov.io
-      http:
-        paths:
-          - path: /v1/ach/receivers
-            backend:
-              serviceName: paygate
-              servicePort: 8080
-```
-
-### Cross Origin Resource Sharing (CORS)
-
-We enable CORS via preflight checks by parsing out the `Origin` header in requests, ensuring it's a valid URL and responding with the origin and other `Access-Control-Allow-*` headers. The flow looks like this:
-
-```
-(browser)
- OPTIONS  ->  traefik -> `auth` (responds with headers) -> browser (traefik forwards CORS headers)
-```
-
-The response headers are proxied from `auth` back to the original client accoring to `ingress.kubernetes.io/auth-response-headers` on each `Ingress`.
-
-[Mozilla MDN docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+We run the [pusher/oauth2_proxy](https://github.com/pusher/oauth2_proxy) to handle auth infront of our infra-oss.moov.io resources. You just need to authorize our Github OAuth2 application (oauth creds are in `11-secrets.yml`) to be granted access. This [blog post](https://www.digitalocean.com/community/tutorials/how-to-protect-private-kubernetes-services-behind-a-github-login-with-oauth2_proxy) from DigitalOcean covers a similar setup to how we've deployed oauth2_proxy.
 
 ### Certificates
 
