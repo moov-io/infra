@@ -40,6 +40,8 @@ variable "capacity" {
   default = "1Gi"
 }
 
+# Both values are URIs generated with ./cmd/genkey from https://github.com/moov-io/customers
+# More Details: https://moov-io.github.io/customers/configuration.html#account-numbers
 variable "local_base64_key_filepath" {}
 variable "transit_local_base64_key_filepath" {}
 
