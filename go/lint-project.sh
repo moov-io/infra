@@ -60,8 +60,8 @@ fi
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v6.1.2/gitleaks-linux-amd64; fi
-    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v6.1.2/gitleaks-darwin-amd64; fi
+    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v6.2.0/gitleaks-linux-amd64; fi
+    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v6.2.0/gitleaks-darwin-amd64; fi
 
     if [[ "$OS_NAME" != "windows" ]]; then
         chmod +x ./bin/gitleaks
@@ -88,8 +88,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.0/nancy-linux.amd64-v1.0.0; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.0/nancy-darwin.amd64-v1.0.0; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.1/nancy-linux.amd64-v1.0.1; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.1/nancy-darwin.amd64-v1.0.1; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
 
