@@ -5,5 +5,5 @@ variable "instances" {
 }
 
 variable "image_tag" {
-  default = "v0.30.2"
+  default = "v0.37.0"
 }
