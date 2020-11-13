@@ -46,7 +46,7 @@ spec:
         - mountPath: /go/src/github.com/moov-io/imagecashletter/test/fuzz-reader/crashers/
           name: imagecashletterfuzz-data
       containers:
-      - image: moov/imagecashletterfuzz:v0.5.0-dev2
+      - image: moov/imagecashletterfuzz:v0.5.0
         imagePullPolicy: Always
         name: imagecashletterfuzz
         volumeMounts:
