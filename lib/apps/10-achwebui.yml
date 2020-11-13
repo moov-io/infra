@@ -42,7 +42,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/ach-webui:v1.4.5-dev
+      - image: moov/ach-webui:v1.5.1
         imagePullPolicy: Always
         name: ach-webui
         args:
