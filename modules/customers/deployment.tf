@@ -89,6 +89,19 @@ resource "kubernetes_deployment" "customers" {
             value = "/opt/moov/customers-documents/google-application-credentials"
           }
           env {
+            name = "APP_SALT"
+            value_from {
+              secret_key_ref {
+                name = "customers-secrets"
+                key = "app-salt"
+              }
+            }
+          }
+          env {
+            name = "REHASH_ACCOUNTS"
+            value = var.rehash_accounts
+          }
+          env {
             name = "SECRETS_LOCAL_BASE64_KEY"
             value_from {
               secret_key_ref {

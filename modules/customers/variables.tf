@@ -40,6 +40,14 @@ variable "capacity" {
   default = "1Gi"
 }
 
+variable "app_salt_filepath" {
+  default = ""
+}
+
+variable "rehash_accounts" {
+  default = "false"
+}
+
 # Both values are URIs generated with ./cmd/genkey from https://github.com/moov-io/customers
 # More Details: https://moov-io.github.io/customers/configuration.html#account-numbers
 variable "local_base64_key_filepath" {}
