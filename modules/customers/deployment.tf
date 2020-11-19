@@ -37,7 +37,7 @@ resource "kubernetes_deployment" "customers" {
           }
         }
         container {
-          image = "moov/customers:${var.tag}"
+          image = var.docker_image
           image_pull_policy = "Always"
           name  = "customers"
           args = [

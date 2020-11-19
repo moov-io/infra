@@ -1,5 +1,5 @@
-variable "tag" {
-  default = "latest"
+variable "docker_image" {
+  default = "moov/customers:latest"
 }
 
 variable "namespace" {}
