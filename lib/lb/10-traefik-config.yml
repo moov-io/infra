@@ -137,6 +137,18 @@ data:
           stripPrefix:
             prefixes:
               - "/v1/watchman"
+        demo-moovio-ach-redirect:
+          redirectRegex:
+            regex: "/ach$"
+            replacement: "/ach/"
+        demo-moovio-imagecashletterwebui-redirect:
+          redirectRegex:
+            regex: "/x9$"
+            replacement: "/x9/"
+        demo-moovio-wirewebui-redirect:
+          redirectRegex:
+            regex: "/wire$"
+            replacement: "/wire/"
         soc2:
           stripPrefix:
             prefixes:
@@ -206,6 +218,8 @@ data:
           entryPoints: [https]
           service: achwebui
           rule: "Host(`demo.moov.io`) && PathPrefix(`/ach`)"
+          middlewares:
+            - demo-moovio-ach-redirect
           tls:
             certResolver: default
             domains:
@@ -214,6 +228,8 @@ data:
           entryPoints: [https]
           service: imagecashletterwebui
           rule: "Host(`demo.moov.io`) && PathPrefix(`/x9`)"
+          middlewares:
+            - demo-moovio-imagecashletterwebui-redirect
           tls:
             certResolver: default
             domains:
@@ -222,6 +238,8 @@ data:
           entryPoints: [https]
           service: wirewebui
           rule: "Host(`demo.moov.io`) && PathPrefix(`/wire`)"
+          middlewares:
+            - demo-moovio-wirewebui-redirect
           tls:
             certResolver: default
             domains:
