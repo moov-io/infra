@@ -121,6 +121,10 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
+        demo-moovio-http:
+          redirectScheme:
+            scheme: https
+            permanent: true
         moov-io-http:
           redirectScheme:
             scheme: https
@@ -182,6 +186,12 @@ data:
           rule: "Host(`slack.moov.io`)"
           middlewares:
             - slack-moovio-http
+        "demo-moovio-http":
+          entryPoints: [http]
+          service: achwebui
+          rule: "Host(`demo.moov.io`)"
+          middlewares:
+            - demo-moovio-http
         "demo-moovio-watchman":
           entryPoints: [https]
           service: watchman
