@@ -35,6 +35,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
     then
         exit $code
     fi
+
+    echo "finished gofmt check"
 fi
 
 # Misspell
@@ -54,6 +56,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
     do
         ./bin/misspell -error -locale US -i "$ignore" $file
     done
+
+    echo "finished misspell check"
 fi
 
 # gitleaks
@@ -73,6 +77,8 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
         fi
         ./bin/gitleaks --depth=$depth --repo-path=$(pwd) --pretty --verbose
     fi
+
+    echo "finished gitleaks check"
 fi
 
 # staticcheck
@@ -85,6 +91,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
     # Grab directories with Go files but not 'admin' or 'client'
     GODIRS=$(find ./** -mindepth 1 -type f -name "*.go" | grep -v admin | grep -v client | xargs -n1 -I '{}' dirname {} | sort -u)
     ./bin/staticcheck $GODIRS
+
+    echo "finished staticcheck check"
 fi
 
 # nancy (vulnerable dependencies)
@@ -124,12 +132,15 @@ if [[ "$OS_NAME" != "windows" ]]; then
     go list -m all | ./bin/nancy sleuth --exclude-vulnerability "$ignored"
 
     echo "" # newline
+    echo "finished nancy check"
 fi
 
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.32.2
     ./bin/golangci-lint run --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
+
+    echo "finished golangci-lint check"
 fi
 
 # gocyclo
@@ -146,6 +157,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
     do
         ./bin/gocyclo $args $file
     done
+
+    echo "finished gocyclo check"
 fi
 
 # Run exhaustive to verify Enums aren't missing cases
@@ -158,6 +171,8 @@ if [[ "$EXPERIMENTAL" == *"exhaustive"* ]]; then
     else
         exhaustive ./...
     fi
+
+    echo "finished exhaustive check"
 fi
 
 ## Clear GOARCH and GOOS for testing...
@@ -172,3 +187,5 @@ fi
 if [[ "$OS_NAME" != "windows" ]]; then
     go test ./... -race -coverprofile=coverage.txt -covermode=atomic
 fi
+
+echo "finished running Go tests"
