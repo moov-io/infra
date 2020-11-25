@@ -45,6 +45,7 @@ if [[ "$OS_NAME" == "osx" ]]; then wget -q -O misspell.tar.gz https://github.com
 if [[ "$OS_NAME" != "windows" ]]; then
     tar xf misspell.tar.gz
     cp ./misspell ./bin/misspell
+    echo "misspell version: "$(./bin/misspell -v)
 
     ignore=""
     if [ -n "$MISSPELL_IGNORE" ];
@@ -87,6 +88,7 @@ if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.
 if [[ "$OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
+    ./bin/staticcheck --version
 
     # Grab directories with Go files but not 'admin' or 'client'
     GODIRS=$(find ./** -mindepth 1 -type f -name "*.go" | grep -v admin | grep -v client | xargs -n1 -I '{}' dirname {} | sort -u)
@@ -100,6 +102,7 @@ if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/s
 if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.1/nancy-darwin.amd64-v1.0.1; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
+    ./bin/nancy --version
 
     ignored_deps=(
         # Consul Enterprise
@@ -138,6 +141,8 @@ fi
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.33.0
+
+    ./bin/golangci-lint --version
     ./bin/golangci-lint run --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
 
     echo "finished golangci-lint check"
@@ -165,6 +170,7 @@ fi
 if [[ "$EXPERIMENTAL" == *"exhaustive"* ]]; then
     go get github.com/nishanths/exhaustive/cmd/exhaustive
     echo "Running nishanths/exhaustive"
+    exhaustive --version
 
     if [ -n "$DEFAULT_SIGNIFIES_EXHAUSTIVE" ]; then
         exhaustive -default-signifies-exhaustive ./...
