@@ -102,6 +102,10 @@ resource "kubernetes_deployment" "customers" {
             value = var.rehash_accounts
           }
           env {
+            name = "TUMBLER_HOST"
+            value = var.tumbler_host
+          }
+          env {
             name = "SECRETS_LOCAL_BASE64_KEY"
             value_from {
               secret_key_ref {
