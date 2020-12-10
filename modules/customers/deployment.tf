@@ -106,6 +106,14 @@ resource "kubernetes_deployment" "customers" {
             value = var.tumbler_host
           }
           env {
+            name = "KAFKA_CHANGES_PRODUCER"
+            value = var.kafka_changes_producer
+          }
+          env {
+            name = "KAFKA_COMMANDS_PRODUCER"
+            value = var.kafka_commands_producer
+          }
+          env {
             name = "SECRETS_LOCAL_BASE64_KEY"
             value_from {
               secret_key_ref {

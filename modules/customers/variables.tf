@@ -52,6 +52,14 @@ variable "tumbler_host" {
   default = ""
 }
 
+variable "kafka_changes_producer" {
+  default = ""
+}
+
+variable "kafka_commands_producer" {
+  default = ""
+}
+
 # Both values are URIs generated with ./cmd/genkey from https://github.com/moov-io/customers
 # More Details: https://moov-io.github.io/customers/configuration.html#account-numbers
 variable "local_base64_key_filepath" {}
