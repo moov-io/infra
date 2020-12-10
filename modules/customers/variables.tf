@@ -52,6 +52,10 @@ variable "tumbler_host" {
   default = ""
 }
 
+variable "kafka_brokers" {
+  default = ""
+}
+
 variable "kafka_changes_producer" {
   default = ""
 }

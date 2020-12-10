@@ -106,6 +106,10 @@ resource "kubernetes_deployment" "customers" {
             value = var.tumbler_host
           }
           env {
+            name = "KAFKA_BROKERS"
+            value = var.kafka_brokers
+          }
+          env {
             name = "KAFKA_CHANGES_PRODUCER"
             value = var.kafka_changes_producer
           }
