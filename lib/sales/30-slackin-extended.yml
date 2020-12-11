@@ -78,7 +78,7 @@ spec:
           - name: SLACKIN_ACCENT
             value: "#000000"
           - name: SLACKIN_COC
-            value: "https://github.com/moov-io/ach/blob/master/CODE_OF_CONDUCT.md"
+            value: "https://github.com/moov-io/moov-slack-code-of-conduct"
         ports:
           - containerPort: 3000
             name: http
