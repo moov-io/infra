@@ -89,7 +89,7 @@ resource "google_dns_record_set" "demo" {
   type         = "A"
   ttl          = 60
 
-  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
+  rrdatas = ["35.224.135.109"]
 }
 
 resource "google_dns_record_set" "docs" {
@@ -118,6 +118,15 @@ resource "google_dns_record_set" "local" {
   ttl          = 60
 
   rrdatas = ["127.0.0.1"]
+}
+
+resource "google_dns_record_set" "oss" {
+  name         = "oss.${google_dns_managed_zone.moov-io.dns_name}"
+  managed_zone = google_dns_managed_zone.moov-io.name
+  type         = "A"
+  ttl          = 60
+
+  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
 }
 
 resource "google_dns_record_set" "slack" {
