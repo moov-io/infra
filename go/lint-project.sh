@@ -65,18 +65,20 @@ fi
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v6.2.0/gitleaks-linux-amd64; fi
-    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v6.2.0/gitleaks-darwin-amd64; fi
+    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.0/gitleaks-linux-amd64; fi
+    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.0/gitleaks-darwin-amd64; fi
 
     if [[ "$OS_NAME" != "windows" ]]; then
         chmod +x ./bin/gitleaks
+
+        echo "gitleaks version: "$(./bin/gitleaks --version)
 
         # Scan a few of the most recent commits
         depth=10
         if [ -n "$GITLEAKS_DEPTH" ]; then
             depth=$GITLEAKS_DEPTH
         fi
-        ./bin/gitleaks --depth=$depth --repo-path=$(pwd) --pretty --verbose
+        ./bin/gitleaks --depth=$depth --path=$(pwd) --verbose
     fi
 
     echo "finished gitleaks check"
