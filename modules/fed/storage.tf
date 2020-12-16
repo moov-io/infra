@@ -11,7 +11,7 @@ resource "kubernetes_persistent_volume_claim" "fed-data" {
     access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
-        storage = var.fed_data_capacity
+        storage = "${var.fed_data_capacity}Gi"
       }
     }
   }
