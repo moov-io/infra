@@ -49,11 +49,11 @@ resource "kubernetes_deployment" "fed" {
           }
           env {
             name = "FEDACH_DATA_PATH"
-            value = fileexists(var.fedach_data_filepath) ? "/opt/fed/ach.json" : ""
+            value = var.fedach_data_path
           }
           env {
             name = "FEDWIRE_DATA_PATH"
-            value = fileexists(var.fedwire_data_filepath) ? "/opt/fed/wire.json" : ""
+            value = var.fedwire_data_path
           }
           volume_mount {
             name = "fed-data"
@@ -96,16 +96,17 @@ resource "kubernetes_deployment" "fed" {
         }
         volume {
           name = "fed-data"
-          config_map {
-            name = "fed-data"
-            items {
-              key = "ach.json"
-              path = "ach.json"
+
+          dynamic "persistent_volume_claim" {
+            for_each = var.fed_data_capacity > 0 ? [1] : []
+            content {
+              claim_name = "fed-data"
             }
-            items {
-              key = "wire.json"
-              path = "wire.json"
-            }
+          }
+
+          dynamic "empty_dir" {
+            for_each = var.fed_data_capacity <= 0 ? [1] : []
+            content { }
           }
         }
         restart_policy = "Always"
