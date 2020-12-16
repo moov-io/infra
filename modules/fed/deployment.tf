@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "fed" {
           }
         }
         container {
-          image = "moov/fed:${var.tag}"
+          image = var.docker_image
           image_pull_policy = "Always"
           name  = "fed"
           args = [
@@ -45,7 +45,15 @@ resource "kubernetes_deployment" "fed" {
           ]
           env {
             name = "LOG_FORMAT"
-            value = "plain"
+            value = var.log_format
+          }
+          env {
+            name = "FEDACH_DATA_PATH"
+            value = var.fedach_data_path
+          }
+          env {
+            name = "FEDWIRE_DATA_PATH"
+            value = var.fedwire_data_path
           }
           port {
             container_port = 8080
