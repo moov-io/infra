@@ -13,11 +13,11 @@ variable "log_format" {
 }
 
 variable "fedach_data_path" {
-  default = ""
+  default = "/data/fed/FedACHdir.txt"
 }
 
 variable "fedwire_data_path" {
-  default = ""
+  default = "/data/fed/fpddir.txt"
 }
 
 variable "fed_data_capacity" {
