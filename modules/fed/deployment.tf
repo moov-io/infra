@@ -39,10 +39,7 @@ resource "kubernetes_deployment" "fed" {
           image = var.docker_image
           image_pull_policy = "Always"
           name  = "fed"
-          args = [
-            "-http.addr=:8080",
-            "-admin.addr=:9090",
-          ]
+          args = var.args
           env {
             name = "LOG_FORMAT"
             value = var.log_format

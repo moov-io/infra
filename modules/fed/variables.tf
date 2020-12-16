@@ -8,6 +8,13 @@ variable "instances" {
   default = 1
 }
 
+variable "args" {
+  default = [
+    "-http.addr=:8080",
+    "-admin.addr=:9090",
+  ]
+}
+
 variable "log_format" {
   default = "plain"
 }
