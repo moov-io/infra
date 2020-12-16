@@ -83,25 +83,6 @@ data "kubernetes_service" "traefik" {
   }
 }
 
-resource "google_dns_record_set" "demo" {
-  name         = "demo.${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = google_dns_managed_zone.moov-io.name
-  type         = "A"
-  ttl          = 60
-
-  rrdatas = ["35.224.135.109"]
-}
-
-resource "google_dns_record_set" "docs" {
-  name         = "docs.${google_dns_managed_zone.moov-io.dns_name}"
-  managed_zone = google_dns_managed_zone.moov-io.name
-  type         = "A"
-  ttl          = 60
-
-  # rrdatas = ["moov-io.github.io."] # CNAME for GitHub pages
-  rrdatas = [data.kubernetes_service.traefik.load_balancer_ingress[0].ip]
-}
-
 resource "google_dns_record_set" "infra-oss" {
   name         = "infra-oss.${google_dns_managed_zone.moov-io.dns_name}"
   managed_zone = google_dns_managed_zone.moov-io.name
