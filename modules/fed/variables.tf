@@ -12,10 +12,10 @@ variable "log_format" {
   default = "plain"
 }
 
-variable "fedach_data_path" {
+variable "fedach_data_filepath" {
   default = ""
 }
 
-variable "fedwire_data_path" {
+variable "fedwire_data_filepath" {
   default = ""
 }

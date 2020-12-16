@@ -49,11 +49,15 @@ resource "kubernetes_deployment" "fed" {
           }
           env {
             name = "FEDACH_DATA_PATH"
-            value = var.fedach_data_path
+            value = fileexists(var.fedach_data_filepath) ? "/opt/fed/ach.json" : ""
           }
           env {
             name = "FEDWIRE_DATA_PATH"
-            value = var.fedwire_data_path
+            value = fileexists(var.fedwire_data_filepath) ? "/opt/fed/wire.json" : ""
+          }
+          volume_mount {
+            name = "fed-data"
+            mount_path = "/opt/fed/"
           }
           port {
             container_port = 8080
@@ -88,6 +92,20 @@ resource "kubernetes_deployment" "fed" {
             }
             initial_delay_seconds = 5
             period_seconds        = 10
+          }
+        }
+        volume {
+          name = "fed-data"
+          config_map {
+            name = "fed-data"
+            items {
+              key = "ach.json"
+              path = "ach.json"
+            }
+            items {
+              key = "wire.json"
+              path = "wire.json"
+            }
           }
         }
         restart_policy = "Always"
