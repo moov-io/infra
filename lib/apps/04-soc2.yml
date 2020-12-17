@@ -22,7 +22,7 @@ metadata:
   labels:
     app: soc2
 spec:
-  replicas: 2
+  replicas: 0
   selector:
     matchLabels:
       app: soc2
