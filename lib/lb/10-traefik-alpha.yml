@@ -11,7 +11,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -44,56 +43,6 @@ spec:
       serviceAccountName: traefik
       terminationGracePeriodSeconds: 30
       containers:
-      - image: nginx:1.19
-        imagePullPolicy: Always
-        name: nginx
-        args:
-          - nginx
-          - -c
-          - /opt/nginx/nginx.conf
-        volumeMounts:
-          - name: nginx-conf
-            mountPath: /opt/nginx/
-          - name: nginx-temp
-            mountPath: /var/cache/nginx/
-          - name: nginx-www
-            mountPath: /usr/share/nginx/www/
-        ports:
-          - containerPort: 8080
-            name: http
-            protocol: TCP
-      - image: nginx/nginx-prometheus-exporter:0.4.2
-        imagePullPolicy: Always
-        name: nginx-exporter
-        args:
-          - -nginx.scrape-uri=http://localhost:8080/stub_status
-        ports:
-          - containerPort: 9113
-            name: metrics
-            protocol: TCP
-        resources:
-          limits:
-            cpu: 100m
-            memory: 50Mi
-          requests:
-            cpu: 50m
-            memory: 25Mi
-        readinessProbe:
-          httpGet:
-            path: /metrics
-            port: 9113
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        # livenessProbe:
-        #   httpGet:
-        #     path: /metrics
-        #     port: 9113
-        #   initialDelaySeconds: 5
-        #   periodSeconds: 10
-        securityContext:
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 65534
       - image: traefik:v2.2
         imagePullPolicy: Always
         name: traefik
@@ -121,24 +70,5 @@ spec:
         - name: traefik-acme-alpha
           persistentVolumeClaim:
             claimName: traefik-acme-alpha
-        - name: nginx-conf
-          configMap:
-            name: traefik-config
-            items:
-              - key: nginx.conf
-                path: nginx.conf
-              - key: default.conf
-                path: conf.d/default.conf
-        - name: nginx-temp
-          emptyDir: {}
-        - name: nginx-www
-          configMap:
-            name: traefik-config
-            items:
-              - key: metrics
-                path: metrics
-              - key: index.html
-                path: index.html
       restartPolicy: Always
-
 ---
