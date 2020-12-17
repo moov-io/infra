@@ -84,12 +84,12 @@ spec:
             port: 9113
           initialDelaySeconds: 5
           periodSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /metrics
-            port: 9113
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        # livenessProbe:
+        #   httpGet:
+        #     path: /metrics
+        #     port: 9113
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true

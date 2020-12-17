@@ -22,6 +22,11 @@ data:
             - "10.0.0.0/8"
       traefik:
         address: ":8081"
+    tls:
+      options:
+        default:
+          sniStrict: false
+          preferServerCipherSuites: true
     providers:
       providersThrottleDuration: 2s
       file:
@@ -31,15 +36,6 @@ data:
       #   namespaces: [apps, infra, lb]
     http:
       services:
-        docs:
-          loadBalancer:
-            servers:
-              - url: 'http://docs.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
         slackin:
           loadBalancer:
             servers:
@@ -49,6 +45,10 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        ossmoovio:
+          loadBalancer:
+            servers:
+              - url: "https://example.com"
         watchman:
           loadBalancer:
             servers:
@@ -89,15 +89,7 @@ data:
           loadBalancer:
             servers:
               - url: 'http://oauth2-proxy.infra.svc.cluster.local:4180/'
-        soc2:
-          loadBalancer:
-            servers:
-              - url: 'http://soc2.apps.svc.cluster.local:8080/'
-            healthCheck:
-              path: "/"
-              interval: "30s"
-              timeout: "5s"
-              scheme: http
+
       middlewares:
         cors:
           headers:
@@ -109,10 +101,6 @@ data:
           headers:
             hostsProxyHeaders:
               - X-Forwarded-For
-        docs-moov-io-http:
-          redirectScheme:
-            scheme: https
-            permanent: true
         infra-moov-io-http:
           redirectScheme:
             scheme: https
@@ -129,6 +117,10 @@ data:
           redirectScheme:
             scheme: https
             permanent: true
+        moovio-github:
+          redirectRegex:
+            regex: "^(.*)$"
+            replacement: "https://github.com/moov-io"
         oss-moovio-watchman:
           stripPrefix:
             prefixes:
@@ -149,41 +141,7 @@ data:
           redirectRegex:
             regex: "/wire$"
             replacement: "/wire/"
-        soc2:
-          stripPrefix:
-            prefixes:
-              - "/soc2"
-            forceslash: true
-        soc2-redirect:
-          redirectRegex:
-            regex: "/soc2$"
-            replacement: "/soc2/"
       routers:
-        "docs-moov-io-http":
-          entryPoints: [http]
-          service: docs
-          rule: "Host(`docs.moov.io`)"
-          middlewares:
-            - docs-moov-io-http
-        "docs-moov-io":
-          entryPoints: [https]
-          service: docs
-          rule: "Host(`docs.moov.io`)"
-          tls:
-            certResolver: default
-            domains:
-              - main: "docs.moov.io"
-        "docs-moov-io-soc2":
-          entryPoints: [https]
-          service: soc2
-          rule: "Host(`docs.moov.io`) && PathPrefix(`/soc2`)"
-          middlewares:
-            - soc2-redirect
-            - soc2
-          tls:
-            certResolver: default
-            domains:
-              - main: "docs.moov.io"
         "slack-moovio":
           entryPoints: [https]
           service: slackin
@@ -200,50 +158,60 @@ data:
             - slack-moovio-http
         "oss-moovio-http":
           entryPoints: [http]
-          service: achwebui
+          service: slackin
           rule: "Host(`oss.moov.io`)"
-          middlewares:
-            - oss-moovio-http
-        "oss-moovio-watchman":
+        #   middlewares:
+        #     - oss-moovio-http
+        "oss-moovio":
           entryPoints: [https]
-          service: watchman
-          rule: "Host(`oss.moov.io`) && PathPrefix(`/watchman`)"
-          middlewares:
-            - oss-moovio-watchman
+          service: slackin
+          rule: "Host(`oss.moov.io`) && Path(`/`)"
+          # middlewares:
+          #   - moovio-github
           tls:
             certResolver: default
             domains:
               - main: "oss.moov.io"
-        "oss-moovio-achwebui":
-          entryPoints: [https]
-          service: achwebui
-          rule: "Host(`oss.moov.io`) && PathPrefix(`/ach`)"
-          middlewares:
-            - oss-moovio-ach-redirect
-          tls:
-            certResolver: default
-            domains:
-              - main: "oss.moov.io"
-        "oss-moovio-imagecashletterwebui":
-          entryPoints: [https]
-          service: imagecashletterwebui
-          rule: "Host(`oss.moov.io`) && PathPrefix(`/x9`)"
-          middlewares:
-            - oss-moovio-imagecashletterwebui-redirect
-          tls:
-            certResolver: default
-            domains:
-              - main: "oss.moov.io"
-        "oss-moovio-wirewebui":
-          entryPoints: [https]
-          service: wirewebui
-          rule: "Host(`oss.moov.io`) && PathPrefix(`/wire`)"
-          middlewares:
-            - oss-moovio-wirewebui-redirect
-          tls:
-            certResolver: default
-            domains:
-              - main: "oss.moov.io"
+        # "oss-moovio-watchman":
+        #   entryPoints: [https]
+        #   service: watchman
+        #   rule: "Host(`oss.moov.io`) && PathPrefix(`/watchman`)"
+        #   middlewares:
+        #     - oss-moovio-watchman
+        #   tls:
+        #     certResolver: default
+        #     domains:
+        #       - main: "oss.moov.io"
+        # "oss-moovio-achwebui":
+        #   entryPoints: [https]
+        #   service: achwebui
+        #   rule: "Host(`oss.moov.io`) && PathPrefix(`/ach`)"
+        #   middlewares:
+        #     - oss-moovio-ach-redirect
+        #   tls:
+        #     certResolver: default
+        #     domains:
+        #       - main: "oss.moov.io"
+        # "oss-moovio-imagecashletterwebui":
+        #   entryPoints: [https]
+        #   service: imagecashletterwebui
+        #   rule: "Host(`oss.moov.io`) && PathPrefix(`/x9`)"
+        #   middlewares:
+        #     - oss-moovio-imagecashletterwebui-redirect
+        #   tls:
+        #     certResolver: default
+        #     domains:
+        #       - main: "oss.moov.io"
+        # "oss-moovio-wirewebui":
+        #   entryPoints: [https]
+        #   service: wirewebui
+        #   rule: "Host(`oss.moov.io`) && PathPrefix(`/wire`)"
+        #   middlewares:
+        #     - oss-moovio-wirewebui-redirect
+        #   tls:
+        #     certResolver: default
+        #     domains:
+        #       - main: "oss.moov.io"
         "infra-oauth2":
           entryPoints: [https]
           service: oauth2-proxy
@@ -322,7 +290,7 @@ data:
     ping:
       entryPoint: https
     log:
-      level: INFO
+      level: DEBUG
     accessLog: {}
     certificatesResolvers:
       default:
@@ -333,6 +301,7 @@ data:
           keyType: EC384
           httpChallenge:
             entryPoint: http
+          # tlsChallenge: {} # Uses TLS-ALPN-01
   nginx.conf: |
     daemon off;
     worker_processes  1;
