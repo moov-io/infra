@@ -100,8 +100,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.1/nancy-linux.amd64-v1.0.1; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.1/nancy-darwin.amd64-v1.0.1; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.5/nancy-linux.amd64-v1.0.5; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.5/nancy-darwin.amd64-v1.0.5; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     ./bin/nancy --version
