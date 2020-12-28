@@ -142,7 +142,7 @@ fi
 
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
-    wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.33.0
+    wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.34.0
 
     ./bin/golangci-lint --version
     ./bin/golangci-lint run --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
