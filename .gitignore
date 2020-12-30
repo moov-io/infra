@@ -2,6 +2,7 @@
 terraform.tfvars
 terraform.tfstate.backup*
 .terraform/
+.terraform.lock.hcl
 
 # context specific directories
 .gcp/
