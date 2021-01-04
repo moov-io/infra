@@ -1,6 +1,6 @@
 locals {
   computed_args = compact([
-    "${var.base_path != "" ? "-server.path-prefix=${var.base_path}" : "" }",
+    var.base_path != "" ? "-server.path-prefix=${var.base_path}" : ""
   ])
 }
 
