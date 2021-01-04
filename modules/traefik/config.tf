@@ -5,7 +5,7 @@ resource "kubernetes_config_map" "traefik-config" {
   }
 
   data = {
-    "traefik.yaml" = "${file(var.traefik_config_filepath)}"
+    "traefik.yaml" = file(var.traefik_config_filepath)
   }
 }
 
@@ -16,8 +16,8 @@ resource "kubernetes_config_map" "traefik-nginx-config" {
   }
 
   data = {
-    "nginx.conf"   = "${file(var.nginx_config_filepath)}"
-    "default.conf" = "${file(var.nginx_default_config_filepath)}"
+    "nginx.conf"   = file(var.nginx_config_filepath)
+    "default.conf" = file(var.nginx_default_config_filepath)
     # stub response for prometheus metrics scraping
     "metrics"      = "# no content"
     "index.html"   = "nginx - traefik"
