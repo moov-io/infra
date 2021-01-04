@@ -5,6 +5,6 @@ resource "kubernetes_config_map" "loki-config" {
   }
 
   data = {
-    "loki.yaml"   = "${file(var.loki_config_filepath)}"
+    "loki.yaml" = file(var.loki_config_filepath)
   }
 }

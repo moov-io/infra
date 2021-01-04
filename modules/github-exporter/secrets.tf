@@ -5,6 +5,6 @@ resource "kubernetes_secret" "github-exporter" {
   }
 
   data = {
-    "github-token" = "${trimspace(file(var.github_token_filepath))}"
+    "github-token" = trimspace(file(var.github_token_filepath))
   }
 }

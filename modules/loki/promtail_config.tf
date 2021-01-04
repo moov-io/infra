@@ -5,6 +5,6 @@ resource "kubernetes_config_map" "promtail-config" {
   }
 
   data = {
-    "promtail.yaml"   = "${file(var.promtail_config_filepath)}"
+    "promtail.yaml" = file(var.promtail_config_filepath)
   }
 }

@@ -5,7 +5,7 @@ resource "kubernetes_config_map" "prometheus-config" {
   }
 
   data = {
-    "prometheus.yaml" = "${file(var.config_filepath)}"
+    "prometheus.yaml" = file(var.config_filepath)
   }
 }
 
@@ -16,6 +16,6 @@ resource "kubernetes_config_map" "prometheus-rules" {
   }
 
   data = {
-    "rules.yaml" = "${file(var.rules_filepath)}"
+    "rules.yaml" = file(var.rules_filepath)
   }
 }

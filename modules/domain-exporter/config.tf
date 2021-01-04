@@ -5,6 +5,6 @@ resource "kubernetes_config_map" "domain-exporter" {
   }
 
   data = {
-    "domains.yaml"   = "${file(var.config_filepath)}"
+    "domains.yaml" = file(var.config_filepath)
   }
 }

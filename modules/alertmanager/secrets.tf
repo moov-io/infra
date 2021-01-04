@@ -5,6 +5,6 @@ resource "kubernetes_secret" "alertmanager-config" {
   }
 
   data = {
-    "alertmanager.yaml" = "${trimspace(file(var.config_filepath))}"
+    "alertmanager.yaml" = trimspace(file(var.config_filepath))
   }
 }

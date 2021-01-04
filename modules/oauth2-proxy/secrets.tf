@@ -5,8 +5,8 @@ resource "kubernetes_secret" "oauth2-proxy-config" {
   }
 
   data = {
-    "client_id" = "${trimspace(file(var.client_id_filepath))}"
-    "client_secret" = "${trimspace(file(var.client_secret_filepath))}"
-    "cookie_secret" = "${trimspace(file(var.cookie_secret_filepath))}"
+    "client_id" = trimspace(file(var.client_id_filepath))
+    "client_secret" = trimspace(file(var.client_secret_filepath))
+    "cookie_secret" = trimspace(file(var.cookie_secret_filepath))
   }
 }
