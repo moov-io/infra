@@ -93,8 +93,11 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/staticcheck --version
 
     # Grab directories with Go files but not 'admin' or 'client'
-    GODIRS=$(find ./** -mindepth 1 -type f -name "*.go" | grep -v admin | grep -v client | grep -v vendor | xargs -n1 -I '{}' dirname {} | sort -u)
-    ./bin/staticcheck $GODIRS
+    GODIRS=($(find ./** -mindepth 1 -type f -name "*.go" | grep -v admin | grep -v client | grep -v vendor | xargs -n1 -I '{}' dirname {} | sort -u))
+    for dir in "${GODIRS[@]}"
+    do
+        ./bin/staticcheck "$dir"
+    done
 
     echo "finished staticcheck check"
 fi
