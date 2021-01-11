@@ -99,9 +99,7 @@ resource "kubernetes_deployment" "sftp" {
         }
         volume {
           name = "sftp-data"
-          host_path {
-            path = "/opt/sftp/"
-          }
+          empty_dir {}
         }
         restart_policy = "Always"
       }
