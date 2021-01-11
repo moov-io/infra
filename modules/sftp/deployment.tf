@@ -83,7 +83,7 @@ resource "kubernetes_deployment" "sftp" {
           }
           volume_mount {
             name = "sftp-data"
-            mount_path = "/usr/share/nginx/www/"
+            mount_path = "/usr/share/nginx/www/sftp/"
           }
           port {
             container_port = 8080
