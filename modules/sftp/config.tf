@@ -5,8 +5,8 @@ resource "kubernetes_config_map" "sftp-nginx-config" {
   }
 
   data = {
-    "nginx.conf"   = file(var.nginx_config_filepath)
-    "default.conf" = file(var.nginx_default_config_filepath)
+    "nginx.conf"   = file("${path.module}/conf/nginx.conf")
+    "default.conf" = file("${path.module}/conf/default.conf")
     # stub response for prometheus metrics scraping
     "metrics"      = "# no content"
     "index.html"   = "nginx - grafana"

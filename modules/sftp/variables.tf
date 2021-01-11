@@ -10,6 +10,3 @@ variable "namespace" {}
 variable "instances" {
   default = 0
 }
-
-variable "nginx_config_filepath" {}
-variable "nginx_default_config_filepath" {}
