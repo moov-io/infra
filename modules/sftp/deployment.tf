@@ -90,11 +90,33 @@ resource "kubernetes_deployment" "sftp" {
             name = "http"
             protocol = "TCP"
           }
+          readiness_probe {
+            tcp_socket {
+              port = 8080
+            }
+            initial_delay_seconds = 5
+            period_seconds        = 10
+          }
+          liveness_probe {
+            tcp_socket {
+              port = 8080
+            }
+            initial_delay_seconds = 5
+            period_seconds        = 10
+          }
         }
         volume {
           name = "nginx-conf"
           config_map {
             name = "sftp-nginx-config"
+            items {
+              key = "nginx.conf"
+              path = "nginx.conf"
+            }
+            items {
+              key = "default.conf"
+              path = "conf.d/default.conf"
+            }
           }
         }
         volume {
