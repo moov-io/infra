@@ -14,5 +14,11 @@ resource "kubernetes_service" "sftp" {
       target_port = 22
       protocol    = "TCP"
     }
+    port {
+      name        = "http"
+      port        = 8080
+      target_port = 8080
+      protocol    = "TCP"
+    }
   }
 }

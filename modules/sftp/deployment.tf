@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "sftp" {
           }
         }
         container {
-          image = "atmoz/sftp:${var.tag}"
+          image = var.sftp_image
           image_pull_policy = "Always"
           name  = "sftp"
           command = [
@@ -46,20 +46,15 @@ resource "kubernetes_deployment" "sftp" {
             "-c",
             "set -x; mkdir -p /home/demo/upload/inbound/ /home/demo/upload/outbound/ /home/demo/upload/returned/; chown -R 1000:100 /home/demo/upload; /entrypoint demo:password:::upload;"
           ]
+          volume_mount {
+            name = "sftp-data"
+            mount_path = "/home/demo/upload/"
+          }
           port {
             container_port = 22
             name = "sftp"
             protocol = "TCP"
           }
-          # resources {
-          #   limits {
-          #     cpu    = "100m"
-          #     memory = "100Mi"
-          #   }
-          #   requests {
-          #     memory = "25Mi"
-          #   }
-          # }
           readiness_probe {
             tcp_socket {
               port = 22
@@ -74,6 +69,59 @@ resource "kubernetes_deployment" "sftp" {
             initial_delay_seconds = 5
             period_seconds        = 10
           }
+        }
+        container {
+          image = var.nginx_image
+          image_pull_policy = "Always"
+          name = "nginx"
+          args = [
+            "nginx", "-c", "/opt/nginx/nginx.conf"
+          ]
+          volume_mount {
+            name = "nginx-conf"
+            mount_path = "/opt/nginx/"
+          }
+          volume_mount {
+            name = "sftp-data"
+            mount_path = "/usr/share/nginx/www/sftp/"
+          }
+          port {
+            container_port = 8080
+            name = "http"
+            protocol = "TCP"
+          }
+          readiness_probe {
+            tcp_socket {
+              port = 8080
+            }
+            initial_delay_seconds = 5
+            period_seconds        = 10
+          }
+          liveness_probe {
+            tcp_socket {
+              port = 8080
+            }
+            initial_delay_seconds = 5
+            period_seconds        = 10
+          }
+        }
+        volume {
+          name = "nginx-conf"
+          config_map {
+            name = "sftp-nginx-config"
+            items {
+              key = "nginx.conf"
+              path = "nginx.conf"
+            }
+            items {
+              key = "default.conf"
+              path = "conf.d/default.conf"
+            }
+          }
+        }
+        volume {
+          name = "sftp-data"
+          empty_dir {}
         }
         restart_policy = "Always"
       }
