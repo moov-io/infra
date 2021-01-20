@@ -69,12 +69,7 @@ resource "kubernetes_deployment" "paygate" {
           ]
           env {
             name = "GOOGLE_APPLICATION_CREDENTIALS"
-            value_from {
-              secret_key_ref {
-                name = "paygate-google-application-credentials"
-                key = "credentials.json"
-              }
-            }
+            value = "/conf/audittrail/credentials.json"
           }
           port {
             container_port = 8080
@@ -105,6 +100,10 @@ resource "kubernetes_deployment" "paygate" {
           volume_mount {
             name = "paygate-merging"
             mount_path = "/storage/"
+          }
+          volume_mount {
+            name = "paygate-audittrail"
+            mount_path = "/conf/audittrail/"
           }
           resources {
             limits {
@@ -148,6 +147,12 @@ resource "kubernetes_deployment" "paygate" {
           name = "paygate-merging"
           persistent_volume_claim {
             claim_name = "paygate-merging"
+          }
+        }
+        volume {
+          name = "paygate-audittrail"
+          secret {
+            secret_name = "paygate-google-application-credentials"
           }
         }
         restart_policy = "Always"
