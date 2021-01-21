@@ -28,7 +28,7 @@ resource "kubernetes_secret" "paygate-google-application-credentials" {
   }
 
   data = {
-    "credentials.json" = "${file(var.google_application_credentials_filepath)}"
+    "credentials.json" = fileexists(var.google_application_credentials_filepath) ? file(var.google_application_credentials_filepath) : ""
   }
 }
 
