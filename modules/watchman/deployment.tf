@@ -83,11 +83,11 @@ resource "kubernetes_deployment" "watchman" {
             protocol = "TCP"
           }
           resources {
-            requests {
+            requests = {
               cpu    = var.resources_cpu_request
               memory = var.resources_mem_request
             }
-            limits {
+            limits = {
               memory = var.resources_mem_limit
             }
           }

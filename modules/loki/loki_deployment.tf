@@ -48,11 +48,11 @@ resource "kubernetes_deployment" "loki" {
             protocol = "TCP"
           }
           resources {
-            limits {
+            limits = {
               cpu    = "250m"
               memory = "250Mi"
             }
-            requests {
+            requests = {
               memory = "100Mi"
             }
           }

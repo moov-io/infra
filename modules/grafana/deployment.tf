@@ -60,10 +60,10 @@ resource "kubernetes_deployment" "grafana" {
             protocol = "TCP"
           }
           resources {
-            limits {
+            limits = {
               memory = var.resources_memory_limit
             }
-            requests {
+            requests = {
               memory = var.resources_memory_request
             }
           }
@@ -94,11 +94,11 @@ resource "kubernetes_deployment" "grafana" {
           image_pull_policy = "Always"
           name = "grafana"
           resources {
-            limits {
+            limits = {
               cpu    = "50m"
               memory = "50Mi"
             }
-            requests {
+            requests = {
               memory = "50Mi"
             }
           }

@@ -42,10 +42,10 @@ resource "kubernetes_daemonset" "cadvisor" {
             name = "metrics"
           }
           resources {
-            limits {
+            limits = {
               memory = "200Mi"
             }
-            requests {
+            requests = {
               memory = "200Mi"
             }
           }

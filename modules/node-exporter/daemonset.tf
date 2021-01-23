@@ -38,11 +38,11 @@ resource "kubernetes_daemonset" "node-exporter" {
             name = "metrics"
           }
           resources {
-            limits {
+            limits = {
               cpu    = "50m"
               memory = "50Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }
