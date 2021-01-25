@@ -29,7 +29,7 @@ variable "nginx_exporter_tag" {
 }
 
 variable "traefik_tag" {
-  default = "v2.2"
+  default = "v2.4"
 }
 
 variable "capacity" {
