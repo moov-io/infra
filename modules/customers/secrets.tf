@@ -5,9 +5,9 @@ resource "kubernetes_secret" "customers-secrets" {
   }
 
   data = {
-    "local-base64-key" = "${trimspace(file(var.local_base64_key_filepath))}"
-    "google-application-credentials" = "${fileexists(var.google_application_credentials) ? trimspace(file(var.google_application_credentials)) : ""}"
-    "app-salt" = "${fileexists(var.app_salt_filepath) ? trimspace(file(var.app_salt_filepath)) : ""}"
+    "local-base64-key" = trimspace(file(var.local_base64_key_filepath))
+    "google-application-credentials" = fileexists(var.google_application_credentials) ? trimspace(file(var.google_application_credentials)) : ""
+    "app-salt" = fileexists(var.app_salt_filepath) ? trimspace(file(var.app_salt_filepath)) : ""
   }
 }
 
@@ -18,7 +18,7 @@ resource "kubernetes_secret" "customers-transit-secrets" {
   }
 
   data = {
-    "transit-local-base64-key" = "${trimspace(file(var.transit_local_base64_key_filepath))}"
+    "transit-local-base64-key" = trimspace(file(var.transit_local_base64_key_filepath))
   }
 }
 
@@ -29,6 +29,6 @@ resource "kubernetes_secret" "customers-mysql-secrets" {
   }
 
   data = {
-    "password" = "${fileexists(var.mysql_password_filepath) ? trimspace(file(var.mysql_password_filepath)) : ""}"
+    "password" = fileexists(var.mysql_password_filepath) ? trimspace(file(var.mysql_password_filepath)) : ""
   }
 }

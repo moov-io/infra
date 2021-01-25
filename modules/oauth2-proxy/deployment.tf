@@ -62,11 +62,11 @@ resource "kubernetes_deployment" "oauth2-proxy" {
             }
           }
           resources {
-            limits {
+            limits = {
               cpu    = "50m"
               memory = "25Mi"
             }
-            requests {
+            requests = {
               memory = "10Mi"
             }
           }

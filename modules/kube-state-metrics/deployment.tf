@@ -36,10 +36,10 @@ resource "kubernetes_deployment" "kube-state-metrics" {
             container_port = 8081
           }
           resources {
-            limits {
+            limits = {
               memory = "100Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }
@@ -79,10 +79,10 @@ resource "kubernetes_deployment" "kube-state-metrics" {
             "--deployment=kube-state-metrics",
           ]
           resources {
-            limits {
+            limits = {
               memory = "50Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }

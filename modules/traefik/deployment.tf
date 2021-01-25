@@ -74,11 +74,11 @@ resource "kubernetes_deployment" "traefik" {
             protocol = "TCP"
           }
           resources {
-            limits {
+            limits = {
               cpu    = "100m"
               memory = "50Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }

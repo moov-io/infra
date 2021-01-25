@@ -187,11 +187,11 @@ resource "kubernetes_deployment" "customers" {
             protocol = "TCP"
           }
           resources {
-            limits {
+            limits = {
               cpu    = "100m"
               memory = "100Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }

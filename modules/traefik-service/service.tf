@@ -32,5 +32,5 @@ resource "kubernetes_service_account" "traefik" {
 }
 
 output "traefik_public_ip" {
-  value = kubernetes_service.traefik.load_balancer_ingress[0].ip
+  value = kubernetes_service.traefik.status[0].load_balancer[0].ingress[0].ip
 }

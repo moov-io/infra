@@ -40,11 +40,11 @@ resource "kubernetes_daemonset" "promtail" {
             }
           }
           resources {
-            limits {
+            limits = {
               cpu    = "250m"
               memory = "50Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }

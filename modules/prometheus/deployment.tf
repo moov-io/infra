@@ -47,10 +47,10 @@ resource "kubernetes_deployment" "prometheus" {
             protocol = "TCP"
           }
           resources {
-            limits {
+            limits = {
               memory = var.resources_memory_limit
             }
-            requests {
+            requests = {
               memory = var.resources_memory_request
             }
           }

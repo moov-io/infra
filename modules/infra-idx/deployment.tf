@@ -42,11 +42,11 @@ resource "kubernetes_deployment" "infra-idx" {
             protocol = "TCP"
           }
           resources {
-            limits {
+            limits = {
               cpu    = "100m"
               memory = "50Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }
@@ -77,11 +77,11 @@ resource "kubernetes_deployment" "infra-idx" {
           image_pull_policy = "Always"
           name = "infra-idx"
           resources {
-            limits {
+            limits = {
               cpu    = "50m"
               memory = "25Mi"
             }
-            requests {
+            requests = {
               memory = "10Mi"
             }
           }

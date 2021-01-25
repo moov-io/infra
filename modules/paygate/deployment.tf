@@ -106,11 +106,11 @@ resource "kubernetes_deployment" "paygate" {
             mount_path = "/conf/audittrail/"
           }
           resources {
-            limits {
+            limits = {
               cpu    = "100m"
               memory = "100Mi"
             }
-            requests {
+            requests = {
               memory = "25Mi"
             }
           }
