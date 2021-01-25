@@ -161,12 +161,12 @@ data:
           entryPoints: [http]
           service: slackin
           rule: "Host(`oss.moov.io`)"
-          # middlewares:
-          #   - oss-moovio-http
+          middlewares:
+            - oss-moovio-http
         "oss-moovio":
-          entryPoints: [http, https]
+          entryPoints: [https]
           service: slackin
-          rule: "Host(`oss.moov.io`)"
+          rule: "Host(`oss.moov.io`) && Path(`/`)"
           middlewares:
             - moovio-github
           tls:
