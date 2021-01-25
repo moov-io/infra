@@ -65,8 +65,8 @@ fi
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.0/gitleaks-linux-amd64; fi
-    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.0/gitleaks-darwin-amd64; fi
+    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-linux-amd64; fi
+    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-darwin-amd64; fi
 
     if [[ "$OS_NAME" != "windows" ]]; then
         chmod +x ./bin/gitleaks
