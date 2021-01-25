@@ -174,45 +174,45 @@ data:
             domains:
               - main: "oss.moov.io"
         "oss-moovio-watchman":
-          entryPoints: [http, https]
+          entryPoints: [https]
           service: watchman
           rule: "Host(`oss.moov.io`) && PathPrefix(`/watchman`)"
           middlewares:
             - oss-moovio-watchman
-          # tls:
-          #   certResolver: default
-          #   domains:
-          #     - main: "oss.moov.io"
+          tls:
+            certResolver: default
+            domains:
+              - main: "oss.moov.io"
         "oss-moovio-achwebui":
-          entryPoints: [http, https]
+          entryPoints: [https]
           service: achwebui
           rule: "Host(`oss.moov.io`) && PathPrefix(`/ach`)"
           middlewares:
             - oss-moovio-ach-redirect
-          # tls:
-          #   certResolver: default
-          #   domains:
-          #     - main: "oss.moov.io"
+          tls:
+            certResolver: default
+            domains:
+              - main: "oss.moov.io"
         "oss-moovio-imagecashletterwebui":
-          entryPoints: [http, https]
+          entryPoints: [https]
           service: imagecashletterwebui
           rule: "Host(`oss.moov.io`) && PathPrefix(`/x9`)"
           middlewares:
             - oss-moovio-imagecashletterwebui-redirect
-          # tls:
-          #   certResolver: default
-          #   domains:
-          #     - main: "oss.moov.io"
+          tls:
+            certResolver: default
+            domains:
+              - main: "oss.moov.io"
         "oss-moovio-wirewebui":
-          entryPoints: [http, https]
+          entryPoints: [https]
           service: wirewebui
           rule: "Host(`oss.moov.io`) && PathPrefix(`/wire`)"
           middlewares:
             - oss-moovio-wirewebui-redirect
-          # tls:
-          #   certResolver: default
-          #   domains:
-          #     - main: "oss.moov.io"
+          tls:
+            certResolver: default
+            domains:
+              - main: "oss.moov.io"
         "infra-oauth2":
           entryPoints: [https]
           service: oauth2-proxy
