@@ -42,7 +42,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       serviceAccountName: traefik
       containers:
-      - image: traefik:v2.3
+      - image: traefik:v2.4
         imagePullPolicy: Always
         name: traefik
         args:
