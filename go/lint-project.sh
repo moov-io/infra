@@ -103,8 +103,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.9/nancy-v1.0.9-linux-amd64; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.9/nancy-v1.0.9-darwin-amd64; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.10/nancy-v1.0.10-linux-amd64; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.10/nancy-v1.0.10-darwin-amd64; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     ./bin/nancy --version
@@ -135,6 +135,10 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
     # Clean nancy cache
     ./bin/nancy --clean-cache
+
+    # Skip Nancy version check
+    mkdir -p ~/.ossindex/.nancy-config
+    echo "last_update_check: "$(date "+%Y-%m-%d") > ~/.ossindex/.nancy-config/update_check.yml
 
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
     go list -mod=mod -m all | ./bin/nancy sleuth --exclude-vulnerability "$ignored"
