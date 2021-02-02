@@ -136,6 +136,10 @@ if [[ "$OS_NAME" != "windows" ]]; then
     # Clean nancy cache
     ./bin/nancy --clean-cache
 
+    # Skip Nancy version check
+    mkdir -p ~/.ossindex/.nancy-config
+    echo "last_update_check: "$(date "+%Y-%m-%d") > ~/.ossindex/.nancy-config/update_check.yml
+
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
     go list -mod=mod -m all | ./bin/nancy sleuth --exclude-vulnerability "$ignored"
 
