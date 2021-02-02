@@ -29,11 +29,11 @@ variable "mysql_database" {
 }
 
 variable "resources_cpu_request" {
-  default = "25m"
+  default = "100m"
 }
 variable "resources_mem_request" {
-  default = "25Mi"
+  default = "200Mi"
 }
 variable "resources_mem_limit" {
-  default = "100Mi"
+  default = "300Mi"
 }
