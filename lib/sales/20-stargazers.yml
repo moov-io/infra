@@ -22,28 +22,22 @@ metadata:
 data:
   repos.txt: |
     # One repository per line
-    moov-io/SOC2
-    moov-io/accounts
+    moov-io/1120x
     moov-io/ach
-    moov-io/api
-    moov-io/auth
-    moov-io/authn
-    moov-io/banktime
+    moov-io/ach-node-sdk
     moov-io/base
+    moov-io/charts
     moov-io/customers
-    moov-io/docs
     moov-io/fed
-    moov-io/go-client
-    moov-io/identity
     moov-io/imagecashletter
     moov-io/infra
     moov-io/irs
+    moov-io/iso20022
     moov-io/iso8583
     moov-io/metro2
-    moov-io/moov-io
+    moov-io/moov-slack-code-of-conduct
     moov-io/paygate
     moov-io/ruby-ach-demo
-    moov-io/tumbler
     moov-io/watchman
     moov-io/wire
     # Community Repositories
