@@ -10,6 +10,12 @@ Each of our OSS projects has fuzzers that try and cause panics inside of the mai
 
 Each project has a Go test function which attempts to read a directory of files that have caused crashes before fixing underlying issues. These are kept around as regression tests to ensure hardened parsers going forward.
 
+- [ach](https://github.com/moov-io/ach/tree/master/test/fuzz-reader)
+- [imagecashletter](https://github.com/moov-io/imagecashletter/tree/master/test/fuzz-reader)
+- [iso8583](https://github.com/moov-io/iso8583/tree/master/test/fuzz-reader)
+- [metro2](https://github.com/moov-io/metro2/tree/master/test/fuzz-reader)
+- [wire](https://github.com/moov-io/wire/tree/master/test/fuzz-reader)
+
 ### Data Collection and Analysis
 
 Crasher files are collected inside a `crashers/` directory from where the fuzz binary runs from. Files with the input that caused the crash are written alongside the stacktrace.
