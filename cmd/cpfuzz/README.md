@@ -16,6 +16,12 @@ Each project has a Go test function which attempts to read a directory of files 
 - [metro2](https://github.com/moov-io/metro2/tree/master/test/fuzz-reader)
 - [wire](https://github.com/moov-io/wire/tree/master/test/fuzz-reader)
 
+### Deployment
+
+These fuzzer images are deployed with `kubectl` in the `envs/oss/` directory of this repository. It's assumed `kubectl` has a context for this GCP project.
+
+**Note**: This setup assumes the projects and this repository live in the same parent directory. Some scripts copy files outside of this repository based on relative paths.
+
 ### Data Collection and Analysis
 
 Crasher files are collected inside a `crashers/` directory from where the fuzz binary runs from. Files with the input that caused the crash are written alongside the stacktrace.
