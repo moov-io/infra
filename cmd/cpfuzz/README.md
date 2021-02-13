@@ -22,6 +22,12 @@ These fuzzer images are deployed with `kubectl` in the `envs/oss/` directory of 
 
 **Note**: This setup assumes the projects and this repository live in the same parent directory. Some scripts copy files outside of this repository based on relative paths.
 
+### Private Crasher Files
+
+This repository has a `.gitignore` entry for `fuzz-*` which will keep the crasher files out of the git tree. This is done because a crash in our libraries represents a possible security vulnerability and should be fixed following our security release guidelines.
+
+The fuzzer logic and setup is open source so the collection of results is also made open.
+
 ### Data Collection and Analysis
 
 Crasher files are collected inside a `crashers/` directory from where the fuzz binary runs from. Files with the input that caused the crash are written alongside the stacktrace.
@@ -105,3 +111,13 @@ deployment.apps "iso8583fuzz" deleted
 persistentvolumeclaim/iso8583fuzz-data created
 deployment.apps/iso8583fuzz created
 ```
+
+### Metrics
+
+We deploy [adamdecaf/gofuzz_exporter](https://github.com/adamdecaf/gofuzz_exporter) to scrape and parse the go-fuzz output which lets us generate graphs.
+
+![](../../docs/images/fuzz-stats.png)
+
+### Security Disclosures
+
+If you believe you have identified a security vulnerability please responsibly report the issue as via email to security@moov.io. Please do not post it to a public issue tracker.
