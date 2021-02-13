@@ -118,6 +118,8 @@ We deploy [adamdecaf/gofuzz_exporter](https://github.com/adamdecaf/gofuzz_export
 
 ![](../../docs/images/fuzz-stats.png)
 
+Source: [infra-oss.moov.io/grafana](https://infra-oss.moov.io/grafana/d/6I4G4jGGz/fuzz-statistics?orgId=1&refresh=1m)
+
 ### Security Disclosures
 
 If you believe you have identified a security vulnerability please responsibly report the issue as via email to security@moov.io. Please do not post it to a public issue tracker.
