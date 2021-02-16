@@ -39,6 +39,18 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished gofmt check"
 fi
 
+# Reject moovfinancial dependencies in moov-io projects
+org=$(basename $(dirname $(pwd)))
+if [[ "$org" == "moov-io" ]];
+then
+    # Fail our build if we find moovfinancial dependencies
+    if go list -m all | grep moovfinancial;
+    then
+        echo "Found github.com/moovfinancial dependencies in OSS. Please remove"
+        exit 1
+    fi
+fi
+
 # Misspell
 if [[ "$OS_NAME" == "linux" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
 if [[ "$OS_NAME" == "osx" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_mac_64bit.tar.gz; fi
