@@ -51,6 +51,17 @@ then
     fi
 fi
 
+# Verify we're using the latest version of github.com/moovfinancial/events if it's a dependency
+eventsLibrary="github.com/moovfinancial/events"
+eventsVersion=$( go list -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
+if [[ $eventsVersion ]]
+then
+    echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion" 
+    exit 1
+fi
+
+
+
 # Misspell
 if [[ "$OS_NAME" == "linux" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
 if [[ "$OS_NAME" == "osx" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_mac_64bit.tar.gz; fi
