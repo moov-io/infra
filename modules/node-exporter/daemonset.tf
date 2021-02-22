@@ -39,11 +39,12 @@ resource "kubernetes_daemonset" "node-exporter" {
           }
           resources {
             limits = {
-              cpu    = "50m"
-              memory = "50Mi"
+              cpu = var.resources_limits_cpu
+              memory = var.resources_limits_memory
             }
             requests = {
-              memory = "25Mi"
+              cpu = var.resources_requests_cpu
+              memory = var.resources_requests_memory
             }
           }
           volume_mount {

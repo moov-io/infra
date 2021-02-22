@@ -38,11 +38,12 @@ resource "kubernetes_deployment" "domain-exporter" {
           }
           resources {
             limits = {
-              cpu    = "25m"
-              memory = "50Mi"
+              cpu    = var.resources_cpu_limit
+              memory = var.resources_mem_limit
             }
             requests = {
-              memory = "25Mi"
+              cpu    = var.resources_cpu_request
+              memory = var.resources_mem_request
             }
           }
           readiness_probe {

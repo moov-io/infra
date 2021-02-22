@@ -30,3 +30,19 @@ variable "fedwire_data_path" {
 variable "fed_data_capacity" {
   default = 0
 }
+
+variable "resources_cpu_limit" {
+  default = "1000m"
+}
+
+variable "resources_mem_limit" {
+  default = "256Mi"
+}
+
+variable "resources_cpu_request" {
+  default = "100m"
+}
+
+variable "resources_mem_request" {
+  default = "128Mi"
+}

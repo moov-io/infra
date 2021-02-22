@@ -95,11 +95,12 @@ resource "kubernetes_deployment" "grafana" {
           name = "grafana"
           resources {
             limits = {
-              cpu    = "50m"
-              memory = "50Mi"
+              cpu    = var.resources_cpu_limit
+              memory = var.resources_mem_limit
             }
             requests = {
-              memory = "50Mi"
+              cpu    = var.resources_cpu_request
+              memory = var.resources_mem_request
             }
           }
           env {

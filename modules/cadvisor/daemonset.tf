@@ -43,10 +43,12 @@ resource "kubernetes_daemonset" "cadvisor" {
           }
           resources {
             limits = {
-              memory = "200Mi"
+              cpu = var.resources_limits_cpu
+              memory = var.resources_limits_memory
             }
             requests = {
-              memory = "200Mi"
+              cpu = var.resources_requests_cpu
+              memory = var.resources_requests_memory
             }
           }
           volume_mount {

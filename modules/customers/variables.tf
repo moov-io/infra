@@ -102,3 +102,19 @@ variable "documents_secret_provider" {
 variable "google_application_credentials" {
   default = "missing.json"
 }
+
+variable "resources_cpu_limit" {
+  default = "1000m"
+}
+
+variable "resources_mem_limit" {
+  default = "1024Mi"
+}
+
+variable "resources_cpu_request" {
+  default = "100m"
+}
+
+variable "resources_mem_request" {
+  default = "256Mi"
+}

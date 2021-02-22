@@ -34,9 +34,18 @@ variable "install_plugins" {
   default = []
 }
 
-variable "resources_memory_limit" {
-  default = "50Mi"
+variable "resources_cpu_limit" {
+  default = "1000m"
 }
-variable "resources_memory_request" {
-  default = "25Mi"
+
+variable "resources_mem_limit" {
+  default = "1024Mi"
+}
+
+variable "resources_cpu_request" {
+  default = "100m"
+}
+
+variable "resources_mem_request" {
+  default = "256Mi"
 }

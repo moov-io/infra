@@ -28,12 +28,18 @@ variable "mysql_database" {
   default = ""
 }
 
+variable "resources_cpu_limit" {
+  default = "1000m"
+}
+
+variable "resources_mem_limit" {
+  default = "1024Mi"
+}
+
 variable "resources_cpu_request" {
   default = "100m"
 }
+
 variable "resources_mem_request" {
-  default = "200Mi"
-}
-variable "resources_mem_limit" {
-  default = "300Mi"
+  default = "256Mi"
 }
