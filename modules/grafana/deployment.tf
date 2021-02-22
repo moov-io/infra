@@ -59,14 +59,6 @@ resource "kubernetes_deployment" "grafana" {
             name = "metrics"
             protocol = "TCP"
           }
-          resources {
-            limits = {
-              memory = var.resources_memory_limit
-            }
-            requests = {
-              memory = var.resources_memory_request
-            }
-          }
           readiness_probe {
             http_get {
               path = "/metrics"
