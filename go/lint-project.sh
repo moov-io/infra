@@ -51,9 +51,9 @@ then
     fi
 fi
 
+# Verify we're using the latest version of github.com/moovfinancial/events if it's a dependency
 if [[ "$org" == "moovfinancial" ]];
 then
-  # Verify we're using the latest version of github.com/moovfinancial/events if it's a dependency
   eventsLibrary="github.com/moovfinancial/events"
   eventsVersion=$( go list -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
   if [[ $eventsVersion ]]
@@ -63,7 +63,6 @@ then
       exit 1
   fi
 fi
-
 
 
 # Misspell
