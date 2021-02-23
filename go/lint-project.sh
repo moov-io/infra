@@ -51,13 +51,17 @@ then
     fi
 fi
 
-# Verify we're using the latest version of github.com/moovfinancial/events if it's a dependency
-eventsLibrary="github.com/moovfinancial/events"
-eventsVersion=$( go list -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
-if [[ $eventsVersion ]]
+if [[ "$org" == "moovfinancial" ]];
 then
-    echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion" 
-    exit 1
+  # Verify we're using the latest version of github.com/moovfinancial/events if it's a dependency
+  eventsLibrary="github.com/moovfinancial/events"
+  eventsVersion=$( go list -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
+  if [[ $eventsVersion ]]
+  then
+      echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion" 
+      echo "Run 'go get -u ""$eventsLibrary""@latest' to resolve this issue"
+      exit 1
+  fi
 fi
 
 
