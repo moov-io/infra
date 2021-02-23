@@ -32,7 +32,7 @@ resource "kubernetes_cluster_role" "kube-state-metrics" {
       "replicasets",
       "ingresses",
     ]
-    verbs = ["list", "watch"]
+    verbs = ["get", "list", "watch"]
   }
   rule {
     api_groups = ["apps"]
@@ -41,6 +41,13 @@ resource "kubernetes_cluster_role" "kube-state-metrics" {
       "daemonsets",
       "deployments",
       "replicasets",
+    ]
+    verbs = ["list", "watch"]
+  }
+  rule {
+    api_groups = ["extensions", "apps"]
+    resources = [
+      "deployments",
     ]
     verbs = ["list", "watch"]
   }
