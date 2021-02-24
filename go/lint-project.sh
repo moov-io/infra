@@ -40,7 +40,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # Reject moovfinancial dependencies in moov-io projects
-org=$(basename $(dirname $(pwd)))
+org=$(head -n 1 "./go.mod" | awk -F'/' '{print $2}')
 if [[ "$org" == "moov-io" ]];
 then
     # Fail our build if we find moovfinancial dependencies
