@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "grafana_tag" {
-  default = "7.3.7"
+  default = "7.4.3"
 }
 
 variable "nginx_tag" {
