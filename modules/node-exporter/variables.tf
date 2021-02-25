@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "image_tag" {
-  default = "v1.0.1"
+  default = "v1.1.1"
 }
 
 ## Default Resource Allocation
