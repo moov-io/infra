@@ -39,8 +39,10 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished gofmt check"
 fi
 
+# Would be set to 'moo-io' or 'moovfinancial'
+org=$(go mod why | head -n1  | awk -F'/' '{print $2}')
+
 # Reject moovfinancial dependencies in moov-io projects
-org=$(basename $(dirname $(pwd)))
 if [[ "$org" == "moov-io" ]];
 then
     # Fail our build if we find moovfinancial dependencies
