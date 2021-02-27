@@ -27,7 +27,7 @@ resource "google_dns_record_set" "moov-TXT" {
   ttl          = 60
 
   rrdatas = [
-    "\"v=spf1 include:_spf.google.com ~all\"",
+    "\"v=spf1 include:_spf.google.com ip4:35.225.30.173/32 ~all\"",
     "google-site-verification=U9kk8AwHytRgjkIfMp_6WYZP5f4IlMqlYuqF5MmUxPk"
   ]
 }
