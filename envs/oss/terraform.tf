@@ -92,7 +92,7 @@ terraform {
   }
   required_providers {
     aws = ">= 2.13"
-    google = "~> 2.7"
+    google = "~> 3.0"
     kubernetes = ">= 1.7"
     random = "> 2.1"
     null = "> 2.1"
