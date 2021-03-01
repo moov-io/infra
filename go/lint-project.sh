@@ -57,7 +57,7 @@ fi
 if [[ "$org" == "moovfinancial" ]];
 then
   eventsLibrary="github.com/moovfinancial/events"
-  eventsVersion=$( go list -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
+  eventsVersion=$( go list -f '{{if not .Indirect}}{{.}}{{end}}' -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
   if [[ $eventsVersion ]]
   then
       echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion" 
