@@ -38,7 +38,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: emedvedev/slackin-extended@sha256:f8544159b040c965e0259f0e618c6fd44dfe2d7d4a1ffb0feab179043cc56ee5
+      - image: emedvedev/slackin-extended@sha256:8bd1c83d4c236fa0456f2e103347e0cfaead74d19e54626a0c3ee7723dc34705
         name: slackin
         env:
           - name: SLACK_SUBDOMAIN
