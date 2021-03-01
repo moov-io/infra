@@ -176,7 +176,7 @@ spec:
       template:
         spec:
           containers:
-            - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.3.0
+            - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.5.0
               name: backup
               env:
                 - name: GCP_GCLOUD_AUTH
