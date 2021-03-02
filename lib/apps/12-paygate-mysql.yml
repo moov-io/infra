@@ -175,7 +175,7 @@ spec:
       template:
         spec:
           containers:
-            - image: gcr.io/maynard-io-public/kubernetes-cloud-mysql-backup:v2.5.0
+            - image: ghcr.io/benjamin-maynard/kubernetes-cloud-mysql-backup:v2.5.0
               name: backup
               imagePullPolicy: Always
               env:
