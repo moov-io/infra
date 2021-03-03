@@ -27,6 +27,9 @@ resource "kubernetes_daemonset" "cadvisor" {
         service_account_name = "cadvisor"
         automount_service_account_token = false
         container {
+          security_context {
+            privileged = true
+          }
           image = var.docker_image
           image_pull_policy = "Always"
           name = "cadvisor"
