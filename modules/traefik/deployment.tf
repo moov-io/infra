@@ -8,6 +8,9 @@ resource "kubernetes_deployment" "traefik" {
   }
   spec {
     replicas = var.instances
+    strategy {
+      type = "Recreate"
+    }
     selector {
       match_labels = {
         app = "traefik"
