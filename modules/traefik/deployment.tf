@@ -9,7 +9,10 @@ resource "kubernetes_deployment" "traefik" {
   spec {
     replicas = var.instances
     strategy {
-      type = "Recreate"
+      rolling_update {
+        max_unavailable = 1
+        max_surge = 0
+      }
     }
     selector {
       match_labels = {
