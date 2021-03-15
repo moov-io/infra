@@ -60,7 +60,7 @@ then
   eventsVersion=$( go list -f '{{if not .Indirect}}{{.}}{{end}}' -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
   if [[ $eventsVersion ]]
   then
-      echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion" 
+      echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion"
       echo "Run 'go get -u ""$eventsLibrary""@latest' to resolve this issue"
       exit 1
   fi
@@ -93,8 +93,8 @@ fi
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-linux-amd64; fi
-    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.2.1/gitleaks-darwin-amd64; fi
+    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.3.0/gitleaks-linux-amd64; fi
+    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.3.0/gitleaks-darwin-amd64; fi
 
     if [[ "$OS_NAME" != "windows" ]]; then
         chmod +x ./bin/gitleaks
