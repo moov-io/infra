@@ -113,8 +113,8 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
 fi
 
 # staticcheck
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.2/staticcheck_linux_amd64.tar.gz; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.2/staticcheck_darwin_amd64.tar.gz; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.3/staticcheck_linux_amd64.tar.gz; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.3/staticcheck_darwin_amd64.tar.gz; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
@@ -131,8 +131,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.15/nancy-v1.0.15-linux-amd64; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.15/nancy-v1.0.15-darwin-amd64; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.17/nancy-v1.0.17-linux-amd64; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.17/nancy-v1.0.17-darwin-amd64; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     ./bin/nancy --version
