@@ -17,7 +17,9 @@ resource "google_dns_record_set" "moov-A" {
   type         = "A"
   ttl          = 60
 
-  rrdatas = ["104.198.14.52"] # Netlify
+  # rrdatas = ["104.198.14.52"] # Netlify
+  rrdatas = ["75.2.60.5"] # Netlify fix 2021-03-25 outage
+  
 }
 
 resource "google_dns_record_set" "moov-TXT" {
