@@ -164,7 +164,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 65534
-      - image: grafana/grafana:7.4.3
+      - image: grafana/grafana:7.5.1
         imagePullPolicy: Always
         name: grafana
         resources:
