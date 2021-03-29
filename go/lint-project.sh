@@ -151,6 +151,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
         CVE-2020-15114
         CVE-2020-15115
         CVE-2020-15136
+        # github.com/gogo/protobuf (used by Viper and Go Kit)
+        CVE-2021-3121
     )
     ignored=$(printf ",%s" "${ignored_deps[@]}")
     ignored=${ignored:1}
