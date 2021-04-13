@@ -230,7 +230,12 @@ if [[ "$OS_NAME" == "windows" ]]; then
     go test ./... -race -short -coverprofile=coverage.txt -covermode=atomic
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
-    go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+    if [[ "$org" == "moov-io" ]];
+    then
+        go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+    else
+        go test ./... -race
+    fi
 fi
 
 echo "finished running Go tests"
