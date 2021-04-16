@@ -4,7 +4,7 @@ variable "loki_instances" {
   default = 1
 }
 variable "loki_tag" {
-  default = "2.2.0"
+  default = "2.2.1"
 }
 variable "loki_config_filepath" {}
 variable "loki_storage_capacity" {
@@ -23,7 +23,7 @@ variable "loki_args" {
 
 
 variable "promtail_tag" {
-  default = "2.2.0"
+  default = "2.2.1"
 }
 variable "promtail_config_filepath" {}
 variable "promtail_args" {
