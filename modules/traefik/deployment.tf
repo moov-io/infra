@@ -1,6 +1,6 @@
 resource "kubernetes_deployment" "traefik" {
   metadata {
-    name = "traefik-${var.stage}"
+    name      = "traefik-${var.stage}"
     namespace = var.namespace
     labels = {
       app = "traefik"
@@ -11,7 +11,7 @@ resource "kubernetes_deployment" "traefik" {
     strategy {
       rolling_update {
         max_unavailable = 1
-        max_surge = 0
+        max_surge       = 0
       }
     }
     selector {
@@ -40,44 +40,44 @@ resource "kubernetes_deployment" "traefik" {
             }
           }
         }
-        service_account_name = "traefik"
+        service_account_name             = "traefik"
         termination_grace_period_seconds = 30
         container {
-          image = "nginx:${var.nginx_tag}"
+          image             = "nginx:${var.nginx_tag}"
           image_pull_policy = "Always"
-          name = "nginx"
+          name              = "nginx"
           args = [
             "nginx", "-c", "/opt/nginx/nginx.conf"
           ]
           volume_mount {
-            name = "nginx-conf"
+            name       = "nginx-conf"
             mount_path = "/opt/nginx/"
           }
           volume_mount {
-            name = "nginx-temp"
+            name       = "nginx-temp"
             mount_path = "/var/cache/nginx/"
           }
           volume_mount {
-            name = "nginx-www"
+            name       = "nginx-www"
             mount_path = "/usr/share/nginx/www/"
           }
           port {
             container_port = 8080
-            name = "http"
-            protocol = "TCP"
+            name           = "http"
+            protocol       = "TCP"
           }
         }
         container {
-          image = "nginx/nginx-prometheus-exporter:${var.nginx_exporter_tag}"
+          image             = "nginx/nginx-prometheus-exporter:${var.nginx_exporter_tag}"
           image_pull_policy = "Always"
-          name = "nginx-exporter"
+          name              = "nginx-exporter"
           args = [
             "-nginx.scrape-uri=http://localhost:8080/stub_status",
           ]
           port {
             container_port = 9113
-            name = "metrics"
-            protocol = "TCP"
+            name           = "metrics"
+            protocol       = "TCP"
           }
           resources {
             limits = {
@@ -107,34 +107,34 @@ resource "kubernetes_deployment" "traefik" {
           }
           security_context {
             read_only_root_filesystem = true
-            run_as_non_root = true
-            run_as_user = 65534
+            run_as_non_root           = true
+            run_as_user               = 65534
           }
         }
         container {
-          image = "traefik:${var.traefik_tag}"
+          image             = "traefik:${var.traefik_tag}"
           image_pull_policy = "Always"
-          name = "traefik"
+          name              = "traefik"
           args = [
             "--configfile=/etc/traefik/traefik.yaml",
           ]
           volume_mount {
-            name = "traefik-config"
+            name       = "traefik-config"
             mount_path = "/etc/traefik/"
           }
           volume_mount {
-            name = "traefik-${var.stage}-acme"
+            name       = "traefik-${var.stage}-acme"
             mount_path = "/opt/traefik/"
           }
           port {
             container_port = 80
-            name = "proxy"
-            protocol = "TCP"
+            name           = "proxy"
+            protocol       = "TCP"
           }
           port {
             container_port = 8081
-            name = "dashboard"
-            protocol = "TCP"
+            name           = "dashboard"
+            protocol       = "TCP"
           }
         }
         volume {
@@ -142,7 +142,7 @@ resource "kubernetes_deployment" "traefik" {
           config_map {
             name = "traefik-${var.stage}-config"
             items {
-              key = "traefik.yaml"
+              key  = "traefik.yaml"
               path = "traefik.yaml"
             }
           }
@@ -156,13 +156,13 @@ resource "kubernetes_deployment" "traefik" {
         volume {
           name = "nginx-conf"
           config_map {
-            name = "traefik-${var.stage}-nginx-config"
+            name = "traefik-${var.stage}-nginx-config-${random_id.traefik_config_suffix.hex}"
             items {
-              key = "nginx.conf"
+              key  = "nginx.conf"
               path = "nginx.conf"
             }
             items {
-              key = "default.conf"
+              key  = "default.conf"
               path = "conf.d/default.conf"
             }
           }
@@ -174,13 +174,13 @@ resource "kubernetes_deployment" "traefik" {
         volume {
           name = "nginx-www"
           config_map {
-            name = "traefik-${var.stage}-nginx-config"
+            name = "traefik-${var.stage}-nginx-config-${random_id.traefik_nginx_config_suffix.hex}"
             items {
-              key = "metrics"
+              key  = "metrics"
               path = "metrics"
             }
             items {
-              key = "index.html"
+              key  = "index.html"
               path = "index.html"
             }
           }
