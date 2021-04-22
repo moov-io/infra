@@ -1,6 +1,6 @@
 resource "kubernetes_service" "sftp" {
   metadata {
-    name = "sftp"
+    name      = "sftp"
     namespace = var.namespace
   }
   spec {

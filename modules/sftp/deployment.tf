@@ -1,6 +1,6 @@
 resource "kubernetes_deployment" "sftp" {
   metadata {
-    name = "sftp"
+    name      = "sftp"
     namespace = var.namespace
     labels = {
       app = "sftp"
@@ -36,9 +36,9 @@ resource "kubernetes_deployment" "sftp" {
           }
         }
         container {
-          image = var.sftp_image
+          image             = var.sftp_image
           image_pull_policy = "Always"
-          name  = "sftp"
+          name              = "sftp"
           command = [
             "/bin/sh"
           ]
@@ -47,13 +47,13 @@ resource "kubernetes_deployment" "sftp" {
             "set -x; mkdir -p /home/demo/upload/inbound/ /home/demo/upload/outbound/ /home/demo/upload/returned/; chown -R 1000:100 /home/demo/upload; /entrypoint demo:password:::upload;"
           ]
           volume_mount {
-            name = "sftp-data"
+            name       = "sftp-data"
             mount_path = "/home/demo/upload/"
           }
           port {
             container_port = 22
-            name = "sftp"
-            protocol = "TCP"
+            name           = "sftp"
+            protocol       = "TCP"
           }
           readiness_probe {
             tcp_socket {
@@ -71,24 +71,24 @@ resource "kubernetes_deployment" "sftp" {
           }
         }
         container {
-          image = var.nginx_image
+          image             = var.nginx_image
           image_pull_policy = "Always"
-          name = "nginx"
+          name              = "nginx"
           args = [
             "nginx", "-c", "/opt/nginx/nginx.conf"
           ]
           volume_mount {
-            name = "nginx-conf"
+            name       = "nginx-conf"
             mount_path = "/opt/nginx/"
           }
           volume_mount {
-            name = "sftp-data"
+            name       = "sftp-data"
             mount_path = "/usr/share/nginx/www/sftp/"
           }
           port {
             container_port = 8080
-            name = "http"
-            protocol = "TCP"
+            name           = "http"
+            protocol       = "TCP"
           }
           readiness_probe {
             tcp_socket {
@@ -108,13 +108,13 @@ resource "kubernetes_deployment" "sftp" {
         volume {
           name = "nginx-conf"
           config_map {
-            name = "sftp-nginx-config"
+            name = "sftp-nginx-config-${random_id.sftp_nginx_config_suffix.hex}"
             items {
-              key = "nginx.conf"
+              key  = "nginx.conf"
               path = "nginx.conf"
             }
             items {
-              key = "default.conf"
+              key  = "default.conf"
               path = "conf.d/default.conf"
             }
           }
