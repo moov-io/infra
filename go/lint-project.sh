@@ -234,9 +234,9 @@ fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$org" == "moov-io" ]];
     then
-        go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+        go test ./... -race -coverprofile=coverage.txt -covermode=atomic --no-cache
     else
-        go test ./... -race
+        go test ./... -race --no-cache
     fi
 fi
 
