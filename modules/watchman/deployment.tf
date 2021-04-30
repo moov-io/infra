@@ -39,10 +39,7 @@ resource "kubernetes_deployment" "watchman" {
           image = "moov/watchman:${var.tag}"
           image_pull_policy = "Always"
           name  = "watchman"
-          args = [
-            "-http.addr=:8080",
-            "-admin.addr=:9090",
-          ]
+          args = var.args
           env {
             name = "LOG_FORMAT"
             value = "plain"
