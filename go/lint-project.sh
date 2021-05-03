@@ -113,8 +113,8 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
 fi
 
 # staticcheck
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.3/staticcheck_linux_amd64.tar.gz; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.3/staticcheck_darwin_amd64.tar.gz; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.4/staticcheck_linux_amd64.tar.gz; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.4/staticcheck_darwin_amd64.tar.gz; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     tar xf staticcheck.tar.gz
     cp ./staticcheck/staticcheck ./bin/staticcheck
