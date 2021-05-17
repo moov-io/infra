@@ -159,14 +159,14 @@ fi
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.37.1
 
-    enabled="-E=bodyclose,rowserrcheck"
+    enabled="-E=bodyclose,exhaustive,rowserrcheck"
     if [ -n "$GOLANGCI_LINTERS" ];
     then
         enabled="$enabled"",$GOLANGCI_LINTERS"
     fi
 
     ./bin/golangci-lint --version
-    ./bin/golangci-lint run "$enabled" --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
+    ./bin/golangci-lint run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
 
     echo "finished golangci-lint check"
 fi
