@@ -112,24 +112,6 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
     echo "finished gitleaks check"
 fi
 
-# staticcheck
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.4/staticcheck_linux_amd64.tar.gz; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.2.4/staticcheck_darwin_amd64.tar.gz; fi
-if [[ "$OS_NAME" != "windows" ]]; then
-    tar xf staticcheck.tar.gz
-    cp ./staticcheck/staticcheck ./bin/staticcheck
-    ./bin/staticcheck --version
-
-    # Grab directories with Go files but not 'admin' or 'client'
-    GODIRS=($(find ./** -mindepth 1 -type f -name "*.go" | grep -v admin | grep -v client | grep -v vendor | xargs -n1 -I '{}' dirname {} | sort -u))
-    for dir in "${GODIRS[@]}"
-    do
-        ./bin/staticcheck "$dir"
-    done
-
-    echo "finished staticcheck check"
-fi
-
 # nancy (vulnerable dependencies)
 if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.20/nancy-v1.0.20-linux-amd64; fi
 if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.20/nancy-v1.0.20-darwin-amd64; fi
@@ -184,7 +166,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     ./bin/golangci-lint --version
-    ./bin/golangci-lint run "$enabled" --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
+    ./bin/golangci-lint run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
 
     echo "finished golangci-lint check"
 fi
@@ -205,21 +187,6 @@ if [[ "$OS_NAME" != "windows" ]]; then
     done
 
     echo "finished gocyclo check"
-fi
-
-# Run exhaustive to verify Enums aren't missing cases
-if [[ "$EXPERIMENTAL" == *"exhaustive"* ]]; then
-    go get github.com/nishanths/exhaustive/cmd/exhaustive
-    echo "Running nishanths/exhaustive"
-    exhaustive --version
-
-    if [ -n "$DEFAULT_SIGNIFIES_EXHAUSTIVE" ]; then
-        exhaustive -default-signifies-exhaustive ./...
-    else
-        exhaustive ./...
-    fi
-
-    echo "finished exhaustive check"
 fi
 
 ## Clear GOARCH and GOOS for testing...
