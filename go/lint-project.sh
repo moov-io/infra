@@ -113,8 +113,8 @@ if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.20/nancy-v1.0.20-linux-amd64; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.20/nancy-v1.0.20-darwin-amd64; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.21/nancy-v1.0.21-linux-amd64; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.21/nancy-v1.0.21-darwin-amd64; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     ./bin/nancy --version
