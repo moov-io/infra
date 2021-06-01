@@ -159,7 +159,7 @@ fi
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.37.1
 
-    enabled="-E=bodyclose,exhaustive,rowserrcheck"
+    enabled="-E=bodyclose,exhaustive,gocyclo,rowserrcheck"
     if [ -n "$GOLANGCI_LINTERS" ];
     then
         enabled="$enabled"",$GOLANGCI_LINTERS"
@@ -171,24 +171,6 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished golangci-lint check"
 fi
 
-# gocyclo
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-linux-amd64; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
-if [[ "$OS_NAME" != "windows" ]]; then
-    echo "running go cyclo checks"
-    chmod +x ./bin/gocyclo
-
-    args='-over 25'
-    if [ -n "$GOCYCLO_LIMIT" ]; then
-        args="-over $GOCYCLO_LIMIT"
-    fi
-    for file in "${GOFILES[@]}"
-    do
-        ./bin/gocyclo $args $file
-    done
-
-    echo "finished gocyclo check"
-fi
 ## Clear GOARCH and GOOS for testing...
 GOARCH=''
 GOOS=''
