@@ -175,6 +175,7 @@ fi
 if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-linux-amd64; fi
 if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gocyclo https://github.com/adamdecaf/gocyclo/releases/download/2019-08-09/gocyclo-darwin-amd64; fi
 if [[ "$OS_NAME" != "windows" ]]; then
+    echo "running go cyclo checks"
     chmod +x ./bin/gocyclo
 
     args='-over 25'
@@ -188,7 +189,6 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
     echo "finished gocyclo check"
 fi
-
 ## Clear GOARCH and GOOS for testing...
 GOARCH=''
 GOOS=''
