@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "alertmanager_tag" {
-  default = "v0.22.1"
+  default = "v0.22.2"
 }
 
 variable "capacity" {
