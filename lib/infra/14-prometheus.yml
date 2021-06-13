@@ -214,7 +214,7 @@ spec:
       #     value: "true"
       #     effect: NoSchedule
       containers:
-      - image: prom/prometheus:v2.25.2
+      - image: prom/prometheus:v2.27.1
         imagePullPolicy: Always
         name: prometheus
         args:
