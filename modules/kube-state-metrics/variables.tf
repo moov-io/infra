@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "image_tag" {
-  default = "v1.9.8"
+  default = "v2.1.0"
 }
 
 variable "addon_tag" {
