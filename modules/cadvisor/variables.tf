@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "docker_image" {
-  default = "gcr.io/cadvisor/cadvisor:v0.37.5"
+  default = "gcr.io/cadvisor/cadvisor:v0.39.2"
 }
 
 ## Default Resource Allocation

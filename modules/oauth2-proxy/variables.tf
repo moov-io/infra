@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "image_tag" {
-  default = "v7.3.1"
+  default = "v7.1.3"
 }
 
 variable "client_id_filepath" {}
