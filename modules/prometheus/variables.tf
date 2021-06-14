@@ -5,7 +5,7 @@ variable "instances" {
 }
 
 variable "image_tag" {
-  default = "v2.25.2"
+  default = "v2.27.1"
 }
 
 variable "config_filepath" {}
