@@ -9,15 +9,6 @@ data:
     "groups":
       - "name": "kubernetes-absent"
         "rules":
-        - "alert": "KubeAPIDown"
-          "annotations":
-            "message": "KubeAPI has disappeared from Prometheus target discovery."
-            "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapidown"
-          "expr": |
-            absent(up{job="kube-apiserver"} == 1)
-          "for": "15m"
-          "labels":
-            "severity": "critical"
         - "alert": "KubeControllerManagerDown"
           "annotations":
             "message": "KubeControllerManager has disappeared from Prometheus target discovery."
@@ -33,15 +24,6 @@ data:
             "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeschedulerdown"
           "expr": |
             absent(up{job="kube-scheduler"} == 1)
-          "for": "15m"
-          "labels":
-            "severity": "critical"
-        - "alert": "KubeletDown"
-          "annotations":
-            "message": "Kubelet has disappeared from Prometheus target discovery."
-            "runbook_url": "https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeletdown"
-          "expr": |
-            absent(up{job="kubelet"} == 1)
           "for": "15m"
           "labels":
             "severity": "critical"
