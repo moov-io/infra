@@ -174,18 +174,23 @@ fi
 ## Clear GOARCH and GOOS for testing...
 GOARCH=''
 GOOS=''
+GORACE='-race'
+if [[ "$CGO_ENABLED" == "0" ]];
+then
+    GORACE=''
+fi
 
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
-    go test ./... -race -short -coverprofile=coverage.txt -covermode=atomic
+    go test ./... "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$org" == "moov-io" ]];
     then
-        go test ./... -race -coverprofile=coverage.txt -covermode=atomic -count 1
+        go test ./... "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1
     else
-        go test ./... -race -count 1
+        go test ./... "$GORACE" -count 1
     fi
 fi
 
