@@ -1,4 +1,4 @@
-FROM debian:buster-20210621-slim
+FROM debian:buster-20210721-slim
 LABEL maintainer="Moov <support@moov.io>"
 
 # Docs: https://www.tarsnap.com/pkg-deb.html
