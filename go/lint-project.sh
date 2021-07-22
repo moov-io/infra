@@ -166,7 +166,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     ./bin/golangci-lint --version
-    ./bin/golangci-lint run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=2m --disable=errcheck
+    ./bin/golangci-lint run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck
 
     echo "finished golangci-lint check"
 fi
