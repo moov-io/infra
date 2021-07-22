@@ -46,7 +46,7 @@ ifneq ($(OS),Windows_NT)
 endif
 
 .PHONY: test test-docker test-kubeval test-mysql
-test: check test-docker test-terraform test-kubeval test-promtool-configmap
+test: check test-docker test-terraform test-kubeval
 
 test-docker:
 	@go run ./cmd/dockertest
@@ -62,15 +62,6 @@ ifneq ($(OS),Windows_NT)
 else
 	@echo "Skipping kubeval tests on TravisCI"
 endif
-
-test-promtool-configmap:
-	./bin/promtool-configmap --version
-# Handcrafted files
-	./bin/promtool-configmap envs/oss/infra/14-prometheus.yml
-	./bin/promtool-configmap envs/oss/infra/14-prometheus-rules.yml
-# Generated files
-	./bin/promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-alerts.yml
-	./bin/promtool-configmap envs/oss/infra/14-prometheus-kubernetes-mixin-rules.yml
 
 test-mysql:
 	@for dir in $(shell ls -1 ./tests/); do \
