@@ -35,6 +35,8 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: Check
+      env:
+        COVER_THRESHOLD: 85.0
       run: make check
 
     - name: Tests
