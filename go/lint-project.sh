@@ -194,4 +194,19 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 fi
 
+# Verify Code Coverage Threshold
+if [[ "$COVER_THRESHOLD" != "" ]]; then
+    totalCoverage=$(go tool cover -func=coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
+    echo "Project has $totalCoverage% statement coverage."
+
+    if [[ "$totalCoverage" < "$COVER_THRESHOLD" ]]; then
+        echo "ERROR: statement coverage is not sufficient"
+        exit 1
+    else
+        echo "SUCCESS: project has sufficient statement coverage"
+    fi
+else
+    echo "Skipping code coverage threshold, consider setting COVER_THRESHOLD. (Example: 85.0)"
+fi
+
 echo "finished running Go tests"
