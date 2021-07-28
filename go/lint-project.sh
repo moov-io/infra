@@ -186,11 +186,10 @@ if [[ "$OS_NAME" == "windows" ]]; then
     go test ./... "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
-    if [[ "$org" == "moov-io" ]];
-    then
-        go test ./... "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1
-    else
+    if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
         go test ./... "$GORACE" -count 1
+    else
+        go test ./... "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1
     fi
 fi
 
