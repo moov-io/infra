@@ -1,5 +1,16 @@
 ## Go debugging
 
+### Code Coverage Thresholds
+
+When running tests (via `make check`) using our linting script you can specify a threshold for "code coverage" which is the percent of statements executed during testing. A higher value means more of your program/system is tested. Typically +80-85% is a good starting point. Very well tested codebases have +90-95% coverage.
+
+```yaml
+    - name: Check
+      env:
+        COVER_THRESHOLD: 85.0
+      run: make check
+```
+
 ### Linting
 
 We run a series of linters over all Go code in CI. This is done with the `./go/lint-project.sh` which runs linters such as: `go fmt`, misspell, staticcheck, nancy, golangci-lint, gocyclo, gitleaks (experimental), and exhaustive (experimental). Lastly `go test` is ran.
