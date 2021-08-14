@@ -162,7 +162,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     enabled="-E=bodyclose,exhaustive,gocyclo,rowserrcheck"
     if [ -n "$GOLANGCI_LINTERS" ];
     then
-        enabled="$enabled"",$GOLANGCI_LINTERS"gosec
+        enabled="$enabled"",$GOLANGCI_LINTERS"
     fi
 
     ./bin/golangci-lint --version
