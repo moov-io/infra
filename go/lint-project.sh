@@ -162,7 +162,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     enabled="-E=bodyclose,exhaustive,gocyclo,rowserrcheck"
     if [ -n "$GOLANGCI_LINTERS" ];
     then
-        enabled="$enabled"",$GOLANGCI_LINTERS"
+        enabled="$enabled"",$GOLANGCI_LINTERS"gosec
     fi
 
     ./bin/golangci-lint --version
@@ -199,7 +199,7 @@ if [[ "$COVER_THRESHOLD" != "" ]]; then
     echo "Project has $totalCoverage% statement coverage."
 
     if [[ "$totalCoverage" < "$COVER_THRESHOLD" ]]; then
-        echo "ERROR: statement coverage is not sufficient"
+        echo "ERROR: statement coverage is not sufficient, $COVER_THRESHOLD% is required"
         exit 1
     else
         echo "SUCCESS: project has sufficient statement coverage"
