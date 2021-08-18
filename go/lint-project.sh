@@ -4,7 +4,7 @@ set -e
 mkdir -p ./bin/
 
 # Collect all our files for processing
-GOFILES=($(find . -type f -name '*.go' | grep -v client | grep -v vendor))
+GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' | grep -v client | grep -v vendor))
 
 # Set OS_NAME if it's empty (local dev)
 OS_NAME=$TRAVIS_OS_NAME
