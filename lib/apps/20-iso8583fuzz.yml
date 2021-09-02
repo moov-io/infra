@@ -46,7 +46,7 @@ spec:
         - mountPath: /go/src/github.com/moov-io/iso8583/test/fuzz-reader/crashers/
           name: iso8583fuzz-data
       containers:
-      - image: moov/iso8583fuzz:v0.4.8
+      - image: moov/iso8583fuzz:v0.6.0
         imagePullPolicy: Always
         name: iso8583fuzz
         volumeMounts:
