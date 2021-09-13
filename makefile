@@ -8,12 +8,6 @@ check:
 clean:
 	rm -f kubeval
 
-.PHONY: generate kubernetes-mixins
-generate: kubernetes-mixins
-
-kubernetes-mixins:
-	@go run ./cmd/kubernetes-mixins/
-
 # From https://github.com/genuinetools/img
 .PHONY: AUTHORS
 AUTHORS:
