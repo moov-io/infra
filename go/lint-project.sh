@@ -23,6 +23,15 @@ if [[ "$OS_NAME" != "windows" ]]; then
     code=0
     for file in "${GOFILES[@]}"
     do
+        # Go 1.17 introduced a migration with build constraints
+        # and they offer a migration with gofmt
+        # See https://go.googlesource.com/proposal/+/master/design/draft-gobuild.md#transition for more details
+        if [[ "$file" == "pkged.go" ]];
+        then
+            gofmt -s -w pkged.go
+        fi
+
+        # Check the file's formatting
         test -z $(gofmt -s -l $file)
         if [[ $? != 0 ]];
         then
