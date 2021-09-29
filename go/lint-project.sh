@@ -48,7 +48,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished gofmt check"
 fi
 
-# Would be set to 'moo-io' or 'moovfinancial'
+# Would be set to 'moov-io' or 'moovfinancial'
 org=$(go mod why | head -n1  | awk -F'/' '{print $2}')
 
 # Reject moovfinancial dependencies in moov-io projects
@@ -74,7 +74,6 @@ then
       exit 1
   fi
 fi
-
 
 # Misspell
 if [[ "$OS_NAME" == "linux" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
@@ -158,7 +157,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/nancy --clean-cache
 
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -mod=mod -m all | ./bin/nancy sleuth --skip-update-check --exclude-vulnerability "$ignored"
+    go list -mod=mod -m all | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
 
     echo "" # newline
     echo "finished nancy check"
