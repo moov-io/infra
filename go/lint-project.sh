@@ -75,28 +75,6 @@ then
   fi
 fi
 
-# Misspell
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_linux_64bit.tar.gz; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O misspell.tar.gz https://github.com/client9/misspell/releases/download/v0.3.4/misspell_0.3.4_mac_64bit.tar.gz; fi
-if [[ "$OS_NAME" != "windows" ]]; then
-    tar xf misspell.tar.gz
-    cp ./misspell ./bin/misspell
-    echo "misspell version: "$(./bin/misspell -v)
-
-    ignore=""
-    if [ -n "$MISSPELL_IGNORE" ];
-    then
-        ignore=$MISSPELL_IGNORE
-    fi
-
-    for file in "${GOFILES[@]}"
-    do
-        ./bin/misspell -error -locale US -i "$ignore" $file
-    done
-
-    echo "finished misspell check"
-fi
-
 # gitleaks
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
@@ -167,7 +145,7 @@ fi
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s v1.42.1
 
-    enabled="-E=bodyclose,exhaustive,gocyclo,rowserrcheck"
+    enabled="-E=bodyclose,exhaustive,gocyclo,misspell,rowserrcheck"
     if [ -n "$GOLANGCI_LINTERS" ];
     then
         enabled="$enabled"",$GOLANGCI_LINTERS"
