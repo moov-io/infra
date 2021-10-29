@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-context=$(kubectl config get-contexts --output name | grep automated-clearing-house)
+context=$(kubectl config get-contexts --output name | grep moov-oss)
 
 dir="fuzz-"$(date +"%Y-%m-%d")
 containers=($(kubectl --context "$context" get pods -n apps | grep fuzz | cut -d' ' -f1))
