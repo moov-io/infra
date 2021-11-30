@@ -168,14 +168,20 @@ then
     GORACE=''
 fi
 
+gotest_packages="./..."
+if [ -n "$GOTEST_PKGS" ];
+then
+    gotest_packages="$GOTEST_PKGS"
+fi
+
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
-    go test ./... "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
+    go test "$gotest_packages" "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
-        go test ./... "$GORACE" -count 1 "$GOTEST_FLAGS"
+        go test "$gotest_packages" "$GORACE" -count 1 "$GOTEST_FLAGS"
     else
         # Optionally profile each package
         if [[ "$PROFILE_GOTEST" == "yes" ]]; then
@@ -192,7 +198,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
             done
         else
             # Otherwise just run Go tests without profiling
-            go test ./... "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 "$GOTEST_FLAGS"
+            go test "$gotest_packages" "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 "$GOTEST_FLAGS"
         fi
     fi
 fi
