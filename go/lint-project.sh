@@ -4,6 +4,8 @@ set -e
 mkdir -p ./bin/
 
 # Collect all our files for processing
+MODNAME=$(go list .)
+GOPKGS=($(go list ./...))
 GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' | grep -v client | grep -v vendor))
 
 # Set OS_NAME if it's empty (local dev)
@@ -169,13 +171,29 @@ fi
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
-    go test ./... "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic
+    go test ./... "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
-        go test ./... "$GORACE" -count 1
+        go test ./... "$GORACE" -count 1 "$GOTEST_FLAGS"
     else
-        go test ./... "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1
+        # Optionally profile each package
+        if [[ "$PROFILE_GOTEST" == "yes" ]]; then
+            for pkg in "${GOPKGS[@]}"
+            do
+                # fixup the sub-package for writing cpu/mem profile
+                dir="./"${pkg#$MODNAME"/"}
+
+                go test "$pkg"  "$GORACE" \
+                   -coverprofile=coverage.txt -covermode=atomic \
+                   -test.cpuprofile="$dir"/cpu.out \
+                   -test.memprofile="$dir"/mem.out \
+                   -count 1 "$GOTEST_FLAGS"
+            done
+        else
+            # Otherwise just run Go tests without profiling
+            go test ./... "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 "$GOTEST_FLAGS"
+        fi
     fi
 fi
 

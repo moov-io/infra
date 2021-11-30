@@ -24,6 +24,9 @@ terraform.tfstate.backup*
 misspell*
 staticcheck*
 /bin/
+cpu.out
+mem.out
+/*.test
 /coverage.txt
 
 /kubeval
