@@ -174,6 +174,9 @@ then
     gotest_packages="$GOTEST_PKGS"
 fi
 
+coveredStatements=0
+maximumCoverage=0
+
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
@@ -188,13 +191,25 @@ if [[ "$OS_NAME" != "windows" ]]; then
             for pkg in "${GOPKGS[@]}"
             do
                 # fixup the sub-package for writing cpu/mem profile
-                dir="./"${pkg#$MODNAME"/"}
+                dir=${pkg#$MODNAME"/"}
+                if [[ "$pkg" == "$dir" ]];
+                then
+                    dir="."
+                fi
 
-                go test "$pkg"  "$GORACE" \
-                   -coverprofile=coverage.txt -covermode=atomic \
+                go test "$pkg" "$GORACE" \
+                   -covermode=atomic \
+                   -coverprofile="$dir"/coverage.txt \
                    -test.cpuprofile="$dir"/cpu.out \
                    -test.memprofile="$dir"/mem.out \
                    -count 1 "$GOTEST_FLAGS"
+
+                coverage=$(go tool cover -func="$dir"/coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
+                if [[ "$coverage" > "0.0" ]];
+                then
+                    coveredStatements=$(echo "$coveredStatements" + "$coverage" | bc)
+                    maximumCoverage=$((maximumCoverage+100))
+                fi
             done
         else
             # Otherwise just run Go tests without profiling
@@ -205,10 +220,16 @@ fi
 
 # Verify Code Coverage Threshold
 if [[ "$COVER_THRESHOLD" != "" ]]; then
-    totalCoverage=$(go tool cover -func=coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
-    echo "Project has $totalCoverage% statement coverage."
+    if [[ -f coverage.txt && "$PROFILE_GOTEST" != "yes" ]];
+    then
+        coveredStatements=$(go tool cover -func=coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
+        maximumCoverage=100
+    fi
 
-    if [[ "$totalCoverage" < "$COVER_THRESHOLD" ]]; then
+    avgCoverage=$(printf "%.1f" $(echo "($coveredStatements / $maximumCoverage)*100" | bc -l))
+    echo "Project has $avgCoverage% statement coverage."
+
+    if [[ "$avgCoverage" < "$COVER_THRESHOLD" ]]; then
         echo "ERROR: statement coverage is not sufficient, $COVER_THRESHOLD% is required"
         exit 1
     else
