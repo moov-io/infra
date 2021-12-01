@@ -27,7 +27,7 @@ staticcheck*
 cpu.out
 mem.out
 /*.test
-/coverage.txt
+coverage.txt
 
 /kubeval
 /kubeval-*.tar.gz
