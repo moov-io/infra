@@ -32,6 +32,8 @@ coverage.txt
 /kubeval
 /kubeval-*.tar.gz
 
+/gitleaks.tar.gz
+
 /images/infra-idx/nginx/cache/
 /images/infra-idx/nginx/run/
 

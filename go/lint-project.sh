@@ -10,8 +10,9 @@ GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' | grep -v client |
 
 # Set OS_NAME if it's empty (local dev)
 OS_NAME=$TRAVIS_OS_NAME
+UNAME=$(uname -s | tr [:upper:] [:lower:])
 if [[ "$OS_NAME" == "" ]]; then
-    if [[ $(uname -s) == "Darwin" ]]; then
+    if [[ "$UNAME" == "darwin" ]]; then
         export OS_NAME=osx
     else
         export OS_NAME=linux
@@ -81,23 +82,15 @@ fi
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.6.1/gitleaks-linux-amd64; fi
-    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/gitleaks https://github.com/zricethezav/gitleaks/releases/download/v7.6.1/gitleaks-darwin-amd64; fi
-
     if [[ "$OS_NAME" != "windows" ]]; then
-        chmod +x ./bin/gitleaks
+        wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.0.6/gitleaks_8.0.6_""$UNAME""_x64.tar.gz"
+        tar xf gitleaks.tar.gz gitleaks
+        mv gitleaks ./bin/gitleaks
 
-        echo "gitleaks version: "$(./bin/gitleaks --version)
-
-        # Scan a few of the most recent commits
-        depth=10
-        if [ -n "$GITLEAKS_DEPTH" ]; then
-            depth=$GITLEAKS_DEPTH
-        fi
-        ./bin/gitleaks --depth=$depth --path=$(pwd) --verbose
+        echo "gitleaks version: "$(./bin/gitleaks version)
+        ./bin/gitleaks detect --no-git --verbose
+        echo "finished gitleaks check"
     fi
-
-    echo "finished gitleaks check"
 fi
 
 # nancy (vulnerable dependencies)
