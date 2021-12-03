@@ -65,19 +65,6 @@ then
     fi
 fi
 
-# Verify we're using the latest version of github.com/moovfinancial/events if it's a dependency
-if [[ "$org" == "moovfinancial" ]];
-then
-  eventsLibrary="github.com/moovfinancial/events"
-  eventsVersion=$( go list -f '{{if not .Indirect}}{{.}}{{end}}' -u -m -mod=mod $eventsLibrary | awk -F'[][]' '{print $2}')
-  if [[ $eventsVersion ]]
-  then
-      echo "$eventsLibrary needs to be updated to the latest release: $eventsVersion"
-      echo "Run 'go get -u ""$eventsLibrary""@latest' to resolve this issue"
-      exit 1
-  fi
-fi
-
 # gitleaks
 # Right now there are some false positives which make it harder to scan
 # See: https://github.com/zricethezav/gitleaks/issues/394
