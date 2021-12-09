@@ -46,13 +46,10 @@ ifneq ($(OS),Windows_NT)
 endif
 
 .PHONY: test test-docker test-kubeval test-mysql
-test: check test-docker test-terraform test-kubeval
+test: check test-docker test-kubeval
 
 test-docker:
 	@go run ./cmd/dockertest
-
-test-terraform:
-	@./tests/terraform-validate.sh
 
 test-kubeval:
 ifneq ($(OS),Windows_NT)
