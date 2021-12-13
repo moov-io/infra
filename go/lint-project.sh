@@ -70,7 +70,7 @@ fi
 # See: https://github.com/zricethezav/gitleaks/issues/394
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
     if [[ "$OS_NAME" != "windows" ]]; then
-        wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.2.0/gitleaks_8.2.0_""$UNAME""_x64.tar.gz"
+        wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.2.1/gitleaks_8.2.1_""$UNAME""_x64.tar.gz"
         tar xf gitleaks.tar.gz gitleaks
         mv gitleaks ./bin/gitleaks
 
