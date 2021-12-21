@@ -6,7 +6,7 @@ Moov runs Docker containers of several applications which execute [go-fuzz](http
 
 For example, if we're running fuzzing for `ach` the `Deployment` would be called `achfuzz`. We also run these fuzz containers as a low `PriorityClass` called `fuzz-low-priority` which pushes fuzzing cpu time down if production requests need more cpu or memory.
 
-After you [setup `kubectl`](kubernetes.md) and authentiate [with Google's Cloud](google-cloud.md) you can download the fuzz data. You'll need to run `1-download.sh` located at [`cmd/cpfuzz/1-download.sh`](../cmd/cpfuzz/1-download.sh) from the root of the infra repository.
+After you [setup `kubectl`](kubernetes.md) and authenticate [with Google's Cloud](google-cloud.md) you can download the fuzz data. You'll need to run `1-download.sh` located at [`cmd/cpfuzz/1-download.sh`](../cmd/cpfuzz/1-download.sh) from the root of the infra repository.
 
 ```
 $ ./cmd/cpfuzz/1-download.sh
