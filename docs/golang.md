@@ -22,7 +22,7 @@ The following variables can be used to configure the linters:
 - `IGNORED_CVES=CVE-XXXX-YYYY,CVE-ZZZZ-XXX`
 - `MISSPELL_IGNORE="palestiniens,palestinians"`
 
-Experiemtnal linters can be enabled:
+Experimental linters can be enabled:
 
 - `EXPERIMENTAL=gitleaks,exhaustive`
 
