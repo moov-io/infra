@@ -211,7 +211,7 @@ fi
 if [[ "$COVER_THRESHOLD" != "" ]]; then
     if [[ -f coverage.txt && "$PROFILE_GOTEST" != "yes" ]];
     then
-        coveredStatements=$(go tool cover -func=coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
+        coveredStatements=$(go tool cover -func=coverage.txt | grep -E '^total:' | grep -Eo '[0-9]+\.[0-9]+')
         maximumCoverage=100
     fi
 
