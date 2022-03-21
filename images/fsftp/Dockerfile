@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine as builder
+FROM golang:1.18-alpine as builder
 RUN apk add -U git
 WORKDIR /go/src/github.com/moov-io/fsftp/
 ENV CGO_ENABLED=0
