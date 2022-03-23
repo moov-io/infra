@@ -60,3 +60,4 @@ coverage.txt
 /envs/oss/terraform.tfvars
 
 .idea
+.DS_Store
