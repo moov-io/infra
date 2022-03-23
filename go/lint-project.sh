@@ -123,6 +123,12 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished nancy check"
 fi
 
+# Allow for build tags to be set
+if [[ "$GOTAGS" != "" ]]; then
+    GOLANGCI_TAGS=" --build-tags $GOTAGS "
+    GOTAGS=" -tags $GOTAGS "
+fi
+
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.45.0
@@ -134,7 +140,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     ./bin/golangci-lint --version
-    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck
+    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS 
 
     echo "finished golangci-lint check"
 fi
@@ -169,11 +175,11 @@ maximumCoverage=0
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
-    go test "$gotest_packages" "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
+    go test $GOTAGS "$gotest_packages" "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
-        go test "$gotest_packages" "$GORACE" -count 1 "$GOTEST_FLAGS"
+        go test $GOTAGS "$gotest_packages" "$GORACE" -count 1 "$GOTEST_FLAGS"
     else
         # Optionally profile each package
         if [[ "$PROFILE_GOTEST" == "yes" ]]; then
@@ -186,7 +192,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
                     dir="."
                 fi
 
-                go test "$pkg" "$GORACE" \
+                go test $GOTAGS "$pkg" "$GORACE" \
                    -covermode=atomic \
                    -coverprofile="$dir"/coverage.txt \
                    -test.cpuprofile="$dir"/cpu.out \
@@ -202,7 +208,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
             done
         else
             # Otherwise just run Go tests without profiling
-            go test "$gotest_packages" "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 "$GOTEST_FLAGS"
+            go test $GOTAGS "$gotest_packages" "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 "$GOTEST_FLAGS"
         fi
     fi
 fi
