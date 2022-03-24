@@ -131,7 +131,7 @@ fi
 
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
-    wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.45.0
+    wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.45.2
 
     enabled="-E=asciicheck,bidichk,bodyclose,exhaustive,durationcheck,gocyclo,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck"
     if [ -n "$GOLANGCI_LINTERS" ];
@@ -140,7 +140,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     ./bin/golangci-lint --version
-    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS 
+    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
 
     echo "finished golangci-lint check"
 fi
