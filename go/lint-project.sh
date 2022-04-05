@@ -117,7 +117,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/nancy --clean-cache
 
     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -mod=mod -m all | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
+    go list -json -deps | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
 
     echo "" # newline
     echo "finished nancy check"
