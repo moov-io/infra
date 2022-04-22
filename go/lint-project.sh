@@ -153,15 +153,6 @@ if [[ "$CGO_ENABLED" == "0" ]];
 then
     GORACE=''
 fi
-if [[ "$OS_NAME" == "osx" ]];
-then
-    version=$(sw_vers -productVersion)
-    if echo "$version" | grep "12.";
-    then
-        echo "Skipping -race flag on macOS $version"
-        GORACE=""
-    fi
-fi
 
 gotest_packages="./..."
 if [ -n "$GOTEST_PKGS" ];
