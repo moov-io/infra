@@ -8,6 +8,10 @@ MODNAME=$(go list .)
 GOPKGS=($(go list ./...))
 GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' | grep -v client | grep -v vendor))
 
+# Print (and capture) the host's Go version
+GO_VERSION=$(go version | grep -Eo '[0-9]\.[0-9]+\.[0-9]')
+echo "Detected Go version $GO_VERSION"
+
 # Set OS_NAME if it's empty (local dev)
 OS_NAME=$TRAVIS_OS_NAME
 UNAME=$(uname -s | tr [:upper:] [:lower:])
@@ -140,7 +144,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 
     ./bin/golangci-lint --version
-    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
+    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
 
     echo "finished golangci-lint check"
 fi
