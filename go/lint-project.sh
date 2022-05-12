@@ -9,7 +9,7 @@ GOPKGS=($(go list ./...))
 GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' | grep -v client | grep -v vendor))
 
 # Print (and capture) the host's Go version
-GO_VERSION=$(go version | grep -Eo '[0-9]\.[0-9]+\.[0-9]')
+GO_VERSION=$(go version | grep -Eo '[0-9]\.[0-9]+\.?[0-9]?')
 echo "Detected Go version $GO_VERSION"
 
 # Set OS_NAME if it's empty (local dev)
