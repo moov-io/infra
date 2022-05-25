@@ -92,21 +92,11 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/nancy --version
 
     ignored_deps=(
-        # Consul Enterprise
-        CVE-2018-19653
-        CVE-2020-13250
-        CVE-2020-7219
-        # Vault Enterprise
-        CVE-2020-10660
-        CVE-2020-10661
-        CVE-2020-13223
-        CVE-2020-7220
-        # etcd
-        CVE-2020-15114
-        CVE-2020-15115
-        CVE-2020-15136
-        # jwt-go
-        CVE-2020-26160
+        # hashicorp/vault
+        # CWE-190: Integer Overflow or Wraparound
+        sonatype-2021-3619
+        # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
+        sonatype-2022-1745
     )
     ignored=$(printf ",%s" "${ignored_deps[@]}")
     ignored=${ignored:1}
