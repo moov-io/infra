@@ -80,6 +80,9 @@ fi
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
     run_gitleaks=true
 fi
+if [[ "$DISABLE_GITLEAKS" != "" ]]; then
+    run_gitleaks=false
+fi
 if [[ "$run_gitleaks" == "true" ]]; then
     wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.8.5/gitleaks_8.8.5_""$UNAME""_x64.tar.gz"
     tar xf gitleaks.tar.gz gitleaks
