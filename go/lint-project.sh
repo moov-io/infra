@@ -69,19 +69,25 @@ then
     fi
 fi
 
-# gitleaks
-# Right now there are some false positives which make it harder to scan
-# See: https://github.com/zricethezav/gitleaks/issues/394
+# gitleaks (secret scanning, in-progress of a rollout)
+run_gitleaks=true
+if [[ "$OS_NAME" == "windows" ]]; then
+    run_gitleaks=false
+fi
+if [[ "$org" != "moov-io" ]]; then
+    run_gitleaks=false
+fi
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    if [[ "$OS_NAME" != "windows" ]]; then
-        wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.8.4/gitleaks_8.8.4_""$UNAME""_x64.tar.gz"
-        tar xf gitleaks.tar.gz gitleaks
-        mv gitleaks ./bin/gitleaks
+    run_gitleaks=true
+fi
+if [[ "$run_gitleaks" == "true" ]]; then
+    wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.8.5/gitleaks_8.8.5_""$UNAME""_x64.tar.gz"
+    tar xf gitleaks.tar.gz gitleaks
+    mv gitleaks ./bin/gitleaks
 
-        echo "gitleaks version: "$(./bin/gitleaks version)
-        ./bin/gitleaks detect --no-git --verbose
-        echo "finished gitleaks check"
-    fi
+    echo "gitleaks version: "$(./bin/gitleaks version)
+    ./bin/gitleaks detect --no-git --verbose
+    echo "finished gitleaks check"
 fi
 
 # nancy (vulnerable dependencies)
