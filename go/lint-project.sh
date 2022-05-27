@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+gitleaks_version=8.8.5
+golangci_version=v1.46.2
+nancy_version=v1.0.34
+
 mkdir -p ./bin/
 
 # Collect all our files for processing
@@ -84,7 +88,7 @@ if [[ "$DISABLE_GITLEAKS" != "" ]]; then
     run_gitleaks=false
 fi
 if [[ "$run_gitleaks" == "true" ]]; then
-    wget -q -O gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v8.8.5/gitleaks_8.8.5_""$UNAME""_x64.tar.gz"
+    wget -q -O gitleaks.tar.gz https://github.com/zricethezav/gitleaks/releases/download/v"$gitleaks_version"/gitleaks_"$gitleaks_version"_"$UNAME"_x64.tar.gz
     tar xf gitleaks.tar.gz gitleaks
     mv gitleaks ./bin/gitleaks
 
@@ -94,8 +98,8 @@ if [[ "$run_gitleaks" == "true" ]]; then
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.33/nancy-v1.0.33-linux-amd64; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v1.0.33/nancy-v1.0.33-darwin-amd64; fi
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-linux-amd64; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-darwin-amd64; fi
 if [[ "$OS_NAME" != "windows" ]]; then
     chmod +x ./bin/nancy
     ./bin/nancy --version
@@ -134,7 +138,7 @@ fi
 
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
-    wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.46.2
+    wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
 
     enabled="-E=asciicheck,bidichk,bodyclose,exhaustive,durationcheck,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck"
     if [ -n "$GOLANGCI_LINTERS" ];
