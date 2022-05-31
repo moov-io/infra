@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-gitleaks_version=8.8.5
+gitleaks_version=8.8.6
 golangci_version=v1.46.2
-nancy_version=v1.0.34
+nancy_version=v1.0.35
 
 mkdir -p ./bin/
 
