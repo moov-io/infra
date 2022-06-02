@@ -3,7 +3,7 @@ set -e
 
 gitleaks_version=8.8.6
 golangci_version=v1.46.2
-nancy_version=v1.0.35
+nancy_version=v1.0.36
 
 mkdir -p ./bin/
 
