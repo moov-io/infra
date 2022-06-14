@@ -79,9 +79,6 @@ if [[ "$GOTAGS" != "" ]]; then
     GOTAGS=" -tags $GOTAGS "
 fi
 
-## Clear GOARCH and GOOS for testing...
-GOARCH=''
-GOOS=''
 GORACE='-race'
 if [[ "$CGO_ENABLED" == "0" ]];
 then
@@ -169,6 +166,10 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
     echo "finished golangci-lint check"
 fi
+
+## Clear GOARCH and GOOS for testing...
+GOARCH=''
+GOOS=''
 
 gotest_packages="./..."
 if [ -n "$GOTEST_PKGS" ];
