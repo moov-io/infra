@@ -80,7 +80,7 @@ if [[ "$GOTAGS" != "" ]]; then
 fi
 
 GORACE='-race'
-if [[ "$CGO_ENABLED" == "0" ]];
+if [[ "$CGO_ENABLED" == "0" || "$GOOS" == "js" || "$GOARCH" == "wasm" ]];
 then
     GORACE=''
 fi
