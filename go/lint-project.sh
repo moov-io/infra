@@ -73,6 +73,26 @@ then
     fi
 fi
 
+# Allow for build tags to be set
+if [[ "$GOTAGS" != "" ]]; then
+    GOLANGCI_TAGS=" --build-tags $GOTAGS "
+    GOTAGS=" -tags $GOTAGS "
+fi
+
+## Clear GOARCH and GOOS for testing...
+GOARCH=''
+GOOS=''
+GORACE='-race'
+if [[ "$CGO_ENABLED" == "0" ]];
+then
+    GORACE=''
+fi
+
+# Build the source code (to discover compile errors prior to linting)
+echo "Building Go source code"
+go build $GORACE $GOTAGS $GOBUILD_FLAGS ./...
+echo "SUCCESS: Go code built without errors"
+
 # gitleaks (secret scanning, in-progress of a rollout)
 run_gitleaks=true
 if [[ "$OS_NAME" == "windows" ]]; then
@@ -130,12 +150,6 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished nancy check"
 fi
 
-# Allow for build tags to be set
-if [[ "$GOTAGS" != "" ]]; then
-    GOLANGCI_TAGS=" --build-tags $GOTAGS "
-    GOTAGS=" -tags $GOTAGS "
-fi
-
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
@@ -154,15 +168,6 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
 
     echo "finished golangci-lint check"
-fi
-
-## Clear GOARCH and GOOS for testing...
-GOARCH=''
-GOOS=''
-GORACE='-race'
-if [[ "$CGO_ENABLED" == "0" ]];
-then
-    GORACE=''
 fi
 
 gotest_packages="./..."
