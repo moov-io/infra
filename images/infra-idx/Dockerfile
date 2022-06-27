@@ -1,4 +1,4 @@
-FROM nginx:1.22
+FROM nginx:1.23
 LABEL maintainer="Moov <support@moov.io>"
 USER nginx
 
