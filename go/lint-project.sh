@@ -161,7 +161,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
         enabled="-E=""$SET_GOLANGCI_LINTERS"
     fi
 
-    ./bin/golangci-lint --version
+    ./bin/golangci-lint version
     ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
 
     echo "finished golangci-lint check"
