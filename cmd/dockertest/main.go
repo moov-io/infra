@@ -17,7 +17,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -46,7 +45,7 @@ func main() {
 	parent = filepath.Join(parent, "images")
 
 	// read directories
-	fds, err := ioutil.ReadDir(parent)
+	fds, err := os.ReadDir(parent)
 	if err != nil {
 		log.Printf("ERROR: reading directory %s - %v", parent, err)
 	}
