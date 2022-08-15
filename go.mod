@@ -1,6 +1,6 @@
 module github.com/moov-io/infra
 
-go 1.18
+go 1.19
 
 require goftp.io/server v0.4.1
 
