@@ -55,7 +55,7 @@ test-kubeval:
 ifneq ($(OS),Windows_NT)
 	wget -nc https://github.com/instrumenta/kubeval/releases/download/0.15.0/kubeval-$(PLATFORM)-amd64.tar.gz
 	tar -xf kubeval-$(PLATFORM)-amd64.tar.gz kubeval && chmod +x ./kubeval
-	find lib/* -type f -name *.yml | grep -v blackbox | grep -v '19-etcd' | grep -v '20-vault' | xargs -n1 -I {} ./kubeval $(shell pwd)/'{}' --strict -v 1.16.4
+	find lib/* -type f -name *.yml | grep -v blackbox | grep -v '19-etcd' | grep -v '20-vault' | xargs -n1 -I {} ./kubeval $(shell pwd)/'{}' --strict -v 1.18.1
 else
 	@echo "Skipping kubeval tests on TravisCI"
 endif
