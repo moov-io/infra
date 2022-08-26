@@ -151,7 +151,7 @@ fi
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
 
-    enabled="-E=asciicheck,bidichk,bodyclose,exhaustive,durationcheck,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck"
+    enabled="-E=asciicheck,bidichk,bodyclose,exhaustive,durationcheck,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,unused"
     if [ -n "$GOLANGCI_LINTERS" ];
     then
         enabled="$enabled"",$GOLANGCI_LINTERS"
