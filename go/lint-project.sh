@@ -10,7 +10,7 @@ mkdir -p ./bin/
 # Collect all our files for processing
 MODNAME=$(go list .)
 GOPKGS=($(go list ./...))
-GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' | grep -v client | grep -v vendor))
+GOFILES=($(find . -type f -not -path "./nginx/*" -name '*.go' -not -name '*.pb.go' | grep -v client | grep -v vendor))
 
 # Print (and capture) the host's Go version
 GO_VERSION=$(go version | grep -Eo '[0-9]\.[0-9]+\.?[0-9]?')
