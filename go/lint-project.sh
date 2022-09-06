@@ -166,6 +166,8 @@ then
 
     # Run govulncheck
     govulncheck -v -test ./...
+
+    echo "finished govulncheck check"
 fi
 
 # golangci-lint
