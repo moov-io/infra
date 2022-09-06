@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-gitleaks_version=8.11.2
+gitleaks_version=8.12.0
 golangci_version=v1.49.0
 nancy_version=v1.0.37
 
