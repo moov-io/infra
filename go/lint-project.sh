@@ -147,6 +147,29 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished nancy check"
 fi
 
+# govulncheck (Experimental source code analysis from Go team)
+run_govulncheck=false
+if [[ "$EXPERIMENTAL" == *"govulncheck"* ]];
+then
+    run_govulncheck=true
+fi
+# Run govulncheck on OSS repos by default
+if [[ "$org" == "moov-io" ]];
+then
+    run_govulncheck=true
+fi
+## Run govulncheck which parses the compiled/used code for known vulnerabilities.
+if [[ "$run_govulncheck" == "true" ]];
+then
+    # Install govulncheck (no binary release available currently)
+    go install golang.org/x/vuln/cmd/govulncheck@latest
+
+    # Run govulncheck
+    govulncheck -v -test ./...
+
+    echo "finished govulncheck check"
+fi
+
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
     wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
