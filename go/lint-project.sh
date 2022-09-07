@@ -165,9 +165,14 @@ then
     go install golang.org/x/vuln/cmd/govulncheck@latest
 
     # Run govulncheck
-    govulncheck -v -test ./...
-
-    echo "finished govulncheck check"
+    if [ -f /home/runner/go/bin/govulncheck ];
+    then
+        echo "starting govulncheck check"
+        /home/runner/go/bin/govulncheck -v -test ./...
+        echo "finished govulncheck check"
+    else
+        echo "Can't find govulncheck..."
+    fi
 fi
 
 # golangci-lint
