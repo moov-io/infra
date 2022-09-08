@@ -164,11 +164,23 @@ then
     # Install govulncheck (no binary release available currently)
     go install golang.org/x/vuln/cmd/govulncheck@latest
 
+    # Find govulncheck
+    bin=""
+    if which -s govulncheck > /dev/null;
+    then
+        bin=$(which govulncheck 2>&1 | head -n1)
+    fi
+    actions_path="/home/runner/go/bin/govulncheck"
+    if [[ -f "$actions_path" ]];
+    then
+        bin="$actions_path"
+    fi
+
     # Run govulncheck
-    if [ -f /home/runner/go/bin/govulncheck ];
+    if [[ "$bin" != "" ]];
     then
         echo "starting govulncheck check"
-        /home/runner/go/bin/govulncheck -v -test ./...
+        "$bin" -v -test ./...
         echo "finished govulncheck check"
     else
         echo "Can't find govulncheck..."
