@@ -2,7 +2,7 @@
 
 ### Dependency CVE Checking
 
-- `IGNORED_CVES`: List of [CVEs to ignore in dependencies](https://github.com/sonatype-nexus-community/nancy#via-file). (Example: `CVE-2020-26160`)
+- `IGNORED_CVES`: List of [CVEs to ignore in dependencies](https://github.com/sonatype-nexus-community/nancy#via-file). (Example: `CVE-2020-26160,CVE-2022-0001`)
 
 ### Experiments
 

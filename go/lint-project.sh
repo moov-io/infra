@@ -147,19 +147,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished nancy check"
 fi
 
-# govulncheck (Experimental source code analysis from Go team)
-run_govulncheck=false
-if [[ "$EXPERIMENTAL" == *"govulncheck"* ]];
-then
-    run_govulncheck=true
-fi
-# Run govulncheck on OSS repos by default
-if [[ "$org" == "moov-io" ]];
-then
-    run_govulncheck=true
-fi
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
-if [[ "$run_govulncheck" == "true" ]];
+if [[ "$DISABLE_GOVULNCHECK" == "" ]];
 then
     # Install govulncheck (no binary release available currently)
     go install golang.org/x/vuln/cmd/govulncheck@latest
