@@ -161,7 +161,14 @@ then
     then
         bin=$(which govulncheck 2>&1 | head -n1)
     fi
+    # Public Github runners path
     actions_path="/home/runner/go/bin/govulncheck"
+    if [[ -f "$actions_path" ]];
+    then
+        bin="$actions_path"
+    fi
+    # Moov hosted runner paths
+    actions_path="/home/actions/bin/govulncheck"
     if [[ -f "$actions_path" ]];
     then
         bin="$actions_path"
