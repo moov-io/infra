@@ -122,7 +122,9 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/nancy --version
 
     ignored_deps=(
-        # hashicorp/vault
+        # hashicorp/vault enterprise issues
+        CVE-2022-36129
+        CVE-2022-36129
         # CWE-190: Integer Overflow or Wraparound
         sonatype-2021-3619
         # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
