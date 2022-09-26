@@ -143,7 +143,7 @@ data:
           redirectRegex:
             regex: "/ach$"
             replacement: "/ach/"
-        oss-moovio-fincen-redirect:
+        oss-moovio-fincenwebui-redirect:
           redirectRegex:
             regex: "/fincen$"
             replacement: "/fincen/"
