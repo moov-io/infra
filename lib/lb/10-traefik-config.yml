@@ -68,6 +68,15 @@ data:
               interval: "30s"
               timeout: "5s"
               scheme: http
+        fincenwebui:
+          loadBalancer:
+            servers:
+              - url: 'http://fincen-webui.apps.svc.cluster.local:8080/'
+            healthCheck:
+              path: "/fincen/wasm_exec.js"
+              interval: "30s"
+              timeout: "5s"
+              scheme: http
         imagecashletterwebui:
           loadBalancer:
             servers:
@@ -134,6 +143,10 @@ data:
           redirectRegex:
             regex: "/ach$"
             replacement: "/ach/"
+        oss-moovio-fincen-redirect:
+          redirectRegex:
+            regex: "/fincen$"
+            replacement: "/fincen/"
         oss-moovio-imagecashletterwebui-redirect:
           redirectRegex:
             regex: "/x9$"
@@ -189,6 +202,16 @@ data:
           rule: "Host(`oss.moov.io`) && PathPrefix(`/ach`)"
           middlewares:
             - oss-moovio-ach-redirect
+          tls:
+            certResolver: default
+            domains:
+              - main: "oss.moov.io"
+        "oss-moovio-fincenwebui":
+          entryPoints: [https]
+          service: fincenwebui
+          rule: "Host(`oss.moov.io`) && PathPrefix(`/fincen`)"
+          middlewares:
+            - oss-moovio-fincenwebui-redirect
           tls:
             certResolver: default
             domains:
