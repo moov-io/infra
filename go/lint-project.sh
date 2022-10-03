@@ -122,6 +122,8 @@ if [[ "$OS_NAME" != "windows" ]]; then
     ./bin/nancy --version
 
     ignored_deps=(
+        # hashicorp/consul enterprise issues
+        CVE-2021-41803
         # hashicorp/vault enterprise issues
         CVE-2022-36129
         CVE-2022-36129
