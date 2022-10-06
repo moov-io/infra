@@ -151,8 +151,7 @@ fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
 if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
-# if [[ "$DISABLE_GOVULNCHECK" == "" ]];
-then
+# if [[ "$DISABLE_GOVULNCHECK" == "" ]]; then
     # Install govulncheck (no binary release available currently)
     go install golang.org/x/vuln/cmd/govulncheck@latest
 
