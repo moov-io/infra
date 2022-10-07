@@ -20,7 +20,7 @@ metadata:
   labels:
     app: achfuzz
 spec:
-  replicas: 0
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -46,7 +46,7 @@ spec:
         - mountPath: /go/src/github.com/moov-io/ach/test/fuzz-reader/crashers/
           name: achfuzz-data
       containers:
-      - image: moov/achfuzz:v1.19.3
+      - image: moov/achfuzz:v1.21.2
         imagePullPolicy: Always
         name: achfuzz
         volumeMounts:
