@@ -61,6 +61,9 @@ else
 	@echo "Skipping kubeval tests on TravisCI"
 endif
 
+test-shell:
+	shellcheck ./go/lint-project.sh
+
 test-mysql:
 	@for dir in $(shell ls -1 ./tests/); do \
 		cd ./tests/"$$dir" && ./test.sh && cd ../; \
