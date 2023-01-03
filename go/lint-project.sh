@@ -223,6 +223,10 @@ if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
     go test $GOTAGS "$gotest_packages" "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
 fi
+# Add some default flags to every 'go test' case
+if [[ "$GOTEST_FLAGS" == "" ]]; then
+    GOTEST_FLAGS="-shuffle"
+fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
         go test $GOTAGS "$gotest_packages" "$GORACE" -count 1 "$GOTEST_FLAGS"
