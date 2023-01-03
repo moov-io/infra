@@ -225,7 +225,7 @@ if [[ "$OS_NAME" == "windows" ]]; then
 fi
 # Add some default flags to every 'go test' case
 if [[ "$GOTEST_FLAGS" == "" ]]; then
-    GOTEST_FLAGS="-shuffle"
+    GOTEST_FLAGS="-shuffle $(date +%s)"
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
