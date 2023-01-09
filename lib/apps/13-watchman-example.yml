@@ -17,7 +17,7 @@ spec:
         app: watchman-webhook-example
     spec:
       containers:
-      - image: moov/watchman-webhook-example:v0.23.1
+      - image: moov/watchman-webhook-example:v0.24.0-m4
         imagePullPolicy: Always
         name: watchman-webhook-example
         args:

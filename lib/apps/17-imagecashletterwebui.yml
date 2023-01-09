@@ -42,7 +42,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/imagecashletter-webui:v0.7.3
+      - image: moov/imagecashletter-webui:v0.9.1
         imagePullPolicy: Always
         name: imagecashletter-webui
         args:
