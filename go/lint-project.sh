@@ -4,6 +4,7 @@ set -e
 gitleaks_version=8.14.1
 golangci_version=v1.50.1
 nancy_version=v1.0.42
+sqlvet_version=v1.1.5
 
 mkdir -p ./bin/
 
@@ -182,6 +183,21 @@ if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
         echo "finished govulncheck check"
     else
         echo "Can't find govulncheck..."
+    fi
+fi
+
+# sqlvet
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-linux-amd64.tar.gz; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-darwin-amd64.tar.gz; fi
+if [[ "$OS_NAME" != "windows" ]]; then
+    # Only run sqlvet if the experiment has been enabled
+    if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
+        tar xf sqlvet.tar.gz sqlvet
+        mv sqlvet ./bin/sqlvet
+
+        echo "sqlvet version: "$(./bin/sqlvet --version)
+        ./bin/sqlvet .
+        echo "finished sqlvet check"
     fi
 fi
 
