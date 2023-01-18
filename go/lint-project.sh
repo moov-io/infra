@@ -187,17 +187,19 @@ if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
 fi
 
 # sqlvet
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-linux-amd64.tar.gz; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-darwin-amd64.tar.gz; fi
-if [[ "$OS_NAME" != "windows" ]]; then
-    # Only run sqlvet if the experiment has been enabled
-    if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
+if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
+    # Download only on linux or macOS
+    if [[ "$OS_NAME" != "windows" ]]; then
+        if [[ "$OS_NAME" == "linux" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-linux-amd64.tar.gz; fi
+        if [[ "$OS_NAME" == "osx" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-darwin-amd64.tar.gz; fi
         tar xf sqlvet.tar.gz sqlvet
         mv sqlvet ./bin/sqlvet
 
         echo "sqlvet version: "$(./bin/sqlvet --version)
         ./bin/sqlvet .
         echo "finished sqlvet check"
+    else
+        echo "sqlvet is not supported on windows"
     fi
 fi
 
