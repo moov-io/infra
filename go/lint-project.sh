@@ -299,7 +299,7 @@ if [[ "$COVER_THRESHOLD" != "" ]]; then
         echo "ERROR: statement coverage is not sufficient, $COVER_THRESHOLD% is required"
         exit 1
     else
-        echo "SUCCESS: project has sufficient statement coverage"
+        echo "SUCCESS: project has sufficient statement coverage (over $COVER_THRESHOLD%)"
     fi
 else
     echo "Skipping code coverage threshold, consider setting COVER_THRESHOLD. (Example: 85.0)"
