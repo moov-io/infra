@@ -223,6 +223,12 @@ if [[ "$OS_NAME" != "windows" ]]; then
     echo "finished golangci-lint check"
 fi
 
+if [[ "$SKIP_TESTS" == "yes" ]];
+then
+    echo "Skipping Go tests from env var"
+    exit 0;
+fi
+
 ## Clear GOARCH and GOOS for testing...
 GOARCH=''
 GOOS=''
@@ -239,7 +245,7 @@ maximumCoverage=0
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
-    go test $GOTAGS "$gotest_packages" "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic "$GOTEST_FLAGS"
+    go test $GOTAGS "$gotest_packages" "$GORACE" -short -coverprofile=coverage.txt -covermode=atomic $GOTEST_FLAGS
 fi
 # Add some default flags to every 'go test' case
 if [[ "$GOTEST_FLAGS" == "" ]]; then
@@ -250,7 +256,7 @@ if [[ "$GOTEST_FLAGS" == "" ]]; then
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
-        go test $GOTAGS "$gotest_packages" "$GORACE" -count 1 "$GOTEST_FLAGS"
+        go test $GOTAGS "$gotest_packages" "$GORACE" -count 1 $GOTEST_FLAGS
     else
         # Optionally profile each package
         if [[ "$PROFILE_GOTEST" == "yes" ]]; then
@@ -268,7 +274,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
                    -coverprofile="$dir"/coverage.txt \
                    -test.cpuprofile="$dir"/cpu.out \
                    -test.memprofile="$dir"/mem.out \
-                   -count 1 "$GOTEST_FLAGS"
+                   -count 1 $GOTEST_FLAGS
 
                 coverage=$(go tool cover -func="$dir"/coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
                 if [[ "$coverage" > "0.0" ]];
@@ -279,7 +285,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
             done
         else
             # Otherwise just run Go tests without profiling
-            go test $GOTAGS "$gotest_packages" "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 "$GOTEST_FLAGS"
+            go test $GOTAGS "$gotest_packages" "$GORACE" -coverprofile=coverage.txt -covermode=atomic -count 1 $GOTEST_FLAGS
         fi
     fi
 fi
