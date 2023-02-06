@@ -2,7 +2,7 @@
 set -e
 
 gitleaks_version=8.14.1
-golangci_version=v1.51.0
+golangci_version=v1.51.1
 nancy_version=v1.0.42
 sqlvet_version=v1.1.5
 
