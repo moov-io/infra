@@ -7,7 +7,7 @@
 ### Experiments
 
 - `EXPERIMENTAL`: List of additional checks to perform. (Example: `gitleaks,...`)
-   - Current experiments: `gitleaks`
+   - Current experiments: `gitleaks`, `govulncheck`, `shuffle`
 
 ### Go Linters
 
@@ -19,3 +19,4 @@
 - `GOTEST_FLAGS`: Additional flags to include on `go test` commands. (Example `-test.shuffle=on`)
 - `GOTEST_PKGS`: Selector of packages to test (Examples: `./...`, `./internal/foo/`)
 - `PROFILE_GOTEST`: Run each package with CPU and memory profiling. (Example: `yes`)
+- `SKIP_TESTS`: Don't run any Go tests when set to `yes`.
