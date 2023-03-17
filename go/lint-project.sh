@@ -115,40 +115,40 @@ if [[ "$run_gitleaks" == "true" ]]; then
     echo "finished gitleaks check"
 fi
 
-# `# nancy (vulnerable dependencies)
-# if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-linux-amd64; fi
-# if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-darwin-amd64; fi
-# if [[ "$OS_NAME" != "windows" ]]; then
-#     chmod +x ./bin/nancy
-#     ./bin/nancy --version
+# nancy (vulnerable dependencies)
+if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-linux-amd64; fi
+if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-darwin-amd64; fi
+if [[ "$OS_NAME" != "windows" ]]; then
+    chmod +x ./bin/nancy
+    ./bin/nancy --version
 
-#     ignored_deps=(
-#         # hashicorp/vault enterprise issues
-#         CVE-2022-36129
-#         CVE-2022-36129
-#         # CWE-190: Integer Overflow or Wraparound
-#         sonatype-2021-3619
-#         # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
-#         sonatype-2022-1745
-#     )
-#     ignored=$(printf ",%s" "${ignored_deps[@]}")
-#     ignored=${ignored:1}
+    ignored_deps=(
+        # hashicorp/vault enterprise issues
+        CVE-2022-36129
+        CVE-2022-36129
+        # CWE-190: Integer Overflow or Wraparound
+        sonatype-2021-3619
+        # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
+        sonatype-2022-1745
+    )
+    ignored=$(printf ",%s" "${ignored_deps[@]}")
+    ignored=${ignored:1}
 
-#     # Append additional CVEs
-#     if [ -n "$IGNORED_CVES" ];
-#     then
-#         ignored="$ignored"",""$IGNORED_CVES"
-#     fi
+    # Append additional CVEs
+    if [ -n "$IGNORED_CVES" ];
+    then
+        ignored="$ignored"",""$IGNORED_CVES"
+    fi
 
-#     # Clean nancy cache
-#     ./bin/nancy --clean-cache
+    # Clean nancy cache
+    ./bin/nancy --clean-cache
 
-#     # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-#     go list -deps -f '{{with .Module}}{{.Path}} {{.Version}}{{end}}' ./... | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
+    # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
+    go list -deps -f '{{with .Module}}{{.Path}} {{.Version}}{{end}}' ./... | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
 
-#     echo "" # newline
-#     echo "finished nancy check"
-# fi`
+    echo "" # newline
+    echo "finished nancy check"
+fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
 if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
