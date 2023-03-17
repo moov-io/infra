@@ -6,6 +6,18 @@ golangci_version=v1.51.2
 nancy_version=v1.0.42
 sqlvet_version=v1.1.5
 
+# Set these to any non-blank value to disable the linter
+disable_golangci=""
+if [[ "$SKIP_GOLANGCI" != "" ]];
+then
+    disable_golangci="$SKIP_GOLANGCI"
+fi
+disable_nancy=""
+if [[ "$SKIP_NANCY" != "" ]];
+then
+    disable_nancy="$SKIP_NANCY"
+fi
+
 mkdir -p ./bin/
 
 # Collect all our files for processing
@@ -112,42 +124,49 @@ if [[ "$run_gitleaks" == "true" ]]; then
 
     echo "gitleaks version: "$(./bin/gitleaks version)
     ./bin/gitleaks detect --no-git --verbose
-    echo "finished gitleaks check"
+    echo "FINISHED gitleaks check"
 fi
 
 # nancy (vulnerable dependencies)
-if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-linux-amd64; fi
-if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-darwin-amd64; fi
-if [[ "$OS_NAME" != "windows" ]]; then
-    chmod +x ./bin/nancy
-    ./bin/nancy --version
+if [[ "$disable_nancy" != "" ]];
+then
+    echo "SKIPPING nancy check"
+else
+    # Download nancy
+    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-linux-amd64; fi
+    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-darwin-amd64; fi
+    if [[ "$OS_NAME" != "windows" ]]; then
+        chmod +x ./bin/nancy
+        echo "STARTING nancy check"
+        ./bin/nancy --version
 
-    ignored_deps=(
-        # hashicorp/vault enterprise issues
-        CVE-2022-36129
-        CVE-2022-36129
-        # CWE-190: Integer Overflow or Wraparound
-        sonatype-2021-3619
-        # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
-        sonatype-2022-1745
-    )
-    ignored=$(printf ",%s" "${ignored_deps[@]}")
-    ignored=${ignored:1}
+        ignored_deps=(
+            # hashicorp/vault enterprise issues
+            CVE-2022-36129
+            CVE-2022-36129
+            # CWE-190: Integer Overflow or Wraparound
+            sonatype-2021-3619
+            # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
+            sonatype-2022-1745
+        )
+        ignored=$(printf ",%s" "${ignored_deps[@]}")
+        ignored=${ignored:1}
 
-    # Append additional CVEs
-    if [ -n "$IGNORED_CVES" ];
-    then
-        ignored="$ignored"",""$IGNORED_CVES"
+        # Append additional CVEs
+        if [ -n "$IGNORED_CVES" ];
+        then
+            ignored="$ignored"",""$IGNORED_CVES"
+        fi
+
+        # Clean nancy cache
+        ./bin/nancy --clean-cache
+
+        # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
+        go list -deps -f '{{with .Module}}{{.Path}} {{.Version}}{{end}}' ./... | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
+
+        echo "" # newline
+        echo "FINISHED nancy check"
     fi
-
-    # Clean nancy cache
-    ./bin/nancy --clean-cache
-
-    # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-    go list -deps -f '{{with .Module}}{{.Path}} {{.Version}}{{end}}' ./... | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
-
-    echo "" # newline
-    echo "finished nancy check"
 fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
@@ -178,9 +197,9 @@ if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
     # Run govulncheck
     if [[ "$bin" != "" ]];
     then
-        echo "starting govulncheck check"
+        echo "STARTING govulncheck check"
         "$bin" -v -test ./...
-        echo "finished govulncheck check"
+        echo "FINISHED govulncheck check"
     else
         echo "Can't find govulncheck..."
     fi
@@ -197,7 +216,7 @@ if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
 
         echo "sqlvet version: "$(./bin/sqlvet --version)
         ./bin/sqlvet .
-        echo "finished sqlvet check"
+        echo "FINISHED sqlvet check"
     else
         echo "sqlvet is not supported on windows"
     fi
@@ -205,27 +224,34 @@ fi
 
 # golangci-lint
 if [[ "$OS_NAME" != "windows" ]]; then
-    wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
-
-    enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,unused,wastedassign"
-    if [ -n "$GOLANGCI_LINTERS" ];
+    if [[ "$disable_golangci" != "" ]];
     then
-        enabled="$enabled"",$GOLANGCI_LINTERS"
-    fi
-    if [ -n "$SET_GOLANGCI_LINTERS" ];
-    then
-        enabled="-E=""$SET_GOLANGCI_LINTERS"
-    fi
+        echo "SKIPPING golangci-lint"
+    else
+        # Download golangci-lint
+        wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
 
-    ./bin/golangci-lint version
-    ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
+        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,unused,wastedassign"
+        if [ -n "$GOLANGCI_LINTERS" ];
+        then
+            enabled="$enabled"",$GOLANGCI_LINTERS"
+        fi
+        if [ -n "$SET_GOLANGCI_LINTERS" ];
+        then
+            enabled="-E=""$SET_GOLANGCI_LINTERS"
+        fi
 
-    echo "finished golangci-lint check"
+        echo "STARTING golangci-lint checks"
+        ./bin/golangci-lint version
+        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
+
+        echo "FINISHED golangci-lint checks"
+    fi
 fi
 
 if [[ "$SKIP_TESTS" == "yes" ]];
 then
-    echo "Skipping Go tests from env var"
+    echo "SKIPPING Go tests from env var"
     exit 0;
 fi
 
