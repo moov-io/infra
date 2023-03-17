@@ -12,6 +12,8 @@
 ### Go Linters
 
 - `GOLANGCI_LINTERS`: List of additional [Go linters to run with golangci-lint](https://golangci-lint.run/usage/linters/). (Example: `gosec`)
+- `SKIP_GOLANGCI`: Don't run the golangci-lint checks
+- `SKIP_NANCY`: Don't run the nancy checks
 
 ### Testing
 
