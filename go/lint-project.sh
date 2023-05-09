@@ -205,6 +205,22 @@ if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
     fi
 fi
 
+# mirror
+run_butuzov_mirror=false
+if [[ "$org" == "moov-io" ]]; then
+    run_butuzov_mirror=true
+fi
+if [[ "$EXPERIMENTAL" == *"mirror"* ]]; then
+    run_butuzov_mirror=true
+fi
+if [[ "$run_butuzov_mirror" == "true" ]]; then
+    go install github.com/butuzov/mirror/cmd/mirror@latest
+
+    echo "butuzov mirror version: "$(mirror -V=full)
+    mirror ./...
+    echo "FINISHED butuzov mirror check"
+fi
+
 # sqlvet
 if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
     # Download only on linux or macOS
