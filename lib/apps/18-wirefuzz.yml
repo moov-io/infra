@@ -47,7 +47,7 @@ spec:
         - mountPath: /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/
           name: wirefuzz-data
       containers:
-      - image: moov/wirefuzz:v0.13.0
+      - image: moov/wirefuzz:v0.13.3
         imagePullPolicy: Always
         name: wirefuzz
         volumeMounts:
