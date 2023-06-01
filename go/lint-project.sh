@@ -241,9 +241,21 @@ if [[ "$OS_NAME" != "windows" ]]; then
             enabled="-E=""$SET_GOLANGCI_LINTERS"
         fi
 
+        # Additional linters for moov-io code
+        if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]];
+        then
+            enabled="$enabled"",dupword,errchkjson,gocheckcompilerdirectives,mirror,tenv,usestdlibvars"
+        fi
+
+        disabled="-D=depguard"
+        if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
+        then
+            disabled="-D=""$DISABLED_GOLANGCI_LINTERS"
+        fi
+
         echo "STARTING golangci-lint checks"
         ./bin/golangci-lint version
-        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
 
         echo "FINISHED golangci-lint checks"
     fi
