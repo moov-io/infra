@@ -223,6 +223,10 @@ if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
 fi
 
 # golangci-lint
+if [[ "$org" == "moov-io" ]];
+then
+    STRICT_GOLANGCI_LINTERS=yes
+fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$disable_golangci" != "" ]];
     then
