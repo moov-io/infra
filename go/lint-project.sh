@@ -2,7 +2,7 @@
 set -e
 
 gitleaks_version=8.16.3
-golangci_version=v1.53.0
+golangci_version=v1.53.1
 nancy_version=v1.0.42
 sqlvet_version=v1.1.5
 
@@ -251,16 +251,15 @@ if [[ "$OS_NAME" != "windows" ]]; then
             enabled="$enabled"",dupword,errchkjson,gocheckcompilerdirectives,mirror,tenv,usestdlibvars"
         fi
 
-        disabled="-D=depguard"
+        disabled="-D=depguard,errcheck"
         if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
         then
-            disabled="-D=""$DISABLED_GOLANGCI_LINTERS"
+            disabled="-D=$DISABLED_GOLANGCI_LINTERS"
         fi
 
         echo "STARTING golangci-lint checks"
         ./bin/golangci-lint version
-        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m --disable=errcheck $GOLANGCI_TAGS
-
+        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
         echo "FINISHED golangci-lint checks"
     fi
 fi
