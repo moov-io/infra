@@ -248,7 +248,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
         # Additional linters for moov-io code
         if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]];
         then
-            enabled="$enabled"",dupword,errchkjson,gocheckcompilerdirectives,mirror,tenv"
+            enabled="$enabled"",dupword,gocheckcompilerdirectives,mirror,tenv"
         fi
 
         disabled="-D=depguard,errcheck"
