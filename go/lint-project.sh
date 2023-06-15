@@ -225,7 +225,7 @@ fi
 # golangci-lint
 if [[ "$org" == "moov-io" ]];
 then
-    STRICT_GOLANGCI_LINTERS=yes
+    STRICT_GOLANGCI_LINTERS=${STRICT_GOLANGCI_LINTERS:="yes"}
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$disable_golangci" != "" ]];
