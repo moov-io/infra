@@ -7,7 +7,6 @@ check:
 	GOCYCLO_LIMIT=15 \
 	GOLANGCI_FLAGS="--exclude-use-default=false" \
 	GOTEST_FLAGS='-test.shuffle=on' \
-	IGNORED_CVES=sonatype-2022-5369 \
 	PROFILE_GOTEST='yes' \
 	./go/lint-project.sh
 
