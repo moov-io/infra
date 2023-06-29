@@ -8,7 +8,7 @@ RUN go get -u ./...
 RUN go build -o /go/bin/fsftp main.go
 
 FROM scratch
-LABEL maintainer="Moov <support@moov.io>"
+LABEL maintainer="Moov <oss@moov.io>"
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /go/bin/fsftp /bin/fsftp
 EXPOSE 2121

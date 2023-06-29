@@ -1,5 +1,5 @@
 FROM nginx:1.25
-LABEL maintainer="Moov <support@moov.io>"
+LABEL maintainer="Moov <oss@moov.io>"
 USER nginx
 
 COPY nginx/nginx.conf /opt/nginx/nginx.conf

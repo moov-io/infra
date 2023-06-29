@@ -1,5 +1,5 @@
 FROM debian:stable-slim
-LABEL maintainer="Moov <support@moov.io>"
+LABEL maintainer="Moov <oss@moov.io>"
 
 # Docs: https://www.tarsnap.com/pkg-deb.html
 
