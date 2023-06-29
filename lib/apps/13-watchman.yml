@@ -42,7 +42,7 @@ spec:
                 topologyKey: "kubernetes.io/hostname"
               weight: 1
       containers:
-      - image: moov/watchman:v0.24.0-m4
+      - image: moov/watchman:v0.24.2
         imagePullPolicy: Always
         name: watchman
         args:
@@ -89,18 +89,18 @@ spec:
           httpGet:
             path: /ping
             port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 5
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 10
         livenessProbe:
           httpGet:
             path: /ping
             port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 20
-          timeoutSeconds: 5
-          failureThreshold: 5
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 10
       restartPolicy: Always
       terminationGracePeriodSeconds: 60
 ---
