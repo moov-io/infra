@@ -49,6 +49,9 @@ spec:
           - -http.addr=:8080
           - -admin.addr=:9090
           - -base-path=/x9
+        env:
+          - name: READER_BUFFER_SIZE
+            value: "15728640" # 15MB to support image data
         ports:
           - containerPort: 8080
             name: http
