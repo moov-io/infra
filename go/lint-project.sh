@@ -170,9 +170,15 @@ else
 fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
+run_govulncheck=false
+if [[ "$org" == "moov-io" ]]; then
+    run_govulncheck=true
+fi
 if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
-# if [[ "$DISABLE_GOVULNCHECK" == "" ]]; then
-    # Install govulncheck (no binary release available currently)
+    run_govulncheck=true
+fi
+if [[ "$run_govulncheck" == "true" ]]; then
+    # Install the latest govulncheck release
     go install golang.org/x/vuln/cmd/govulncheck@latest
 
     # Find govulncheck
