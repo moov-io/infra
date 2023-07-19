@@ -198,7 +198,7 @@ if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
     if [[ "$bin" != "" ]];
     then
         echo "STARTING govulncheck check"
-        "$bin" -v -test ./...
+        "$bin" -test ./...
         echo "FINISHED govulncheck check"
     else
         echo "Can't find govulncheck..."
