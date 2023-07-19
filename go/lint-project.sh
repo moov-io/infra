@@ -228,6 +228,44 @@ if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
     fi
 fi
 
+run_xmlencoderclose=true
+if [[ "$DISABLE_XMLENCODERCLOSE" != "" ]]; then
+    run_xmlencoderclose=false
+fi
+if [[ "$run_xmlencoderclose" == "true" ]]; then
+    # Install xmlencoderclose
+    go install github.com/adamdecaf/xmlencoderclose@latest
+
+    # Find the linter
+    bin=""
+    if which -s xmlencoderclose > /dev/null;
+    then
+        bin=$(which xmlencoderclose 2>&1 | head -n1)
+    fi
+    # Public Github runners path
+    actions_path="/home/runner/go/bin/xmlencoderclose"
+    if [[ -f "$actions_path" ]];
+    then
+        bin="$actions_path"
+    fi
+    # Moov hosted runner paths
+    actions_path="/home/actions/bin/xmlencoderclose"
+    if [[ -f "$actions_path" ]];
+    then
+        bin="$actions_path"
+    fi
+
+    # Run xmlencoderclose
+    if [[ "$bin" != "" ]];
+    then
+        echo "STARTING xmlencoderclose check"
+        "$bin" -test ./...
+        echo "FINISHED xmlencoderclose check"
+    else
+        echo "Can't find xmlencoderclose..."
+    fi
+fi
+
 # golangci-lint
 if [[ "$org" == "moov-io" ]];
 then
