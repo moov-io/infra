@@ -122,12 +122,9 @@ if [[ "$run_gitleaks" == "true" ]]; then
 fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
-run_govulncheck=false
-if [[ "$org" == "moov-io" ]]; then
-    run_govulncheck=true
-fi
-if [[ "$EXPERIMENTAL" == *"govulncheck"* ]]; then
-    run_govulncheck=true
+run_govulncheck=true
+if [[ "$DISABLE_GOVULNCHECK" != "" ]]; then
+    run_govulncheck=false
 fi
 if [[ "$run_govulncheck" == "true" ]]; then
     # Install the latest govulncheck release
