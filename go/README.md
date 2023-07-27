@@ -1,9 +1,5 @@
 ## Golang Linter Script
 
-### Dependency CVE Checking
-
-- `IGNORED_CVES`: List of [CVEs to ignore in dependencies](https://github.com/sonatype-nexus-community/nancy#via-file). (Example: `CVE-2020-26160,CVE-2022-0001`)
-
 ### Experiments
 
 - `EXPERIMENTAL`: List of additional checks to perform. (Example: `gitleaks,...`)
@@ -14,7 +10,6 @@
 - `DISABLED_GOLANGCI_LINTERS`: Linters to disable in golangci-lint
 - `GOLANGCI_LINTERS`: List of additional [Go linters to run with golangci-lint](https://golangci-lint.run/usage/linters/). (Example: `gosec`)
 - `SKIP_GOLANGCI`: Don't run the golangci-lint checks
-- `SKIP_NANCY`: Don't run the nancy checks
 - `STRICT_GOLANGCI_LINTERS`: Enable more linters packaged with golangci-lint
 
 ### Testing

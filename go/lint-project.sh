@@ -3,7 +3,6 @@ set -e
 
 gitleaks_version=8.17.0
 golangci_version=v1.53.3
-nancy_version=v1.0.42
 sqlvet_version=v1.1.5
 
 # Set these to any non-blank value to disable the linter
@@ -11,11 +10,6 @@ disable_golangci=""
 if [[ "$SKIP_GOLANGCI" != "" ]];
 then
     disable_golangci="$SKIP_GOLANGCI"
-fi
-disable_nancy=""
-if [[ "$SKIP_NANCY" != "" ]];
-then
-    disable_nancy="$SKIP_NANCY"
 fi
 
 mkdir -p ./bin/
@@ -125,48 +119,6 @@ if [[ "$run_gitleaks" == "true" ]]; then
     echo "gitleaks version: "$(./bin/gitleaks version)
     ./bin/gitleaks detect --no-git --verbose
     echo "FINISHED gitleaks check"
-fi
-
-# nancy (vulnerable dependencies)
-if [[ "$disable_nancy" != "" ]];
-then
-    echo "SKIPPING nancy check"
-else
-    # Download nancy
-    if [[ "$OS_NAME" == "linux" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-linux-amd64; fi
-    if [[ "$OS_NAME" == "osx" ]]; then wget -q -O ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/"$nancy_version"/nancy-"$nancy_version"-darwin-amd64; fi
-    if [[ "$OS_NAME" != "windows" ]]; then
-        chmod +x ./bin/nancy
-        echo "STARTING nancy check"
-        ./bin/nancy --version
-
-        ignored_deps=(
-            # hashicorp/vault enterprise issues
-            CVE-2022-36129
-            CVE-2022-36129
-            # CWE-190: Integer Overflow or Wraparound
-            sonatype-2021-3619
-            # CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')
-            sonatype-2022-1745
-        )
-        ignored=$(printf ",%s" "${ignored_deps[@]}")
-        ignored=${ignored:1}
-
-        # Append additional CVEs
-        if [ -n "$IGNORED_CVES" ];
-        then
-            ignored="$ignored"",""$IGNORED_CVES"
-        fi
-
-        # Clean nancy cache
-        ./bin/nancy --clean-cache
-
-        # Ignore Consul and Vault Enterprise, they need a gocloud.dev release
-        go list -deps -f '{{with .Module}}{{.Path}} {{.Version}}{{end}}' ./... | ./bin/nancy --skip-update-check --loud sleuth --exclude-vulnerability "$ignored"
-
-        echo "" # newline
-        echo "FINISHED nancy check"
-    fi
 fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.
