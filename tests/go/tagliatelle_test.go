@@ -14,10 +14,10 @@ func TestTagliatelleLinter(t *testing.T) {
 
 	// These should not pass without comments to disable
 	type bar struct {
-		Field1 string `json:"Field1"`   // nolint:tagliatelle
-		Field2 string `json:"field_1"`  // nolint:tagliatelle
-		Field3 string `json:"FieldOne"` // nolint:tagliatelle
-		Field4 string `json:"FIELD1"`   // nolint:tagliatelle
+		Field1 string `json:"Field1"`   //nolint:tagliatelle
+		Field2 string `json:"field_1"`  //nolint:tagliatelle
+		Field3 string `json:"FieldOne"` //nolint:tagliatelle
+		Field4 string `json:"FIELD1"`   //nolint:tagliatelle
 	}
 
 	f := &foo{}
