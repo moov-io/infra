@@ -228,7 +228,20 @@ if [[ "$OS_NAME" != "windows" ]]; then
         # Download golangci-lint
         wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
 
-        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,tagliatelle,unused,wastedassign"
+        # Create a temporary filepath for the config file
+        configFilepath=$(mktemp -d)"/config.yml"
+        cat <<EOF > "$configFilepath"
+linters-settings:
+  forbidigo:
+    forbid:
+      - '^panic$'
+  tagliatelle:
+    case:
+      rules:
+        json: goCamel
+EOF
+
+        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forbidigo,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,tagliatelle,unused,wastedassign"
         if [ -n "$GOLANGCI_LINTERS" ];
         then
             enabled="$enabled"",$GOLANGCI_LINTERS"
@@ -252,8 +265,11 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
         echo "STARTING golangci-lint checks"
         ./bin/golangci-lint version
-        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
         echo "FINISHED golangci-lint checks"
+
+        # Cleanup
+        rm -f configFilepath
     fi
 fi
 
