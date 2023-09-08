@@ -227,17 +227,44 @@ if [[ "$OS_NAME" != "windows" ]]; then
     else
         # Download golangci-lint
         wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
+        echo "STARTING golangci-lint checks"
+        ./bin/golangci-lint version
 
         # Create a temporary filepath for the config file
         configFilepath=$(mktemp -d)"/config.yml"
         cat <<EOF > "$configFilepath"
+run:
+  timeout: 5m
+  tests: false
+  go: "$GO_VERSION"
+  skip-dirs:
+    - "cmd/*"
+    - "admin"
+    - "client"
+
+linters:
+  disable-all: true
+  enable:
+    - forbidigo
+
 linters-settings:
   forbidigo:
     forbid:
       - '^panic$'
 EOF
+        # Allow some specific overrides
+        if [[ "$GOLANGCI_ALLOW_PRINT" != "yes" ]];
+        then
+            echo "      - ^fmt\.Print.*$" >> "$configFilepath"
+        fi
 
-        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forbidigo,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,unused,wastedassign"
+        # Run golangci-lint over non-test code first with forbidigo
+        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose $GOLANGCI_TAGS
+
+        echo "======"
+
+        # Setup golangci-lint to run over the entire codebase
+        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,unused,wastedassign"
         if [ -n "$GOLANGCI_LINTERS" ];
         then
             enabled="$enabled"",$GOLANGCI_LINTERS"
@@ -253,15 +280,13 @@ EOF
             enabled="$enabled"",dupword,gocheckcompilerdirectives,mirror,tenv"
         fi
 
-        disabled="-D=depguard,errcheck"
+        disabled="-D=depguard,errcheck,forbidigo"
         if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
         then
             disabled="-D=$DISABLED_GOLANGCI_LINTERS"
         fi
 
-        echo "STARTING golangci-lint checks"
-        ./bin/golangci-lint version
-        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
         echo "FINISHED golangci-lint checks"
 
         # Cleanup
