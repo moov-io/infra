@@ -241,7 +241,14 @@ run:
     - "cmd/*"
     - "admin"
     - "client"
+EOF
+        # Allow skipping one directory from checks
+        if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
+        then
+            echo "    - ""$GOLANGCI_SKIP_DIR"  >> "$configFilepath"
+        fi
 
+        cat <<EOF >> "$configFilepath"
 linters:
   disable-all: true
   enable:
@@ -252,7 +259,7 @@ linters-settings:
     forbid:
       - '^panic$'
 EOF
-        # Allow some specific overrides
+        # Add some specific overrides
         if [[ "$GOLANGCI_ALLOW_PRINT" != "yes" ]];
         then
             echo "      - ^fmt\.Print.*$" >> "$configFilepath"
