@@ -251,8 +251,12 @@ linters-settings:
   forbidigo:
     forbid:
       - '^panic$'
-      - ^fmt\.Print.*$
 EOF
+        # Allow some specific overrides
+        if [[ "$GOLANGCI_ALLOW_PRINT" != "yes" ]];
+        then
+            echo "      - ^fmt\.Print.*$" >> "$configFilepath"
+        fi
 
         # Run golangci-lint over non-test code first with forbidigo
         ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose $GOLANGCI_TAGS
