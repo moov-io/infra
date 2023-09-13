@@ -241,6 +241,7 @@ run:
     - "cmd/*"
     - "admin"
     - "client"
+    - "main.go"
 EOF
         # Allow skipping one directory from checks
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
