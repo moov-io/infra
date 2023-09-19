@@ -103,11 +103,13 @@ if [[ "$org" != "moov-io" ||  "$OS_NAME" == "windows" ]];
 then
     run_gitleaks=false
 else
-    if [[ "$EXPERIMENTAL" == *"gitleaks"* && "$DISABLE_GITLEAKS" != "true"]]; then
+    if [[ "$EXPERIMENTAL" == *"gitleaks"* && "$DISABLE_GITLEAKS" != "true"]];
+    then
         run_gitleaks=true
     else
-	    DISABLE_GITLEAKS=${DISABLE_GITLEAKS:="true"}
-        if [[ "$DISABLE_GITLEAKS" == "true" ]]; then
+        DISABLE_GITLEAKS=${DISABLE_GITLEAKS:="true"}
+        if [[ "$DISABLE_GITLEAKS" == "true" ]];
+        then
             run_gitleaks=false
         fi
     fi
