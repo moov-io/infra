@@ -99,17 +99,18 @@ echo "SUCCESS: Go code built without errors"
 
 # gitleaks (secret scanning, in-progress of a rollout)
 run_gitleaks=true
-if [[ "$OS_NAME" == "windows" ]]; then
+if [[ "$org" != "moov-io" ||  "$OS_NAME" == "windows" ]];
+then
     run_gitleaks=false
-fi
-if [[ "$org" != "moov-io" ]]; then
-    run_gitleaks=false
-fi
-if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    run_gitleaks=true
-fi
-if [[ "$DISABLE_GITLEAKS" != "" ]]; then
-    run_gitleaks=false
+else
+    if [[ "$EXPERIMENTAL" == *"gitleaks"* && "$DISABLE_GITLEAKS" != "true"]]; then
+        run_gitleaks=true
+    else
+	    DISABLE_GITLEAKS=${DISABLE_GITLEAKS:="true"}
+        if [[ "$DISABLE_GITLEAKS" == "true" ]]; then
+            run_gitleaks=false
+        fi
+    fi
 fi
 if [[ "$run_gitleaks" == "true" ]]; then
     wget -q -O gitleaks.tar.gz https://github.com/zricethezav/gitleaks/releases/download/v"$gitleaks_version"/gitleaks_"$gitleaks_version"_"$UNAME"_x64.tar.gz
