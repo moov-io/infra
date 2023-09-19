@@ -99,12 +99,11 @@ echo "SUCCESS: Go code built without errors"
 
 # gitleaks (secret scanning, in-progress of a rollout)
 run_gitleaks=true
-if [[ "$org" != "moov-io" ||  "$OS_NAME" == "windows" ]];
-then
+if [[ "$org" != "moov-io" ||  "$OS_NAME" == "windows" ]]; then
     run_gitleaks=false
 else
-    if [[ "$EXPERIMENTAL" == *"gitleaks"* && "$DISABLE_GITLEAKS" != "true"]];
-    then
+    # checking flags
+    if [[ "$EXPERIMENTAL" == *"gitleaks"* && "$DISABLE_GITLEAKS" != "true"]]; then
         run_gitleaks=true
     else
         DISABLE_GITLEAKS=${DISABLE_GITLEAKS:="true"}
