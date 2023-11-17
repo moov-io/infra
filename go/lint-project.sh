@@ -225,15 +225,30 @@ then
     # Install nilaway
     go install go.uber.org/nilaway/cmd/nilaway@latest
 
-    # Find the linter
+    # Find nilaway on PATH
     bin=""
     if which -s nilaway > /dev/null;
     then
         bin=$(which nilaway 2>&1 | head -n1)
     fi
+    # Public Github runners path
+    actions_path="/home/runner/go/bin/nilaway"
+    if [[ -f "$actions_path" ]];
+    then
+        bin="$actions_path"
+    fi
+    # Moov hosted runner paths
+    actions_path="/home/actions/bin/nilaway"
+    if [[ -f "$actions_path" ]];
+    then
+        bin="$actions_path"
+    fi
 
     # Run nilaway
-    "$bin" -test=false ./...
+    if [[ "$bin" != "" ]];
+    then
+        "$bin" -test=false ./...
+    fi
 fi
 
 # golangci-lint
