@@ -215,6 +215,27 @@ if [[ "$run_xmlencoderclose" == "true" ]]; then
     fi
 fi
 
+if [[ "$EXPERIMENTAL" == *"nilaway"* ]];
+then
+    # nilaway can deliver false positives so it's not currently allowed inside of golangci-lint,
+    # however this linter is useful so we offer it.
+    #
+    # https://github.com/golangci/golangci-lint/issues/4045
+
+    # Install nilaway
+    go install go.uber.org/nilaway/cmd/nilaway@latest
+
+    # Find the linter
+    bin=""
+    if which -s nilaway > /dev/null;
+    then
+        bin=$(which nilaway 2>&1 | head -n1)
+    fi
+
+    # Run nilaway
+    "$bin" -test=false ./...
+fi
+
 # golangci-lint
 if [[ "$org" == "moov-io" ]];
 then
