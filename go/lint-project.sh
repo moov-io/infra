@@ -390,7 +390,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
                    -test.memprofile="$dir"/mem.out \
                    -count 1 $GOTEST_FLAGS
 
-                coverage=$(go tool cover -func="$dir"/coverage.txt | cut -w -f3 | cut -d'%' -f1 | grep -v '^0.0$' | sort -u | awk '{x+=$0}END{print x/NR}')
+                coverage=$(go tool cover -func="$dir"/coverage.txt | grep total | grep -Eo '[0-9]+\.[0-9]+')
                 if [[ "$coverage" > "0.0" ]];
                 then
                     coveredStatements=$(echo "$coveredStatements" + "$coverage" | bc)
@@ -408,7 +408,7 @@ fi
 if [[ "$COVER_THRESHOLD" != "" ]]; then
     if [[ -f coverage.txt && "$PROFILE_GOTEST" != "yes" ]];
     then
-        coveredStatements=$(go tool cover -func=coverage.txt | cut -w -f3 | cut -d'%' -f1 | grep -v '^0.0$' | sort -u | awk '{x+=$0}END{print x/NR}')
+        coveredStatements=$(go tool cover -func=coverage.txt | grep -E '^total:' | grep -Eo '[0-9]+\.[0-9]+')
         maximumCoverage=100
     fi
 
