@@ -177,10 +177,10 @@ if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
     fi
 fi
 
-run_xmlencoderclose=true
-if [[ "$DISABLE_XMLENCODERCLOSE" != "" ]]; then
-    run_xmlencoderclose=false
-fi
+run_xmlencoderclose=false
+# if [[ "$DISABLE_XMLENCODERCLOSE" != "" ]]; then
+#     run_xmlencoderclose=false
+# fi
 if [[ "$run_xmlencoderclose" == "true" ]]; then
     # Install xmlencoderclose
     go install github.com/adamdecaf/xmlencoderclose@latest
