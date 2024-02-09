@@ -343,6 +343,13 @@ then
     exit 0;
 fi
 
+if [[ "$VENDOR_FOR_TESTS" == "yes" ]];
+then
+    echo "Vendoring deps before running tests"
+    go mod tidy
+    go mod vendor
+fi
+
 ## Clear GOARCH and GOOS for testing...
 GOARCH=''
 GOOS=''
