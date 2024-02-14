@@ -417,7 +417,7 @@ if [[ "$COVER_THRESHOLD" != "" ]]; then
     if [[ -f "$coveragePath" && "$PROFILE_GOTEST" != "yes" ]];
     then
         # Ignore test directories in coverage analysis
-        cat "$coveragePath" | grep -v -E "/client/" | grep -v -E "/pkg*/*test" | grep -v -E "/internal*/*test" | grep -v -E "/examples*/*" | grep -v -E "/gen/"  > coverage.txt
+        cat "$coveragePath" | grep -v -E "/client/" | grep -v -E "/pkg*/*test" | grep -v -E "/internal*/*test" | grep -v -E "/examples/" | grep -v -E "/gen/"  > coverage.txt
         coveredStatements=$(go tool cover -func=coverage.txt | grep -E '^total:' | grep -Eo '[0-9]+\.[0-9]+')
         maximumCoverage=100
     fi
