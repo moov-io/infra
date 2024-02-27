@@ -91,6 +91,10 @@ if [[ "$CGO_ENABLED" == "0" || "$GOOS" == "js" || "$GOARCH" == "wasm" ]];
 then
     GORACE=''
 fi
+if [[ "$DISABLE_GORACE" != "" ]];
+then
+    GORACE=''
+fi
 
 # Build the source code (to discover compile errors prior to linting)
 echo "Building Go source code"
