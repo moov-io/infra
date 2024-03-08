@@ -33,6 +33,7 @@ if [[ "$OS_NAME" == "" ]]; then
         export OS_NAME=linux
     fi
 fi
+
 echo "running go linters for $OS_NAME"
 
 # Check gofmt
@@ -130,6 +131,9 @@ run_govulncheck=true
 if [[ "$DISABLE_GOVULNCHECK" != "" ]]; then
     run_govulncheck=false
 fi
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    run_govulncheck=false
+fi
 if [[ "$run_govulncheck" == "true" ]]; then
     # Install the latest govulncheck release
     go install golang.org/x/vuln/cmd/govulncheck@latest
@@ -183,6 +187,9 @@ fi
 
 run_xmlencoderclose=true
 if [[ "$DISABLE_XMLENCODERCLOSE" != "" ]]; then
+    run_xmlencoderclose=false
+fi
+if [[ "$SKIP_LINTERS" != "" ]]; then
     run_xmlencoderclose=false
 fi
 if [[ "$run_xmlencoderclose" == "true" ]]; then
@@ -259,6 +266,9 @@ fi
 if [[ "$org" == "moov-io" ]];
 then
     STRICT_GOLANGCI_LINTERS=${STRICT_GOLANGCI_LINTERS:="yes"}
+fi
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    disable_golangci=true
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$disable_golangci" != "" ]];
