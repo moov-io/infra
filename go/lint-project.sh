@@ -135,6 +135,8 @@ if [[ "$SKIP_LINTERS" != "" ]]; then
     run_govulncheck=false
 fi
 if [[ "$run_govulncheck" == "true" ]]; then
+    echo "STARTING govulncheck check"
+
     # Install the latest govulncheck release
     go install golang.org/x/vuln/cmd/govulncheck@latest
 
@@ -160,7 +162,6 @@ if [[ "$run_govulncheck" == "true" ]]; then
     # Run govulncheck
     if [[ "$bin" != "" ]];
     then
-        echo "STARTING govulncheck check"
         "$bin" -test ./...
         echo "FINISHED govulncheck check"
     else
@@ -193,6 +194,8 @@ if [[ "$SKIP_LINTERS" != "" ]]; then
     run_xmlencoderclose=false
 fi
 if [[ "$run_xmlencoderclose" == "true" ]]; then
+    echo "STARTING xmlencoderclose check"
+
     # Install xmlencoderclose
     go install github.com/adamdecaf/xmlencoderclose@latest
 
@@ -218,7 +221,6 @@ if [[ "$run_xmlencoderclose" == "true" ]]; then
     # Run xmlencoderclose
     if [[ "$bin" != "" ]];
     then
-        echo "STARTING xmlencoderclose check"
         "$bin" -test ./...
         echo "FINISHED xmlencoderclose check"
     else
@@ -232,6 +234,7 @@ then
     # however this linter is useful so we offer it.
     #
     # https://github.com/golangci/golangci-lint/issues/4045
+    echo "STARTING nilaway check"
 
     # Install nilaway
     go install go.uber.org/nilaway/cmd/nilaway@latest
@@ -259,6 +262,7 @@ then
     if [[ "$bin" != "" ]];
     then
         "$bin" -test=false ./...
+        echo "FINISHED nilaway check"
     fi
 fi
 
@@ -275,9 +279,11 @@ if [[ "$OS_NAME" != "windows" ]]; then
     then
         echo "SKIPPING golangci-lint"
     else
+        echo "STARTING golangci-lint checks"
+
         # Download golangci-lint
         wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
-        echo "STARTING golangci-lint checks"
+
         ./bin/golangci-lint version
 
         # Create a temporary filepath for the config file
