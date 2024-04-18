@@ -28,25 +28,10 @@ jobs:
       if: runner.os == 'Windows'
       run: choco install -y make mingw
 
-    - name: Install Prometheus Tools
-      run: make install
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-
     - name: Check
       env:
         COVER_THRESHOLD: 85.0
       run: make check
-
-    - uses: actions/upload-artifact@v2
-      if: ${{ always() }}
-      with:
-        name: "go-tooling-reports.zip"
-        path: |
-          ./**/coverage.txt
-          ./**/mem.out
-          ./**/cpu.out
 
     - name: Tests
       run: make test
