@@ -293,7 +293,8 @@ run:
   timeout: 5m
   tests: false
   go: "$GO_VERSION"
-  skip-dirs:
+issues:
+  exclude-dirs:
     - "cmd/*"
     - "admin"
     - "client"
@@ -349,7 +350,7 @@ EOF
             disabled="-D=$DISABLED_GOLANGCI_LINTERS"
         fi
 
-        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --skip-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --exclude-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
         echo "FINISHED golangci-lint checks"
 
         # Cleanup
