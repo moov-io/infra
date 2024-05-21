@@ -302,7 +302,7 @@ EOF
         # Allow skipping one directory from checks
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
         then
-            echo "    - ""$GOLANGCI_SKIP_DIR"  >> "$configFilepath"
+            echo "    - ""$GOLANGCI_SKIP_DIR" >> "$configFilepath"
         fi
 
         cat <<EOF >> "$configFilepath"
@@ -350,7 +350,20 @@ EOF
             disabled="-D=$DISABLED_GOLANGCI_LINTERS"
         fi
 
-        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --exclude-dirs="(admin|client)" --timeout=5m $GOLANGCI_TAGS
+        excludeDirs="admin|client"
+        if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
+        then
+            excludeDirs="$excludeDirs|""$GOLANGCI_SKIP_DIR"
+        fi
+
+        excludeFiles=""
+        if [[ "$GOLANGCI_SKIP_FILES" != "" ]];
+        then
+            excludeFiles="--exclude-files=""$GOLANGCI_SKIP_FILES"
+        fi
+
+        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --exclude-dirs="(""$excludeDirs"")" "$excludeFiles" --timeout=5m $GOLANGCI_TAGS
+
         echo "FINISHED golangci-lint checks"
 
         # Cleanup

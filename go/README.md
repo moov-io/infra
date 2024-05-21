@@ -13,6 +13,8 @@
 - `GOLANGCI_LINTERS`: List of additional [Go linters to run with golangci-lint](https://golangci-lint.run/usage/linters/). (Example: `gosec`)
 - `SKIP_GOLANGCI`: Don't run the golangci-lint checks
 - `SKIP_LINTERS`: Don't run any linter (except for those specified in `EXPERIMENTAL`)
+- `GOLANGCI_SKIP_DIR`: Don't run linters on a directory
+- `GOLANGCI_SKIP_FILES`: Don't run linters on files (comma separated)
 - `STRICT_GOLANGCI_LINTERS`: Enable more linters packaged with golangci-lint
 
 ### Testing
