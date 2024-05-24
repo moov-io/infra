@@ -298,6 +298,7 @@ issues:
     - "cmd/*"
     - "admin"
     - "client"
+    - "docs"
 EOF
         # Allow skipping one directory from checks
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
