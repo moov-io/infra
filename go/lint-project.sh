@@ -2,7 +2,7 @@
 set -e
 
 gitleaks_version=8.17.0
-golangci_version=v1.60.1
+golangci_version=v1.61.0
 sqlvet_version=v1.1.5
 
 # Set these to any non-blank value to disable the linter
@@ -324,7 +324,10 @@ EOF
         fi
 
         # Run golangci-lint over non-test code first with forbidigo
-        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose $GOLANGCI_TAGS
+        if [[ "$SKIP_FORBIDIGO" != "yes" ]];
+        then
+            ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose $GOLANGCI_TAGS
+        fi
 
         echo "======"
 
