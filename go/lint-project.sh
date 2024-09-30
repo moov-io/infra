@@ -122,7 +122,17 @@ if [[ "$run_gitleaks" == "true" ]]; then
     mv gitleaks ./bin/gitleaks
 
     echo "gitleaks version: "$(./bin/gitleaks version)
-    ./bin/gitleaks detect --no-git --verbose
+
+    # Find directories and optionally exclude one
+    dirs=($(find . -mindepth 1 -type d | sort -u | grep -v ".git"))
+    if [ -n "$GITLEAKS_EXCLUDE" ]; then
+        dirs=($(echo "${dirs[@]}" | grep -v "$GITLEAKS_EXCLUDE"))
+    fi
+
+    for dir in "${dirs[@]}"; do
+        echo "Running gitleaks on $dir"
+        ./bin/gitleaks detect --no-git --verbose --no-banner --source "$dir"
+    done
     echo "FINISHED gitleaks check"
 fi
 
