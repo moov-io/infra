@@ -126,7 +126,7 @@ if [[ "$run_gitleaks" == "true" ]]; then
     # Find directories and optionally exclude one
     dirs=($(find . -mindepth 1 -type d | sort -u | grep -v ".git"))
     if [ -n "$GITLEAKS_EXCLUDE" ]; then
-        dirs=($(echo "${dirs[@]}" | grep -v "$GITLEAKS_EXCLUDE"))
+        dirs=($(printf "%s\n" "${dirs[@]}" | grep -v "$GITLEAKS_EXCLUDE"))
     fi
 
     for dir in "${dirs[@]}"; do
