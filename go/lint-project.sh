@@ -358,7 +358,7 @@ EOF
         # Additional linters for moov-io code
         if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]];
         then
-            enabled="$enabled"",dupword,gocheckcompilerdirectives,mirror,tenv"
+            enabled="$enabled"",dupword,gocheckcompilerdirectives,iface,mirror,recvcheck,tenv"
         fi
 
         disabled="-D=depguard,errcheck,forbidigo"
