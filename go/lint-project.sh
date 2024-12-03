@@ -345,7 +345,7 @@ EOF
         echo "======"
 
         # Setup golangci-lint to run over the entire codebase
-        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,forcetypeassert,gosec,misspell,nolintlint,rowserrcheck,sqlclosecheck,unused,wastedassign"
+        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,unused,wastedassign"
         if [ -n "$GOLANGCI_LINTERS" ];
         then
             enabled="$enabled"",$GOLANGCI_LINTERS"
@@ -358,7 +358,7 @@ EOF
         # Additional linters for moov-io code
         if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]];
         then
-            enabled="$enabled"",dupword,gocheckcompilerdirectives,iface,mirror,recvcheck,tenv"
+            enabled="$enabled"",dupword,gocheckcompilerdirectives,iface,mirror,perfsprint,recvcheck,sloglint,tenv,testableexamples"
         fi
 
         disabled="-D=depguard,errcheck,forbidigo"
