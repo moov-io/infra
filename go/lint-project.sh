@@ -471,7 +471,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
 fi
 
 # Verify Code Coverage Threshold
-if [[ "$COVER_THRESHOLD" != "" ]]; then
+if [[ "$COVER_THRESHOLD" != "" && "$COVER_THRESHOLD" != "disabled" ]]; then
     if [[ -f "$coveragePath" && "$PROFILE_GOTEST" != "yes" ]];
     then
         # Ignore test directories in coverage analysis
