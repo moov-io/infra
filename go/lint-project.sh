@@ -345,7 +345,7 @@ EOF
         echo "======"
 
         # Setup golangci-lint to run over the entire codebase
-        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,exportloopref,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,unused,wastedassign"
+        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,unused,wastedassign"
         if [ -n "$GOLANGCI_LINTERS" ];
         then
             enabled="$enabled"",$GOLANGCI_LINTERS"
