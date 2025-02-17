@@ -150,8 +150,17 @@ fi
 if [[ "$run_govulncheck" == "true" ]]; then
     echo "STARTING govulncheck check"
 
-    # Install the latest govulncheck release
-    go install golang.org/x/vuln/cmd/govulncheck@latest
+    # Determine which version to use
+    version="latest"
+    if [[ "$GO_RELEASE" == "oldstable" ]];
+    then
+        # govulncheck v1.1.4 looks to have forced projects to 1.24, which doesn't work
+        # when we need to test "oldstable" (which is go1.23 currently)
+        version="v1.1.3"
+    fi
+
+    # Install govulncheck
+    go install "golang.org/x/vuln/cmd/govulncheck@""$version"
 
     # Find govulncheck
     bin=""
