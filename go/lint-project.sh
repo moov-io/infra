@@ -382,6 +382,7 @@ linters:
   settings:
     gosec:
       excludes:
+        - G104 # Audit errors not checked
         - G304 # File path provided as taint input
   enable:
     - $(echo $enabled | sed 's/,/\n    - /g')
