@@ -379,9 +379,10 @@ run:
   go: "$GO_VERSION"
 linters:
   default: none
-  gosec:
-    excludes:
-      - G304 # File path provided as taint input
+  settings:
+    gosec:
+      excludes:
+        - G304 # File path provided as taint input
   enable:
     - $(echo $enabled | sed 's/,/\n    - /g')
 EOF
