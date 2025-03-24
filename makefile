@@ -5,8 +5,11 @@ check:
 	EXPERIMENTAL=gitleaks,govulncheck,nilaway,shuffle \
 	COVER_THRESHOLD=80.0 \
 	GOCYCLO_LIMIT=15 \
-	GOLANGCI_FLAGS="--exclude-use-default=false" \
 	GOTEST_FLAGS='-test.shuffle=on' \
+	GOLANGCI_LINTERS="lll" \
+	DISABLED_GOLANGCI_LINTERS="lll" \
+	GOLANGCI_SKIP_DIR="./not-exist/" \
+	GOLANGCI_SKIP_FILES="not_found.go" \
 	PROFILE_GOTEST='yes' \
 	./go/lint-project.sh
 

@@ -2,7 +2,7 @@
 set -e
 
 gitleaks_version=8.17.0
-golangci_version=v1.64.8
+golangci_version=latest
 sqlvet_version=v1.1.5
 
 # Set these to any non-blank value to disable the linter
@@ -302,84 +302,114 @@ if [[ "$OS_NAME" != "windows" ]]; then
         # Create a temporary filepath for the config file
         configFilepath=$(mktemp -d)"/config.yml"
         cat <<EOF > "$configFilepath"
+version: "2"
 run:
-  timeout: 5m
   tests: false
   go: "$GO_VERSION"
-issues:
-  exclude-dirs:
-    - "cmd/*"
-    - "admin"
-    - "client"
-    - "docs"
+
+linters:
+  default: none
+  enable:
+    - forbidigo
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - cmd/*
+      - admin
+      - client
+      - docs
 EOF
         # Allow skipping one directory from checks
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
         then
-            echo "    - ""$GOLANGCI_SKIP_DIR" >> "$configFilepath"
+            echo "      - ""$GOLANGCI_SKIP_DIR" >> "$configFilepath"
         fi
 
         cat <<EOF >> "$configFilepath"
-linters:
-  disable-all: true
-  enable:
-    - forbidigo
-
-linters-settings:
-  forbidigo:
-    forbid:
-      - '^panic$'
+  settings:
+    forbidigo:
+      forbid:
+        - pattern: ^panic$
 EOF
         # Add some specific overrides
         if [[ "$GOLANGCI_ALLOW_PRINT" != "yes" ]];
         then
-            echo "      - ^fmt\.Print.*$" >> "$configFilepath"
+            echo "        - pattern: ^fmt\.Print.*$" >> "$configFilepath"
         fi
 
         # Run golangci-lint over non-test code first with forbidigo
         if [[ "$SKIP_FORBIDIGO" != "yes" ]];
         then
-            ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose $GOLANGCI_TAGS
+            ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --timeout=5m --verbose $GOLANGCI_TAGS
         fi
 
         echo "======"
 
-        # Setup golangci-lint to run over the entire codebase
-        enabled="-E=asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,unused,wastedassign"
-        if [ -n "$GOLANGCI_LINTERS" ];
-        then
-            enabled="$enabled"",$GOLANGCI_LINTERS"
-        fi
-        if [ -n "$SET_GOLANGCI_LINTERS" ];
-        then
-            enabled="-E=""$SET_GOLANGCI_LINTERS"
+        # Create a temporary filepath for the config file
+        configFilepath=$(mktemp -d)"/config.yml"
+
+        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,unused,wastedassign"
+        enabled="$default_linters"
+
+        if [ -n "$GOLANGCI_LINTERS" ]; then
+            # Append additional linters
+            enabled="$enabled,$GOLANGCI_LINTERS"
         fi
 
-        # Additional linters for moov-io code
-        if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]];
-        then
-            enabled="$enabled"",dupword,exptostd,gocheckcompilerdirectives,iface,mirror,nilnesserr,sloglint,tenv,testableexamples,usetesting"
+        # If SET_GOLANGCI_LINTERS is set, it completely replaces the current set
+        if [ -n "$SET_GOLANGCI_LINTERS" ]; then
+            enabled="$SET_GOLANGCI_LINTERS"
         fi
 
-        disabled="-D=depguard,errcheck,forbidigo"
+        # Add strict linters if STRICT_GOLANGCI_LINTERS is set to "yes"
+        if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]]; then
+            enabled="$enabled,dupword,exptostd,gocheckcompilerdirectives,iface,mirror,nilnesserr,sloglint,testableexamples,usetesting"
+        fi
+
+        # Create the config file with the determined linters
+        cat <<EOF > "$configFilepath"
+version: "2"
+run:
+  tests: false
+  go: "$GO_VERSION"
+linters:
+  default: none
+  enable:
+    - $(echo $enabled | sed 's/,/\n    - /g')
+EOF
+
+        cat <<EOF >> "$configFilepath"
+  disable:
+    - depguard
+    - errcheck
+    - forbidigo
+EOF
         if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
         then
-            disabled="-D=$DISABLED_GOLANGCI_LINTERS"
+            echo "    - ""$DISABLED_GOLANGCI_LINTERS" >> "$configFilepath"
         fi
 
-        excludeDirs="admin|client"
+        cat <<EOF >> "$configFilepath"
+  exclusions:
+    paths:
+      - admin
+      - client
+EOF
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
         then
-            excludeDirs="$excludeDirs|""$GOLANGCI_SKIP_DIR"
+            echo "      - ""$GOLANGCI_SKIP_DIR" >> "$configFilepath"
         fi
-
-        excludeFiles=""
         if [[ "$GOLANGCI_SKIP_FILES" != "" ]];
         then
-            excludeFiles="--exclude-files=""$GOLANGCI_SKIP_FILES"
+            echo "      - ""$GOLANGCI_SKIP_FILES" >> "$configFilepath"
         fi
 
-        ./bin/golangci-lint $GOLANGCI_FLAGS run "$enabled" "$disabled" --verbose --go="$GO_VERSION" --exclude-dirs="(""$excludeDirs"")" "$excludeFiles" --timeout=5m $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose --timeout=5m $GOLANGCI_TAGS
 
         echo "FINISHED golangci-lint checks"
 
