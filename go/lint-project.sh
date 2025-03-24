@@ -395,7 +395,9 @@ EOF
 EOF
         if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
         then
-            echo "    - ""$DISABLED_GOLANGCI_LINTERS" >> "$configFilepath"
+            cat <<EOF >> "$configFilepath"
+    - $(echo "$DISABLED_GOLANGCI_LINTERS" | sed 's/,/\n    - /g')
+EOF
         fi
 
         cat <<EOF >> "$configFilepath"
