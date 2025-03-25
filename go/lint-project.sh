@@ -354,7 +354,8 @@ EOF
         # Create a temporary filepath for the config file
         configFilepath=$(mktemp -d)"/config.yml"
 
-        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,unused,wastedassign"
+        # TODO(adam): re-add unused when they fix some bugs
+        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
         enabled="$default_linters"
 
         if [ -n "$GOLANGCI_LINTERS" ]; then
