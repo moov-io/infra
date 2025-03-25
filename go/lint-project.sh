@@ -323,6 +323,7 @@ linters:
       - admin
       - client
       - docs
+      - examples
 EOF
         # Allow skipping one directory from checks
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
