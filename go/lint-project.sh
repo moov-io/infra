@@ -324,6 +324,7 @@ linters:
       - client
       - docs
       - examples
+      - pkg/test/fixtures
 EOF
         # Allow skipping one directory from checks
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
@@ -408,6 +409,7 @@ EOF
     paths:
       - admin
       - client
+      - pkg/test/fixtures
 EOF
         if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
         then
