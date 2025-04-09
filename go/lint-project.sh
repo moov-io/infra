@@ -335,7 +335,9 @@ EOF
         cat <<EOF >> "$configFilepath"
   settings:
     forbidigo:
+      analyze-types: true
       forbid:
+        - pkg: ^math/rand$
         - pattern: ^panic$
 EOF
         # Add some specific overrides
@@ -387,6 +389,7 @@ linters:
       excludes:
         - G104 # Audit errors not checked
         - G304 # File path provided as taint input
+        - G404 # Insecure random number source (rand)
   enable:
     - $(echo $enabled | sed 's/,/\n    - /g')
 EOF
