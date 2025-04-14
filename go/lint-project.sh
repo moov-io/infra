@@ -311,7 +311,6 @@ linters:
   default: none
   enable:
     - forbidigo
-    - gomodguard
   exclusions:
     generated: lax
     presets:
@@ -335,15 +334,6 @@ EOF
 
         cat <<EOF >> "$configFilepath"
   settings:
-    gomodguard:
-      blocked:
-        modules:
-          - github.com/twmb/franz-go/pkg/kmsg:
-              reason: "Bug introduced - use newer version"
-        versions:
-          - github.com/twmb/franz-go/pkg/kmsg:
-              version: "= v1.11.0"
-
     forbidigo:
       analyze-types: true
       forbid:
