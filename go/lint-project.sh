@@ -97,6 +97,21 @@ then
     GORACE=''
 fi
 
+# Verify no retracted module versions are in the build
+retracted_mods=($(go list -m -u all | grep retracted | cut -f1 -d' '))
+for dep in "${retracted_mods[@]}"
+do
+    # Check if the project actaully uses this mod
+    if go mod why "$dep" | grep -q "module does not need package";
+    then
+        echo "INFO: $dep is retracted, but not used in this project"
+    else
+        echo "ERROR: $dep needs to be updated, current version is retracted"
+        go list -m -u -json "$dep"
+        exit 1
+    fi
+done
+
 # Build the source code (to discover compile errors prior to linting)
 echo "Building Go source code"
 go build $GORACE $GOTAGS $GOBUILD_FLAGS ./...
