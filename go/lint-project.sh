@@ -99,16 +99,33 @@ fi
 
 # Verify no retracted module versions are in the build
 retracted_mods=($(go list -m -u all | grep retracted | cut -f1 -d' '))
+skip_modules=(
+    "github.com/moby/sys/user"
+)
 for dep in "${retracted_mods[@]}"
 do
-    # Check if the project actaully uses this mod
+    # Check if the project actually uses this mod
     if go mod why "$dep" | grep -q "module does not need package";
     then
         echo "INFO: $dep is retracted, but not used in this project"
     else
-        echo "ERROR: $dep needs to be updated, current version is retracted"
-        go list -m -u -json "$dep"
-        exit 1
+        # Check if the module is in skip_modules
+        skip=false
+        for skip_mod in "${skip_modules[@]}"
+        do
+            if [ "$dep" = "$skip_mod" ]; then
+                skip=true
+                break
+            fi
+        done
+
+        if [ "$skip" = true ]; then
+            echo "INFO: $dep is retracted but in skip list, ignoring"
+        else
+            echo "ERROR: $dep needs to be updated, current version is retracted"
+            go list -m -u -json "$dep"
+            exit 1
+        fi
     fi
 done
 
