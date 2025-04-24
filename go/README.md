@@ -25,3 +25,4 @@
 - `GOTEST_PKGS`: Selector of packages to test (Examples: `./...`, `./internal/foo/`)
 - `PROFILE_GOTEST`: Run each package with CPU and memory profiling. (Example: `yes`)
 - `SKIP_TESTS`: Don't run any Go tests when set to `yes`.
+- `SKIP_SUBMODULE_TESTS`: Don't run Go tests in submodules (subfolders with `go.mod` files)

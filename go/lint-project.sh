@@ -546,6 +546,20 @@ if [[ "$OS_NAME" != "windows" ]]; then
     fi
 fi
 
+# Run Go Tests on submodules
+if [[ "$SKIP_SUBMODULE_TESTS" == "" ]];
+then
+    submodules=$(find . -mindepth 2 -name go.mod)
+    if [ -n "$submodules" ]; then
+        echo "Testing Submodules..."
+
+        for mod_file in $submodules; do
+            dir=$(dirname "$mod_file")
+            (cd "$dir" && $GOTEST $GOTAGS "$gotest_packages" "$GORACE" && cd -)
+        done
+    fi
+fi
+
 # Verify Code Coverage Threshold
 if [[ "$COVER_THRESHOLD" != "" && "$COVER_THRESHOLD" != "disabled" ]]; then
     if [[ -f "$coveragePath" && "$PROFILE_GOTEST" != "yes" ]];
