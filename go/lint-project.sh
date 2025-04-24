@@ -370,6 +370,7 @@ EOF
       analyze-types: true
       forbid:
         - pkg: ^math/rand$
+        - pkg: ^plugin$
         - pattern: ^panic$
 EOF
         # Add some specific overrides
