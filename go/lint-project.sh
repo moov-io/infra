@@ -372,6 +372,8 @@ EOF
         - pkg: ^math/rand$
         - pkg: ^plugin$
         - pattern: ^panic$
+        - pattern: .*\.Call.*$
+          pkg: reflect
 EOF
         # Add some specific overrides
         if [[ "$GOLANGCI_ALLOW_PRINT" != "yes" ]];

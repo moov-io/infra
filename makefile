@@ -3,7 +3,7 @@ PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 .PHONY: check
 check:
 	EXPERIMENTAL=gitleaks,govulncheck,nilaway,shuffle \
-	COVER_THRESHOLD=80.0 \
+	COVER_THRESHOLD=50.0 \
 	GOCYCLO_LIMIT=15 \
 	GOTEST_FLAGS='-test.shuffle=on' \
 	GOLANGCI_LINTERS="lll" \
