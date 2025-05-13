@@ -54,8 +54,14 @@ if [[ "$OS_NAME" != "windows" ]]; then
         test -z $(gofmt -s -l $file)
         if [[ $? != 0 ]];
         then
-            code=1
-            echo "$file is not formatted"
+            echo "DEBUG: formatting $file with gofmt"
+
+            test -z $(gofmt -s -w $file)
+            if [[ $? != 0 ]];
+            then
+                echo "ERROR: problem rewriting $file"
+                exit 1;
+            fi
         fi
     done
     set -e
