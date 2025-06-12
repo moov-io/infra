@@ -362,6 +362,7 @@ linters:
       - client
       - docs
       - examples
+      - scripts
       - pkg/test/fixtures
 EOF
         # Allow skipping one directory from checks
