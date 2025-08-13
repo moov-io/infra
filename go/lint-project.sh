@@ -6,7 +6,7 @@ golangci_version=latest
 sqlvet_version=v1.1.5
 
 # Set these to any non-blank value to disable the linter
-disable_golangci="yes"
+disable_golangci=""
 if [[ "$SKIP_GOLANGCI" != "" ]];
 then
     disable_golangci="$SKIP_GOLANGCI"
