@@ -5,6 +5,7 @@ go 1.23.0
 require (
 	github.com/stretchr/testify v1.11.1
 	goftp.io/server v0.4.1
+	goftp.io/server/v2 v2.0.1
 )
 
 require (
