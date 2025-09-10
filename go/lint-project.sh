@@ -300,12 +300,14 @@ then
     then
         bin=$(which nilaway 2>&1 | head -n1)
     fi
+
     # Public Github runners path
     actions_path="/home/runner/go/bin/nilaway"
     if [[ -f "$actions_path" ]];
     then
         bin="$actions_path"
     fi
+
     # Moov hosted runner paths
     actions_path="/home/actions/bin/nilaway"
     if [[ -f "$actions_path" ]];
@@ -313,10 +315,21 @@ then
         bin="$actions_path"
     fi
 
+    nilaway_memory_limit="7168MiB"
+    if [[ "$NILAWAY_MEMORY_LIMIT" != "" ]]; then
+        nilaway_memory_limit="$NILAWAY_MEMORY_LIMIT"
+    fi
+
+    nilaway_packages="./..."
+    if [[ "$NILAWAY_PACKAGES" != "" ]]; then
+        nilaway_packages="$NILAWAY_PACKAGES"
+    fi
+
     # Run nilaway
     if [[ "$bin" != "" ]];
     then
-        "$bin" -test=false ./...
+        echo "Running nilaway with GOMEMLIMIT=""$nilaway_memory_limit"" in ""$nilaway_packages"
+        GOMEMLIMIT="$nilaway_memory_limit" time "$bin" -test=false "$nilaway_packages"
         echo "FINISHED nilaway check"
     fi
 fi
