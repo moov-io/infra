@@ -283,7 +283,16 @@ if [[ "$run_xmlencoderclose" == "true" ]]; then
     fi
 fi
 
+run_nilaway=false
 if [[ "$EXPERIMENTAL" == *"nilaway"* ]];
+then
+    run_nilaway=true
+fi
+if [[ "$SKIP_LINTERS" != "" ]];
+then
+    run_nilaway=false
+fi
+if [[ "$run_nilaway" == "true" ]];
 then
     # nilaway can deliver false positives so it's not currently allowed inside of golangci-lint,
     # however this linter is useful so we offer it.
