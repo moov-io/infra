@@ -21,6 +21,7 @@
 ### Testing
 
 - `COVER_THRESHOLD`: Minimum threshold of code statements required to be ran during tests. (Example: `85.0`)
+- `GOTEST_PARALLEL`: Specify parallelism with Go's `-parallel=N` flag.
 - `GOTEST_FLAGS`: Additional flags to include on `go test` commands. (Example `-test.shuffle=on`)
 - `GOTEST_PKGS`: Selector of packages to test (Examples: `./...`, `./internal/foo/`)
 - `PROFILE_GOTEST`: Run each package with CPU and memory profiling. (Example: `yes`)

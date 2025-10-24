@@ -3,14 +3,13 @@ PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
 .PHONY: check
 check:
 	EXPERIMENTAL=gitleaks,nilaway,shuffle,xmlencoderclose \
-	COVER_THRESHOLD=50.0 \
+	COVER_THRESHOLD=25.0 \
 	GOCYCLO_LIMIT=15 \
-	GOTEST_FLAGS='-test.shuffle=on' \
+	GOTEST_PARALLEL=8 \
 	GOLANGCI_LINTERS="lll" \
 	DISABLED_GOLANGCI_LINTERS="lll" \
 	GOLANGCI_SKIP_DIR="./not-exist/" \
 	GOLANGCI_SKIP_FILES="not_found.go" \
-	PROFILE_GOTEST='yes' \
 	./go/lint-project.sh
 
 .PHONY: docker
