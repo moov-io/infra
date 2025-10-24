@@ -557,9 +557,12 @@ then
     GOTEST=$(which gotest 2>&1 | head -n1)
 fi
 
+echo "======"
+
 # Run 'go test'
 if [[ "$OS_NAME" == "windows" ]]; then
     # Just run short tests on Windows as we don't have Docker support in tests worked out for the database tests
+    echo "Running $GOTEST on $OS_NAME with extra flags: $GOTEST_FLAGS"
     $GOTEST $GOTAGS "$gotest_packages" "$GORACE" -short -coverprofile="$coveragePath" -covermode=atomic $GOTEST_FLAGS
 fi
 # Add some default flags to every 'go test' case
@@ -579,10 +582,13 @@ if [[ "$GOTEST_FLAGS" == "" ]]; then
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
     if [[ "$COVER_THRESHOLD" == "disabled" ]]; then
+        echo "Running $GOTEST on $OS_NAME with coverage disabled and extra flags: $GOTEST_FLAGS"
         $GOTEST $GOTAGS "$gotest_packages" "$GORACE" -count 1 $GOTEST_FLAGS
     else
         # Optionally profile each package
         if [[ "$PROFILE_GOTEST" == "yes" ]]; then
+            echo "Running $GOTEST on $OS_NAME package by package and extra flags: $GOTEST_FLAGS"
+
             for pkg in "${GOPKGS[@]}"
             do
                 # fixup the sub-package for writing cpu/mem profile
@@ -608,6 +614,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
             done
         else
             # Otherwise just run Go tests with coverage
+            echo "Running $GOTEST on $OS_NAME with coverage and extra flags: $GOTEST_FLAGS"
             $GOTEST $GOTAGS "$gotest_packages" "$GORACE" -coverprofile="$coveragePath" -covermode=atomic -count 1 $GOTEST_FLAGS
         fi
     fi
