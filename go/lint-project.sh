@@ -34,10 +34,21 @@ if [[ "$OS_NAME" == "" ]]; then
     fi
 fi
 
-echo "running go linters for $OS_NAME"
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    echo "SKIPPING linters for $OS_NAME"
+else
+    echo "running go linters for $OS_NAME"
+fi
 
 # Check gofmt
-if [[ "$OS_NAME" != "windows" ]]; then
+run_gofmt=true
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    run_gofmt=false
+fi
+if [[ "$OS_NAME" == "windows" ]]; then
+    run_gofmt=false
+fi
+if [[ "$run_gofmt" == "true" ]]; then
     set +e
     code=0
     for file in "${GOFILES[@]}"
@@ -136,9 +147,11 @@ do
 done
 
 # Build the source code (to discover compile errors prior to linting)
-echo "Building Go source code"
-go build $GORACE $GOTAGS $GOBUILD_FLAGS ./...
-echo "SUCCESS: Go code built without errors"
+if [[ "$SKIP_LINTERS" == "" ]]; then
+    echo "Building Go source code"
+    go build $GORACE $GOTAGS $GOBUILD_FLAGS ./...
+    echo "SUCCESS: Go code built without errors"
+fi
 
 # gitleaks (secret scanning, in-progress of a rollout)
 run_gitleaks=true
@@ -150,6 +163,9 @@ if [[ "$org" != "moov-io" ]]; then
 fi
 if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
     run_gitleaks=true
+fi
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    run_gitleaks=false
 fi
 if [[ "$DISABLE_GITLEAKS" != "" ]]; then
     run_gitleaks=false
@@ -221,7 +237,14 @@ if [[ "$run_govulncheck" == "true" ]]; then
 fi
 
 # sqlvet
+run_sqlvet=false
 if [[ "$EXPERIMENTAL" == *"sqlvet"* ]]; then
+    run_sqlvet=true
+fi
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    run_sqlvet=false
+fi
+if [[ "$run_sqlvet" == "true" ]]; then
     # Download only on linux or macOS
     if [[ "$OS_NAME" != "windows" ]]; then
         if [[ "$OS_NAME" == "linux" ]]; then wget -q -O sqlvet.tar.gz https://github.com/houqp/sqlvet/releases/download/"$sqlvet_version"/sqlvet-"$sqlvet_version"-linux-amd64.tar.gz; fi
@@ -241,12 +264,12 @@ run_xmlencoderclose=false
 if [[ "$DISABLE_XMLENCODERCLOSE" != "" ]]; then
     run_xmlencoderclose=false
 fi
-if [[ "$SKIP_LINTERS" != "" ]]; then
-    run_xmlencoderclose=false
-fi
 if [[ "$EXPERIMENTAL" == *"xmlencoderclose"* ]];
 then
     run_xmlencoderclose=true
+fi
+if [[ "$SKIP_LINTERS" != "" ]]; then
+    run_xmlencoderclose=false
 fi
 if [[ "$run_xmlencoderclose" == "true" ]]; then
     echo "STARTING xmlencoderclose check"
