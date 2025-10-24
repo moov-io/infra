@@ -534,7 +534,15 @@ fi
 if [[ "$GOTEST_FLAGS" == "" ]]; then
     # Enable test shuffling
     if [[ "$EXPERIMENTAL" == *"shuffle"* ]]; then
-        GOTEST_FLAGS='-shuffle=on'
+        GOTEST_FLAGS="$GOTEST_FLAGS -test.shuffle=on"
+    fi
+
+    # Enable -parallel
+    if [[ "$EXPERIMENTAL" == *"parallel"* || "$GOTEST_PARALLEL" != "" ]]; then
+        if [[ "$GOTEST_PARALLEL" == "" ]]; then
+            GOTEST_PARALLEL=8
+        fi
+        GOTEST_FLAGS="$GOTEST_FLAGS -parallel=$GOTEST_PARALLEL"
     fi
 fi
 if [[ "$OS_NAME" != "windows" ]]; then
@@ -567,7 +575,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
                 fi
             done
         else
-            # Otherwise just run Go tests without profiling
+            # Otherwise just run Go tests with coverage
             $GOTEST $GOTAGS "$gotest_packages" "$GORACE" -coverprofile="$coveragePath" -covermode=atomic -count 1 $GOTEST_FLAGS
         fi
     fi
