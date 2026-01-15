@@ -660,7 +660,7 @@ if [[ "$COVER_THRESHOLD" != "" && "$COVER_THRESHOLD" != "disabled" ]]; then
     avgCoverage=$(printf "%.1f" $(echo "($coveredStatements / $maximumCoverage)*100" | bc -l))
     echo "Project has $avgCoverage% statement coverage."
 
-    if [[ "$avgCoverage" < "$COVER_THRESHOLD" ]]; then
+    if (( $(echo "$avgCoverage < $COVER_THRESHOLD" | bc -l) )); then
         echo "ERROR: statement coverage is not sufficient, $COVER_THRESHOLD% is required"
         exit 1
     else
