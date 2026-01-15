@@ -431,6 +431,19 @@ EOF
         - pattern: .*\.Call.*$
           pkg: reflect
 EOF
+        # Add Moov Financial specific overrides
+        if [[ "$org" == "moovfinancial" ]];
+        then
+            # Prevent UUID direct inspections in favor of moovfinancial/go-http
+            echo "        - pattern: .*\.IsUUID" >> "$configFilepath"
+            echo "          pkg: github.com/moovfinancial/go-libs/mvalidation" >> "$configFilepath"
+            echo "          msg: Update to moovfinancial/go-libs/mvalidation IsID[(id type goes here)]" >> "$configFilepath"
+            # ozzo validators
+            echo "        - pattern: is.UUID[\d]{0,}" >> "$configFilepath"
+            echo "          pkg: github.com/go-ozzo/ozzo-validation/v4/is" >> "$configFilepath"
+            echo "          msg: Update to moovfinancial/go-libs/mvalidation IsID[(id type goes here)]" >> "$configFilepath"
+        fi
+
         # Add some specific overrides
         if [[ "$GOLANGCI_ALLOW_PRINT" != "yes" ]];
         then
