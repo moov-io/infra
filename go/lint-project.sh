@@ -496,6 +496,9 @@ linters:
         - G117 # Potential exposure of secrets via JSON
         - G304 # File path provided as taint input
         - G404 # Insecure random number source (rand)
+        - G703 # Path traversal via taint analysis (false positive)
+        - G704 # SSRF via taint analysis (false positive)
+        - G705 # XSS via taint analysis (false positive)
   enable:
     - $(echo $enabled | sed 's/,/\n    - /g')
 EOF
