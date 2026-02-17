@@ -493,7 +493,6 @@ linters:
       excludes:
         - G101 # Potential hardcoded credentials
         - G104 # Audit errors not checked
-        - G117 # Potential exposure of secrets via JSON
         - G304 # File path provided as taint input
         - G404 # Insecure random number source (rand)
   enable:
