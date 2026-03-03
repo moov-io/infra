@@ -406,6 +406,7 @@ linters:
       - legacy
       - std-error-handling
     paths:
+      - main.go
       - cmd/*
       - admin
       - client
