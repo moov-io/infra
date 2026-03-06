@@ -5,6 +5,10 @@
 - `EXPERIMENTAL`: List of additional checks to perform. (Example: `gitleaks,...`)
    - Current experiments: `gitleaks`, `govulncheck`, `shuffle`
 
+### Versions
+
+- `GOLANGCI_LINT_VERSION` to override the golangci-lint version used, otherwise use `latest`.
+
 ### Go Linters
 
 - `DISABLE_GOVULNCHECK`: Set to skip running [govulncheck](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck)
