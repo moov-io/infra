@@ -7,7 +7,7 @@
 
 ### Versions
 
-- `GOLANGCI_LINT_VERSION` to override the golangci-lint version used, otherwise use `latest`.
+- `GOLANGCI_LINT_VERSION`: Overrides the `golangci-lint` version used. Defaults to `latest`.
 
 ### Go Linters
 
