@@ -19,8 +19,12 @@ func withcontext(ctx context.Context, env *Env) error {
 
 	prev := env.Shutdown
 	env.Shutdown = func() {
-		prev()
-		close()
+		if prev != nil {
+			prev()
+		}
+		if close != nil {
+			close()
+		}
 	}
 
 	env.DB = db
@@ -29,10 +33,11 @@ func withcontext(ctx context.Context, env *Env) error {
 }
 
 func initDatabase(ctx context.Context, env *Env) (*sql.DB, func(), error) {
-	ctx, cancelFunc := context.WithCancel(ctx)
+	_, cancelFunc := context.WithCancel(ctx)
 
 	db, err := sql.Open("sqlite", "testing")
 	if err != nil {
+		cancelFunc()
 		return nil, cancelFunc, fmt.Errorf("opening database: %w", err)
 	}
 	return db, cancelFunc, nil
