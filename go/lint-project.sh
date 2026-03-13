@@ -504,7 +504,11 @@ EOF
         path: '^(main\.go|cmd/|docs/|examples/|scripts/)'
 EOF
 
-        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose --timeout=5m $GOLANGCI_TAGS
+        GOLANGCI_FIX_FLAG=""
+        if [[ "$GOLANGCI_DO_FIX" == "true" ]]; then
+            GOLANGCI_FIX_FLAG="--fix"
+        fi
+        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" $GOLANGCI_FIX_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
 
         echo "FINISHED golangci-lint checks"
 

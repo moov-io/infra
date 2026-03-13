@@ -21,6 +21,7 @@
 - `GOLANGCI_SKIP_DIR`: Don't run linters on a directory
 - `GOLANGCI_SKIP_FILES`: Don't run linters on files (comma separated)
 - `STRICT_GOLANGCI_LINTERS`: Enable more linters packaged with golangci-lint
+- `GOLANGCI_DO_FIX`: Pass the --fix flag to auto fix some things found by the linter
 
 ### Testing
 
