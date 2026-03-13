@@ -386,43 +386,52 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
         ./bin/golangci-lint version
 
+        # Build the linters list
+        # TODO(adam): re-add unused when they fix some bugs
+        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
+        enabled="$default_linters"
+
+        if [ -n "$GOLANGCI_LINTERS" ]; then
+            # Append additional linters
+            enabled="$enabled,$GOLANGCI_LINTERS"
+        fi
+
+        # If SET_GOLANGCI_LINTERS is set, it completely replaces the current set
+        if [ -n "$SET_GOLANGCI_LINTERS" ]; then
+            enabled="$SET_GOLANGCI_LINTERS"
+        fi
+
+        # Add strict linters if STRICT_GOLANGCI_LINTERS is set to "yes"
+        if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]]; then
+            enabled="$enabled,dupword,exptostd,gocheckcompilerdirectives,iface,mirror,nilnesserr,sloglint,testableexamples,usetesting"
+        fi
+
+        # Add forbidigo unless skipped
+        if [[ "$SKIP_FORBIDIGO" != "yes" ]];
+        then
+            enabled="$enabled,forbidigo"
+        fi
+
         # Create a temporary filepath for the config file
         configFilepath=$(mktemp -d)"/config.yml"
+
         cat <<EOF > "$configFilepath"
 version: "2"
 run:
   tests: false
   go: "$GO_VERSION"
-
 linters:
   default: none
-  enable:
-    - forbidigo
-  exclusions:
-    generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
-    paths:
-      - main.go
-      - cmd/*
-      - admin
-      - client
-      - docs
-      - examples
-      - scripts
-      - pkg/test/fixtures
-EOF
-        # Allow skipping one directory from checks
-        if [[ "$GOLANGCI_SKIP_DIR" != "" ]];
-        then
-            echo "      - ""$GOLANGCI_SKIP_DIR" >> "$configFilepath"
-        fi
-
-        cat <<EOF >> "$configFilepath"
   settings:
+    gosec:
+      excludes:
+        - G101 # Potential hardcoded credentials
+        - G104 # Audit errors not checked
+        - G304 # File path provided as taint input
+        - G404 # Insecure random number source (rand)
+        - G703 # Path traversal via taint analysis (false positive)
+        - G704 # SSRF via taint analysis (false positive)
+        - G705 # XSS via taint analysis (false positive)
     forbidigo:
       analyze-types: true
       forbid:
@@ -451,63 +460,12 @@ EOF
             echo "        - pattern: ^fmt\.Print.*$" >> "$configFilepath"
         fi
 
-        # Run golangci-lint over non-test code first with forbidigo
-        if [[ "$SKIP_FORBIDIGO" != "yes" ]];
-        then
-            ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --timeout=5m --verbose $GOLANGCI_TAGS
-        fi
-
-        echo "======"
-
-        # Create a temporary filepath for the config file
-        configFilepath=$(mktemp -d)"/config.yml"
-
-        # TODO(adam): re-add unused when they fix some bugs
-        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
-        enabled="$default_linters"
-
-        if [ -n "$GOLANGCI_LINTERS" ]; then
-            # Append additional linters
-            enabled="$enabled,$GOLANGCI_LINTERS"
-        fi
-
-        # If SET_GOLANGCI_LINTERS is set, it completely replaces the current set
-        if [ -n "$SET_GOLANGCI_LINTERS" ]; then
-            enabled="$SET_GOLANGCI_LINTERS"
-        fi
-
-        # Add strict linters if STRICT_GOLANGCI_LINTERS is set to "yes"
-        if [[ "$STRICT_GOLANGCI_LINTERS" == "yes" ]]; then
-            enabled="$enabled,dupword,exptostd,gocheckcompilerdirectives,iface,mirror,nilnesserr,sloglint,testableexamples,usetesting"
-        fi
-
-        # Create the config file with the determined linters
-        cat <<EOF > "$configFilepath"
-version: "2"
-run:
-  tests: false
-  go: "$GO_VERSION"
-linters:
-  default: none
-  settings:
-    gosec:
-      excludes:
-        - G101 # Potential hardcoded credentials
-        - G104 # Audit errors not checked
-        - G304 # File path provided as taint input
-        - G404 # Insecure random number source (rand)
-        - G703 # Path traversal via taint analysis (false positive)
-        - G704 # SSRF via taint analysis (false positive)
-        - G705 # XSS via taint analysis (false positive)
+        cat <<EOF >> "$configFilepath"
   enable:
     - $(echo $enabled | sed 's/,/\n    - /g')
-EOF
-
-        cat <<EOF >> "$configFilepath"
   disable:
     - depguard
     - errcheck
-    - forbidigo
 EOF
         if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
         then
@@ -518,6 +476,12 @@ EOF
 
         cat <<EOF >> "$configFilepath"
   exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
     paths:
       - admin
       - client
@@ -532,12 +496,20 @@ EOF
             echo "      - ""$GOLANGCI_SKIP_FILES" >> "$configFilepath"
         fi
 
+        # forbidigo requires broader path exclusions than other linters; use
+        # linter-specific exclusion rules (supported since golangci-lint v2).
+        cat <<EOF >> "$configFilepath"
+    rules:
+      - linters: [forbidigo]
+        path: '^(main\.go|cmd/|docs/|examples/|scripts/)'
+EOF
+
         ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" --verbose --timeout=5m $GOLANGCI_TAGS
 
         echo "FINISHED golangci-lint checks"
 
         # Cleanup
-        rm -f configFilepath
+        rm -f "$configFilepath"
     fi
 fi
 
