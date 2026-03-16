@@ -93,7 +93,7 @@ func (t *tester) run(name string, parent string) {
 	bs, err := cmd.CombinedOutput()
 
 	if *flagVerbose || err != nil {
-		fmt.Printf("\n%s docker build output:\n%s\n\n", name, string(bs))
+		log.Printf("\n%s docker build output:\n%s\n\n", name, string(bs))
 	}
 	if err != nil {
 		err = fmt.Errorf("ERROR running %s tests: %v", name, err)
