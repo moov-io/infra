@@ -412,8 +412,9 @@ if [[ "$OS_NAME" != "windows" ]]; then
             enabled="$enabled,forbidigo"
         fi
 
-        # Create a temporary filepath for the config file
-        configFilepath=$(mktemp -d)"/config.yml"
+        # Create config file in the project directory so golangci-lint v2
+        # resolves file paths relative to the project root, not the config location.
+        configFilepath=".golangci-lint-generated.yml"
 
         cat <<EOF > "$configFilepath"
 version: "2"
