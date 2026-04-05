@@ -40,9 +40,19 @@ else
     echo "running go linters for $OS_NAME"
 fi
 
+# ONLY_GOLANGCI=yes skips all checks except golangci-lint (and its --fix via GOLANGCI_DO_FIX=true)
+if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
+    DISABLE_GITLEAKS=yes
+    DISABLE_GOVULNCHECK=yes
+    SKIP_TESTS=yes
+fi
+
 # Check gofmt
 run_gofmt=true
 if [[ "$SKIP_LINTERS" != "" ]]; then
+    run_gofmt=false
+fi
+if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
     run_gofmt=false
 fi
 if [[ "$OS_NAME" == "windows" ]]; then
@@ -88,7 +98,7 @@ fi
 org=$(go mod why | head -n1  | awk -F'/' '{print $2}')
 
 # Reject moovfinancial dependencies in moov-io projects
-if [[ "$org" == "moov-io" ]];
+if [[ "$ONLY_GOLANGCI" != "yes" && "$org" == "moov-io" ]];
 then
     # Fail our build if we find moovfinancial dependencies
     if go list -m all | grep moovfinancial;
@@ -115,6 +125,9 @@ then
 fi
 
 # Verify no retracted module versions are in the build
+if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
+    retracted_mods=()
+else
 retracted_mods=($(go list -m -u all | grep retracted | cut -f1 -d' '))
 skip_modules=(
     "github.com/moby/sys/user"
@@ -145,9 +158,10 @@ do
         fi
     fi
 done
+fi
 
 # Build the source code (to discover compile errors prior to linting)
-if [[ "$SKIP_LINTERS" == "" ]]; then
+if [[ "$SKIP_LINTERS" == "" && "$ONLY_GOLANGCI" != "yes" ]]; then
     echo "Building Go source code"
     go build $GORACE $GOTAGS $GOBUILD_FLAGS ./...
     echo "SUCCESS: Go code built without errors"
