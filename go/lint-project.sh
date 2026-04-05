@@ -47,53 +47,6 @@ if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
     SKIP_TESTS=yes
 fi
 
-# Check gofmt
-run_gofmt=true
-if [[ "$SKIP_LINTERS" != "" ]]; then
-    run_gofmt=false
-fi
-if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
-    run_gofmt=false
-fi
-if [[ "$OS_NAME" == "windows" ]]; then
-    run_gofmt=false
-fi
-if [[ "$run_gofmt" == "true" ]]; then
-    set +e
-    code=0
-    for file in "${GOFILES[@]}"
-    do
-        # Go 1.17 introduced a migration with build constraints
-        # and they offer a migration with gofmt
-        # See https://go.googlesource.com/proposal/+/master/design/draft-gobuild.md#transition for more details
-        if [[ "$file" == "./pkged.go" ]];
-        then
-            gofmt -s -w pkged.go
-        fi
-
-        # Check the file's formatting
-        test -z $(gofmt -s -l $file)
-        if [[ $? != 0 ]];
-        then
-            echo "DEBUG: formatting $file with gofmt"
-
-            test -z $(gofmt -s -w $file)
-            if [[ $? != 0 ]];
-            then
-                echo "ERROR: problem rewriting $file"
-                exit 1;
-            fi
-        fi
-    done
-    set -e
-    if [[ $code != 0 ]];
-    then
-        exit $code
-    fi
-
-    echo "finished gofmt check"
-fi
-
 # Would be set to 'moov-io' or 'moovfinancial'
 org=$(go mod why | head -n1  | awk -F'/' '{print $2}')
 
@@ -402,7 +355,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
         # Build the linters list
         # TODO(adam): re-add unused when they fix some bugs
-        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
+        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gofmt,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
         enabled="$default_linters"
 
         if [ -n "$GOLANGCI_LINTERS" ]; then
@@ -438,6 +391,8 @@ run:
 linters:
   default: none
   settings:
+    gofmt:
+      simplify: true
     gosec:
       excludes:
         - G101 # Potential hardcoded credentials
