@@ -430,19 +430,14 @@ EOF
             echo "        - pattern: ^fmt\.Print.*$" >> "$configFilepath"
         fi
 
-        cat <<EOF >> "$configFilepath"
-  enable:
-    - $(echo $enabled | sed 's/,/\n    - /g')
-  disable:
-    - depguard
-    - errcheck
-EOF
-        if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
-        then
-            cat <<EOF >> "$configFilepath"
-    - $(echo "$DISABLED_GOLANGCI_LINTERS" | sed 's/,/\n    - /g')
-EOF
+        # Build --enable and --disable flags from env vars rather than config
+        GOLANGCI_ENABLE_FLAG="--enable=$enabled"
+
+        disabled="depguard,errcheck"
+        if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]]; then
+            disabled="$disabled,$DISABLED_GOLANGCI_LINTERS"
         fi
+        GOLANGCI_DISABLE_FLAG="--disable=$disabled"
 
         cat <<EOF >> "$configFilepath"
   exclusions:
@@ -478,7 +473,7 @@ EOF
         if [[ "$GOLANGCI_DO_FIX" == "true" ]]; then
             GOLANGCI_FIX_FLAG="--fix"
         fi
-        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" $GOLANGCI_FIX_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" $GOLANGCI_FIX_FLAG $GOLANGCI_ENABLE_FLAG $GOLANGCI_DISABLE_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
 
         echo "FINISHED golangci-lint checks"
 
