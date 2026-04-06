@@ -355,7 +355,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
         # Build the linters list
         # TODO(adam): re-add unused when they fix some bugs
-        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gofmt,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
+        default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
         enabled="$default_linters"
 
         if [ -n "$GOLANGCI_LINTERS" ]; then
@@ -388,11 +388,15 @@ version: "2"
 run:
   tests: false
   go: "$GO_VERSION"
-linters:
-  default: none
+formatters:
+  enable:
+    - gofmt
   settings:
     gofmt:
       simplify: true
+linters:
+  default: none
+  settings:
     gosec:
       excludes:
         - G101 # Potential hardcoded credentials
