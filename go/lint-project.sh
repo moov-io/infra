@@ -44,6 +44,7 @@ fi
 if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
     DISABLE_GITLEAKS=yes
     DISABLE_GOVULNCHECK=yes
+    EXPERIMENTAL=""
     SKIP_TESTS=yes
 fi
 
