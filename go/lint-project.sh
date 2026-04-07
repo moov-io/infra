@@ -40,55 +40,19 @@ else
     echo "running go linters for $OS_NAME"
 fi
 
-# Check gofmt
-run_gofmt=true
-if [[ "$SKIP_LINTERS" != "" ]]; then
-    run_gofmt=false
-fi
-if [[ "$OS_NAME" == "windows" ]]; then
-    run_gofmt=false
-fi
-if [[ "$run_gofmt" == "true" ]]; then
-    set +e
-    code=0
-    for file in "${GOFILES[@]}"
-    do
-        # Go 1.17 introduced a migration with build constraints
-        # and they offer a migration with gofmt
-        # See https://go.googlesource.com/proposal/+/master/design/draft-gobuild.md#transition for more details
-        if [[ "$file" == "./pkged.go" ]];
-        then
-            gofmt -s -w pkged.go
-        fi
-
-        # Check the file's formatting
-        test -z $(gofmt -s -l $file)
-        if [[ $? != 0 ]];
-        then
-            echo "DEBUG: formatting $file with gofmt"
-
-            test -z $(gofmt -s -w $file)
-            if [[ $? != 0 ]];
-            then
-                echo "ERROR: problem rewriting $file"
-                exit 1;
-            fi
-        fi
-    done
-    set -e
-    if [[ $code != 0 ]];
-    then
-        exit $code
-    fi
-
-    echo "finished gofmt check"
+# ONLY_GOLANGCI=yes skips all checks except golangci-lint (and its --fix via GOLANGCI_DO_FIX=true)
+if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
+    DISABLE_GITLEAKS=yes
+    DISABLE_GOVULNCHECK=yes
+    EXPERIMENTAL=""
+    SKIP_TESTS=yes
 fi
 
 # Would be set to 'moov-io' or 'moovfinancial'
 org=$(go mod why | head -n1  | awk -F'/' '{print $2}')
 
 # Reject moovfinancial dependencies in moov-io projects
-if [[ "$org" == "moov-io" ]];
+if [[ "$ONLY_GOLANGCI" != "yes" && "$org" == "moov-io" ]];
 then
     # Fail our build if we find moovfinancial dependencies
     if go list -m all | grep moovfinancial;
@@ -115,6 +79,9 @@ then
 fi
 
 # Verify no retracted module versions are in the build
+if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
+    retracted_mods=()
+else
 retracted_mods=($(go list -m -u all | grep retracted | cut -f1 -d' '))
 skip_modules=(
     "github.com/moby/sys/user"
@@ -145,9 +112,10 @@ do
         fi
     fi
 done
+fi
 
 # Build the source code (to discover compile errors prior to linting)
-if [[ "$SKIP_LINTERS" == "" ]]; then
+if [[ "$SKIP_LINTERS" == "" && "$ONLY_GOLANGCI" != "yes" ]]; then
     echo "Building Go source code"
     go build $GORACE $GOTAGS $GOBUILD_FLAGS ./...
     echo "SUCCESS: Go code built without errors"
@@ -421,6 +389,12 @@ version: "2"
 run:
   tests: false
   go: "$GO_VERSION"
+formatters:
+  enable:
+    - gofmt
+  settings:
+    gofmt:
+      simplify: true
 linters:
   default: none
   settings:
@@ -461,19 +435,14 @@ EOF
             echo "        - pattern: ^fmt\.Print.*$" >> "$configFilepath"
         fi
 
-        cat <<EOF >> "$configFilepath"
-  enable:
-    - $(echo $enabled | sed 's/,/\n    - /g')
-  disable:
-    - depguard
-    - errcheck
-EOF
-        if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]];
-        then
-            cat <<EOF >> "$configFilepath"
-    - $(echo "$DISABLED_GOLANGCI_LINTERS" | sed 's/,/\n    - /g')
-EOF
+        # Build --enable and --disable flags from env vars rather than config
+        GOLANGCI_ENABLE_FLAG="--enable=$enabled"
+
+        disabled="depguard,errcheck"
+        if [[ "$DISABLED_GOLANGCI_LINTERS" != "" ]]; then
+            disabled="$disabled,$DISABLED_GOLANGCI_LINTERS"
         fi
+        GOLANGCI_DISABLE_FLAG="--disable=$disabled"
 
         cat <<EOF >> "$configFilepath"
   exclusions:
@@ -509,7 +478,7 @@ EOF
         if [[ "$GOLANGCI_DO_FIX" == "true" ]]; then
             GOLANGCI_FIX_FLAG="--fix"
         fi
-        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" $GOLANGCI_FIX_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
+        ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" $GOLANGCI_FIX_FLAG $GOLANGCI_ENABLE_FLAG $GOLANGCI_DISABLE_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
 
         echo "FINISHED golangci-lint checks"
 
