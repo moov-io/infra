@@ -435,6 +435,16 @@ EOF
             echo "        - pattern: ^fmt\.Print.*$" >> "$configFilepath"
         fi
 
+        # Limit staticcheck to auto-fixable rules only (QF* and S1*).
+        # SA* and ST* rules are higher-signal but require manual fixes
+        # They should eventually be turned on as well
+        cat <<EOF >> "$configFilepath"
+    staticcheck:
+      checks:
+        - "-SA*"
+        - "-ST*"
+EOF
+
         # Build --enable and --disable flags from env vars rather than config
         GOLANGCI_ENABLE_FLAG="--enable=$enabled"
 
