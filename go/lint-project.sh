@@ -350,7 +350,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
         echo "STARTING golangci-lint checks"
 
         # Download golangci-lint
-        wget -q -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s "$golangci_version"
+        wget -q -O - -q https://golangci-lint.run/install.sh | sh -s "$golangci_version"
 
         ./bin/golangci-lint version
 
