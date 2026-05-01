@@ -2,7 +2,7 @@
 set -e
 
 gitleaks_version=8.17.0
-golangci_version="${GOLANGCI_LINT_VERSION:-latest}"
+golangci_version="${GOLANGCI_LINT_VERSION:-v2.11.4}"
 sqlvet_version=v1.1.5
 
 # Set these to any non-blank value to disable the linter
