@@ -169,6 +169,11 @@ fi
 if [[ "$SKIP_LINTERS" != "" ]]; then
     run_govulncheck=false
 fi
+if [[ -f ".github/workflows/govulncheck.yml" ]]; then
+    # Dedicated govulncheck workflow handles scanning (including weekly scheduled runs);
+    # skip here to avoid running twice on PRs.
+    run_govulncheck=false
+fi
 if [[ "$run_govulncheck" == "true" ]]; then
     echo "STARTING govulncheck check"
 
