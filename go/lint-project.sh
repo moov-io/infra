@@ -359,6 +359,16 @@ if [[ "$OS_NAME" != "windows" ]]; then
 
         ./bin/golangci-lint version
 
+        GOLANGCI_FIX_FLAG=""
+        if [[ "$GOLANGCI_DO_FIX" == "true" ]]; then
+            GOLANGCI_FIX_FLAG="--fix"
+        fi
+
+        # If the project has a committed .golangci.yml, use it directly and skip
+        # dynamic config generation — the file controls all linter settings.
+        if [[ -f ".golangci.yml" ]]; then
+            ./bin/golangci-lint $GOLANGCI_FLAGS run $GOLANGCI_FIX_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
+        else
         # Build the linters list
         # TODO(adam): re-add unused when they fix some bugs
         default_linters="asciicheck,bidichk,bodyclose,durationcheck,exhaustive,fatcontext,forcetypeassert,gosec,misspell,nolintlint,protogetter,rowserrcheck,sqlclosecheck,testifylint,wastedassign"
@@ -495,16 +505,13 @@ EOF
         path: '^(main\.go|cmd/|docs/|examples/|scripts/)'
 EOF
 
-        GOLANGCI_FIX_FLAG=""
-        if [[ "$GOLANGCI_DO_FIX" == "true" ]]; then
-            GOLANGCI_FIX_FLAG="--fix"
-        fi
         ./bin/golangci-lint $GOLANGCI_FLAGS run --config="$configFilepath" $GOLANGCI_FIX_FLAG $GOLANGCI_ENABLE_FLAG $GOLANGCI_DISABLE_FLAG --verbose --timeout=5m $GOLANGCI_TAGS
 
-        echo "FINISHED golangci-lint checks"
-
-        # Cleanup
+        # Cleanup generated config
         rm -f "$configFilepath"
+        fi
+
+        echo "FINISHED golangci-lint checks"
     fi
 fi
 
