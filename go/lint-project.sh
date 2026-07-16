@@ -340,24 +340,18 @@ then
 fi
 
 # Download a golangci-lint release binary into ./bin/golangci-lint.
-#
-# We intentionally do NOT use the upstream install.sh: golangci-lint
-# releases ship ".sbom.json" assets whose names contain the tarball name,
-# and the installer verifies checksums with an unanchored grep that
-# matches both lines — so its verification always fails.
+# Fetched directly from GitHub releases instead of the upstream install.sh,
+# whose checksum verification breaks on releases that include sbom assets.
 install_golangci_lint() {
     version="$1"
 
-    # "latest" is not a real tag. Resolve it by following the GitHub
-    # releases redirect (/releases/latest -> /releases/tag/vX.Y.Z).
+    # Resolve "latest" to a tag via the GitHub releases redirect.
     if [[ "$version" == "latest" ]]; then
         version=$(curl -sSfL -o /dev/null -w '%{url_effective}' \
             https://github.com/golangci/golangci-lint/releases/latest \
             | grep -Eo 'v[0-9][0-9.]*$')
     fi
 
-    # Release assets are named like golangci-lint-2.12.2-linux-amd64.tar.gz;
-    # map uname arch names onto the Go arch names used in the asset name.
     arch=$(uname -m)
     case "$arch" in
         x86_64)  arch=amd64 ;;
@@ -366,18 +360,14 @@ install_golangci_lint() {
     name="golangci-lint-${version#v}-${UNAME}-${arch}"
     release_url="https://github.com/golangci/golangci-lint/releases/download/${version}"
 
-    # Fetch the tarball and the release checksums file.
     wget -q -O "./bin/${name}.tar.gz" "${release_url}/${name}.tar.gz"
     wget -q -O ./bin/golangci-lint-checksums.txt "${release_url}/golangci-lint-${version#v}-checksums.txt"
 
-    # Verify the tarball. The trailing "$" anchors the filename so the
-    # .sbom.json checksum line cannot match. macOS ships shasum, not
-    # sha256sum.
+    # The anchored grep keeps the sbom checksum line from matching.
     sha_cmd="sha256sum"
     command -v sha256sum >/dev/null 2>&1 || sha_cmd="shasum -a 256"
     (cd ./bin && grep " ${name}.tar.gz\$" golangci-lint-checksums.txt | $sha_cmd -c -)
 
-    # Extract just the binary and clean up the download artifacts.
     tar -xzf "./bin/${name}.tar.gz" -C ./bin --strip-components=1 "${name}/golangci-lint"
     rm -f "./bin/${name}.tar.gz" ./bin/golangci-lint-checksums.txt
 }
