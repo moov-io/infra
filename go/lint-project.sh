@@ -354,8 +354,31 @@ if [[ "$OS_NAME" != "windows" ]]; then
     else
         echo "STARTING golangci-lint checks"
 
-        # Download golangci-lint
-        wget -qO- https://golangci-lint.run/install.sh | sh -s -- -b ./bin "$golangci_version"
+        # Download golangci-lint. The release tarball is fetched and verified
+        # directly instead of via the upstream install.sh: that script's
+        # checksum verification uses an unanchored grep that breaks on
+        # releases shipping .sbom.json assets (the sbom line also matches the
+        # tarball filename, so its want-hash becomes a two-line string).
+        gl_version="$golangci_version"
+        if [[ "$gl_version" == "latest" ]]; then
+            gl_version=$(curl -sSfL -o /dev/null -w '%{url_effective}' https://github.com/golangci/golangci-lint/releases/latest | grep -Eo 'v[0-9][0-9.]*$')
+        fi
+        gl_arch=$(uname -m)
+        case "$gl_arch" in
+            x86_64) gl_arch=amd64 ;;
+            aarch64) gl_arch=arm64 ;;
+        esac
+        gl_name="golangci-lint-${gl_version#v}-${UNAME}-${gl_arch}"
+        gl_base="https://github.com/golangci/golangci-lint/releases/download/${gl_version}"
+        wget -q -O "./bin/${gl_name}.tar.gz" "${gl_base}/${gl_name}.tar.gz"
+        wget -q -O ./bin/golangci-lint-checksums.txt "${gl_base}/golangci-lint-${gl_version#v}-checksums.txt"
+        gl_sha_cmd="sha256sum"
+        if ! command -v sha256sum >/dev/null 2>&1; then
+            gl_sha_cmd="shasum -a 256"
+        fi
+        (cd ./bin && grep " ${gl_name}.tar.gz\$" golangci-lint-checksums.txt | $gl_sha_cmd -c -)
+        tar -xzf "./bin/${gl_name}.tar.gz" -C ./bin --strip-components=1 "${gl_name}/golangci-lint"
+        rm -f "./bin/${gl_name}.tar.gz" ./bin/golangci-lint-checksums.txt
 
         ./bin/golangci-lint version
 
