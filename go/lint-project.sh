@@ -339,6 +339,39 @@ then
     fi
 fi
 
+# Download a golangci-lint release binary into ./bin/golangci-lint.
+# Fetched directly from GitHub releases instead of the upstream install.sh,
+# whose checksum verification breaks on releases that include sbom assets.
+install_golangci_lint() {
+    version="$1"
+
+    # Resolve "latest" to a tag via the GitHub releases redirect.
+    if [[ "$version" == "latest" ]]; then
+        version=$(curl -sSfL -o /dev/null -w '%{url_effective}' \
+            https://github.com/golangci/golangci-lint/releases/latest \
+            | grep -Eo 'v[0-9][0-9.]*$')
+    fi
+
+    arch=$(uname -m)
+    case "$arch" in
+        x86_64)  arch=amd64 ;;
+        aarch64) arch=arm64 ;;
+    esac
+    name="golangci-lint-${version#v}-${UNAME}-${arch}"
+    release_url="https://github.com/golangci/golangci-lint/releases/download/${version}"
+
+    wget -q -O "./bin/${name}.tar.gz" "${release_url}/${name}.tar.gz"
+    wget -q -O ./bin/golangci-lint-checksums.txt "${release_url}/golangci-lint-${version#v}-checksums.txt"
+
+    # The anchored grep keeps the sbom checksum line from matching.
+    sha_cmd="sha256sum"
+    command -v sha256sum >/dev/null 2>&1 || sha_cmd="shasum -a 256"
+    (cd ./bin && grep " ${name}.tar.gz\$" golangci-lint-checksums.txt | $sha_cmd -c -)
+
+    tar -xzf "./bin/${name}.tar.gz" -C ./bin --strip-components=1 "${name}/golangci-lint"
+    rm -f "./bin/${name}.tar.gz" ./bin/golangci-lint-checksums.txt
+}
+
 # golangci-lint
 if [[ "$org" == "moov-io" ]];
 then
@@ -354,8 +387,7 @@ if [[ "$OS_NAME" != "windows" ]]; then
     else
         echo "STARTING golangci-lint checks"
 
-        # Download golangci-lint
-        wget -qO- https://golangci-lint.run/install.sh | sh -s -- -b ./bin "$golangci_version"
+        install_golangci_lint "$golangci_version"
 
         ./bin/golangci-lint version
 
