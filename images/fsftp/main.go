@@ -8,8 +8,8 @@ import (
 	"flag"
 	"log"
 
-	"goftp.io/server"
-	"goftp.io/server/driver/file"
+	"goftp.io/server/v2"
+	"goftp.io/server/v2/driver/file"
 )
 
 var (
@@ -29,23 +29,27 @@ func main() {
 		log.Fatal("Please set a directory to serve with -root")
 	}
 
-	factory := &file.DriverFactory{
-		RootPath: *flagRoot,
-		Perm:     server.NewSimplePerm("user", "group"),
+	driver, err := file.NewDriver(*flagRoot)
+	if err != nil {
+		log.Fatal("Error creating file driver:", err)
 	}
 
-	opts := &server.ServerOpts{
-		Factory:      factory,
+	opts := &server.Options{
+		Driver:       driver,
 		Port:         *flagPort,
 		Hostname:     *flagHost,
 		Auth:         &server.SimpleAuth{Name: *flagUser, Password: *flagPass},
+		Perm:         server.NewSimplePerm("user", "group"),
 		PassivePorts: *flagPassivePorts,
 	}
 
 	log.Printf("Starting FTP server on %v:%v", opts.Hostname, opts.Port)
 	log.Printf("Username %v, Password %v", *flagUser, *flagPass)
-	server := server.NewServer(opts)
-	err := server.ListenAndServe()
+	s, err := server.NewServer(opts)
+	if err != nil {
+		log.Fatal("Error creating server:", err)
+	}
+	err = s.ListenAndServe()
 	if err != nil {
 		log.Fatal("Error starting server:", err)
 	}
