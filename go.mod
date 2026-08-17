@@ -3,7 +3,7 @@ module github.com/moov-io/infra
 go 1.25.0
 
 require (
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 	goftp.io/server/v2 v2.0.3
 )
 
