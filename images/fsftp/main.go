@@ -44,7 +44,11 @@ func main() {
 	}
 
 	log.Printf("Starting FTP server on %v:%v", opts.Hostname, opts.Port)
-	log.Printf("Username %v, password configured: %t", *flagUser, *flagPass != "")
+	if *flagPass != "" {
+		log.Printf("Username %v, password is set", *flagUser)
+	} else {
+		log.Printf("Username %v, password is empty", *flagUser)
+	}
 	s, err := server.NewServer(opts)
 	if err != nil {
 		log.Fatal("Error creating server:", err)
