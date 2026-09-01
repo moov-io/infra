@@ -576,7 +576,7 @@ coveragePath=$(mktemp -d)"/coverage.txt"
 
 # Find "gotest" or "go test"
 GOTEST=$(which go)" test"
-if which -s gotest > /dev/null;
+if command -v gotest > /dev/null 2>&1;
 then
     GOTEST=$(which gotest 2>&1 | head -n1)
 fi
