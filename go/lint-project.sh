@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 gitleaks_version=8.17.0
@@ -182,9 +182,9 @@ if [[ "$run_govulncheck" == "true" ]]; then
 
     # Find govulncheck
     bin=""
-    if which -s govulncheck > /dev/null;
+    if command -v govulncheck > /dev/null 2>&1;
     then
-        bin=$(which govulncheck 2>&1 | head -n1)
+        bin=$(command -v govulncheck)
     fi
     # Public Github runners path
     actions_path="/home/runner/go/bin/govulncheck"
@@ -252,9 +252,9 @@ if [[ "$run_xmlencoderclose" == "true" ]]; then
 
     # Find the linter
     bin=""
-    if which -s xmlencoderclose > /dev/null;
+    if command -v xmlencoderclose > /dev/null 2>&1;
     then
-        bin=$(which xmlencoderclose 2>&1 | head -n1)
+        bin=$(command -v xmlencoderclose)
     fi
     # Public Github runners path
     actions_path="/home/runner/go/bin/xmlencoderclose"
@@ -301,9 +301,9 @@ then
 
     # Find nilaway on PATH
     bin=""
-    if which -s nilaway > /dev/null;
+    if command -v nilaway > /dev/null 2>&1;
     then
-        bin=$(which nilaway 2>&1 | head -n1)
+        bin=$(command -v nilaway)
     fi
 
     # Public Github runners path
@@ -575,10 +575,10 @@ maximumCoverage=0
 coveragePath=$(mktemp -d)"/coverage.txt"
 
 # Find "gotest" or "go test"
-GOTEST=$(which go)" test"
-if which -s gotest > /dev/null;
+GOTEST=$(command -v go)" test"
+if command -v gotest > /dev/null 2>&1;
 then
-    GOTEST=$(which gotest 2>&1 | head -n1)
+    GOTEST=$(command -v gotest)
 fi
 
 echo "======"
