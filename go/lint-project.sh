@@ -5,6 +5,9 @@ gitleaks_version=8.17.0
 golangci_version="${GOLANGCI_LINT_VERSION:-latest}"
 sqlvet_version=v1.1.5
 
+# Additional flags for the golangci-lint run command (set by callers)
+GOLANGCI_FLAGS="${GOLANGCI_FLAGS:-}"
+
 # Set these to any non-blank value to disable the linter
 disable_golangci=""
 if [[ "$SKIP_GOLANGCI" != "" ]];
@@ -342,6 +345,9 @@ fi
 # Download a golangci-lint release binary into ./bin/golangci-lint.
 # Fetched directly from GitHub releases instead of the upstream install.sh,
 # whose checksum verification breaks on releases that include sbom assets.
+# If ./bin/golangci-lint already exists and matches the requested version it is
+# reused, so callers can pre-place their own build (for example one made with
+# 'golangci-lint custom' to link in module plugins).
 install_golangci_lint() {
     version="$1"
 
@@ -350,6 +356,15 @@ install_golangci_lint() {
         version=$(curl -sSfL -o /dev/null -w '%{url_effective}' \
             https://github.com/golangci/golangci-lint/releases/latest \
             | grep -Eo 'v[0-9][0-9.]*$')
+    fi
+
+    # Reuse a pre-existing binary of the requested version instead of
+    # downloading the release build. The trailing character guard keeps
+    # v2.13.1 from matching a v2.13.10 binary.
+    if [[ -x "./bin/golangci-lint" ]] &&
+        ./bin/golangci-lint version 2>/dev/null | grep -qE "version ${version#v}($|[^0-9.])"; then
+        echo "Reusing existing ./bin/golangci-lint for ${version}"
+        return
     fi
 
     arch=$(uname -m)
