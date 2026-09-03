@@ -359,10 +359,12 @@ install_golangci_lint() {
     fi
 
     # Reuse a pre-existing binary of the requested version instead of
-    # downloading the release build. The trailing character guard keeps
-    # v2.13.1 from matching a v2.13.10 binary.
+    # downloading the release build. A custom build reports its version with
+    # a leading 'v' and a build suffix (e.g. v2.13.1-custom-gcl-<hash>), so
+    # the match allows both forms. The trailing character guard keeps v2.13.1
+    # from matching a v2.13.10 binary.
     if [[ -x "./bin/golangci-lint" ]] &&
-        ./bin/golangci-lint version 2>/dev/null | grep -qE "version ${version#v}($|[^0-9.])"; then
+        ./bin/golangci-lint version 2>/dev/null | grep -qE "version v?${version#v}($|[^0-9.])"; then
         echo "Reusing existing ./bin/golangci-lint for ${version}"
         return
     fi
