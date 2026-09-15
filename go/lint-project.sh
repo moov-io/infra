@@ -82,7 +82,9 @@ then
 fi
 
 # Verify no retracted module versions are in the build
-if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
+# Set SKIP_RETRACTED=yes to skip this check, e.g. in test-only CI jobs where
+# the `go list -m -u all` network round-trip is wasted time.
+if [[ "$ONLY_GOLANGCI" == "yes" || "$SKIP_RETRACTED" == "yes" ]]; then
     retracted_mods=()
 else
 retracted_mods=($(go list -m -u all | grep retracted | cut -f1 -d' '))
