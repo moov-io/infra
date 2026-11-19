@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-gitleaks_version=8.17.0
+betterleaks_version="${BETTERLEAKS_VERSION:-1.10.1}"
 golangci_version="${GOLANGCI_LINT_VERSION:-latest}"
 sqlvet_version=v1.1.5
 
@@ -46,6 +46,7 @@ fi
 # ONLY_GOLANGCI=yes skips all checks except golangci-lint (and its --fix via GOLANGCI_DO_FIX=true)
 if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
     DISABLE_GITLEAKS=yes
+    DISABLE_BETTERLEAKS=yes
     DISABLE_GOVULNCHECK=yes
     EXPERIMENTAL=""
     SKIP_TESTS=yes
@@ -126,44 +127,75 @@ if [[ "$SKIP_LINTERS" == "" && "$ONLY_GOLANGCI" != "yes" ]]; then
     echo "SUCCESS: Go code built without errors"
 fi
 
-# gitleaks (secret scanning, in-progress of a rollout)
-run_gitleaks=true
+# betterleaks (secret scanning). Replaces gitleaks. Default-on for moov-io
+# modules; set DISABLE_BETTERLEAKS or DISABLE_GITLEAKS to skip. EXPERIMENTAL
+# still accepts gitleaks as an alias so existing makefiles keep working.
+run_betterleaks=true
 if [[ "$OS_NAME" == "windows" ]]; then
-    run_gitleaks=false
+    run_betterleaks=false
 fi
 if [[ "$org" != "moov-io" ]]; then
-    run_gitleaks=false
+    run_betterleaks=false
 fi
-if [[ "$EXPERIMENTAL" == *"gitleaks"* ]]; then
-    run_gitleaks=true
+if [[ "$EXPERIMENTAL" == *"betterleaks"* || "$EXPERIMENTAL" == *"gitleaks"* ]]; then
+    run_betterleaks=true
 fi
 if [[ "$SKIP_LINTERS" != "" ]]; then
-    run_gitleaks=false
+    run_betterleaks=false
 fi
-if [[ "$DISABLE_GITLEAKS" != "" ]]; then
-    run_gitleaks=false
+if [[ "$DISABLE_BETTERLEAKS" != "" || "$DISABLE_GITLEAKS" != "" ]]; then
+    run_betterleaks=false
 fi
-if [[ "$run_gitleaks" == "true" ]]; then
-    wget -q -O gitleaks.tar.gz https://github.com/zricethezav/gitleaks/releases/download/v"$gitleaks_version"/gitleaks_"$gitleaks_version"_"$UNAME"_x64.tar.gz
-    tar xf gitleaks.tar.gz gitleaks
-    mv gitleaks ./bin/gitleaks
+if [[ "$run_betterleaks" == "true" ]]; then
+    bl_arch=$(uname -m)
+    case "$bl_arch" in
+        x86_64) bl_arch=x64 ;;
+        aarch64|arm64) bl_arch=arm64 ;;
+        *) bl_arch=x64 ;;
+    esac
+    bl_tarball="betterleaks_${betterleaks_version}_${UNAME}_${bl_arch}.tar.gz"
+    wget -q -O "./bin/${bl_tarball}" "https://github.com/betterleaks/betterleaks/releases/download/v${betterleaks_version}/${bl_tarball}"
+    tar xf "./bin/${bl_tarball}" -C ./bin betterleaks
+    rm -f "./bin/${bl_tarball}" ./gitleaks.tar.gz ./betterleaks.tar.gz
 
-    echo "gitleaks version: "$(./bin/gitleaks version)
+    echo "betterleaks version: $(./bin/betterleaks version)"
 
-    # Find directories and optionally exclude one
-    if [ -n "$GITLEAKS_EXCLUDE" ]; then
-        dirs=($(find . -mindepth 1 -type d | sort -u | grep -v ".git"))
-        dirs=($(printf "%s\n" "${dirs[@]}" | grep -v "$GITLEAKS_EXCLUDE"))
-
-        for dir in "${dirs[@]}"; do
-            echo "Running gitleaks on $dir"
-            ./bin/gitleaks detect --no-git --verbose --no-banner --source "$dir"
-        done
+    bl_args=(dir --no-banner --verbose --max-archive-depth 0)
+    if [[ -f .betterleaks.toml ]]; then
+        bl_args+=(--config .betterleaks.toml)
+    elif [[ -f .gitleaks.toml ]]; then
+        bl_args+=(--config .gitleaks.toml)
     else
-        ./bin/gitleaks detect --no-git --verbose
+        # These extra rules flag Go test fixtures (`password = "password"`,
+        # postgres:// URIs in tests) across the org. Repos can opt in with
+        # BETTERLEAKS_STRICT=yes. Do not pass --disable-rule when a custom
+        # config is loaded: signedxml's allowlist does not define those IDs.
+        if [[ "$BETTERLEAKS_STRICT" == "" ]]; then
+            bl_args+=(--disable-rule generic-password --disable-rule generic-credential-uri)
+        fi
     fi
 
-    echo "FINISHED gitleaks check"
+    # Filesystem scan of top-level paths. Skip third-party trees and leftover
+    # scanner archives. GITLEAKS_EXCLUDE remains as an alias for BETTERLEAKS_EXCLUDE.
+    bl_exclude="vendor|.git|bin|node_modules|gitleaks.tar.gz|betterleaks.tar.gz"
+    extra_exclude="${BETTERLEAKS_EXCLUDE:-$GITLEAKS_EXCLUDE}"
+    if [[ -n "$extra_exclude" ]]; then
+        bl_exclude="${bl_exclude}|${extra_exclude}"
+    fi
+    bl_paths=()
+    while IFS= read -r p; do
+        [[ -z "$p" ]] && continue
+        bl_paths+=("$p")
+    done < <(find . -mindepth 1 -maxdepth 1 | sed 's|^\./||' | grep -Ev "^($bl_exclude)$" | sort || true)
+
+    if [[ ${#bl_paths[@]} -eq 0 ]]; then
+        echo "No paths to scan with betterleaks"
+    else
+        echo "Running betterleaks on ${bl_paths[*]}"
+        ./bin/betterleaks "${bl_args[@]}" "${bl_paths[@]}"
+    fi
+
+    echo "FINISHED betterleaks check"
 fi
 
 ## Run govulncheck which parses the compiled/used code for known vulnerabilities.

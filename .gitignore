@@ -32,6 +32,7 @@ coverage.txt
 /kubeval
 /kubeval-*.tar.gz
 /gitleaks.tar.gz
+/betterleaks.tar.gz
 /sqlvet.tar.gz
 
 /images/infra-idx/nginx/cache/
