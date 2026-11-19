@@ -2,8 +2,9 @@
 
 ### Experiments
 
-- `EXPERIMENTAL`: List of additional checks to perform. (Example: `gitleaks,...`)
-   - Current experiments: `gitleaks`, `govulncheck`, `shuffle`
+- `EXPERIMENTAL`: List of additional checks to perform. (Example: `betterleaks,...`)
+   - Current experiments: `betterleaks`, `govulncheck`, `shuffle`
+   - `gitleaks` remains accepted as an alias for `betterleaks`
 
 ### Versions
 
@@ -11,6 +12,10 @@
 
 ### Go Linters
 
+- `DISABLE_BETTERLEAKS`: Set to skip running [betterleaks](https://github.com/betterleaks/betterleaks). `DISABLE_GITLEAKS` is kept as an alias.
+- `BETTERLEAKS_VERSION`: Overrides the betterleaks release. Defaults to `1.10.1` (latest stable v1).
+- `BETTERLEAKS_EXCLUDE` / `GITLEAKS_EXCLUDE`: Top-level path name to skip (in addition to `vendor`, `bin`, `.git`, `node_modules`).
+- `BETTERLEAKS_STRICT`: Set to enable `generic-password` and `generic-credential-uri` (noisy on Go test fixtures).
 - `DISABLE_GOVULNCHECK`: Set to skip running [govulncheck](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck)
 - `DISABLED_GOLANGCI_LINTERS`: Linters to disable in [golangci-lint](https://github.com/golangci/golangci-lint)
 - `DISABLE_NILAWAY`: Set to skip running [nilaway](https://github.com/uber-go/nilaway)
