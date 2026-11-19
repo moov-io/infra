@@ -45,7 +45,6 @@ fi
 
 # ONLY_GOLANGCI=yes skips all checks except golangci-lint (and its --fix via GOLANGCI_DO_FIX=true)
 if [[ "$ONLY_GOLANGCI" == "yes" ]]; then
-    DISABLE_GITLEAKS=yes
     DISABLE_BETTERLEAKS=yes
     DISABLE_GOVULNCHECK=yes
     EXPERIMENTAL=""
